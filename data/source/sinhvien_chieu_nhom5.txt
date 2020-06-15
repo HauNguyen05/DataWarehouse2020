@@ -40,3 +40,23 @@ STT|MSSV|Họ Lót |Tên SV|Ngày sinh|Mã Lớp|Lớp|Số điện thoại|Emai
 39|15154032|Cao Thị|Hiền|03/12/1997|DH15OT|KT|0373924375|15154032@st.hcmuaf.edu.vn|Cà Mau|
 40|15154035|Đan Châu Hạnh|Chi|02/10/1997|DH15OT|KT|0386525445|15154035@st.hcmuaf.edu.vn|Đồng Tháp|
 41|15154046|Nguyễn Thị Ngọc|Giàu|08/03/1997|DH15OT|KT|0853971922|15154046@st.hcmuaf.edu.vn|Kiên Giang| 
+42|17130201|Phạm Nhật|Vượng|05-02-1999|DH17DTA|Công nghệ thông tin A|0949380000|ayaz@sudima.com|Hà Tĩnh|Còn học
+43|17130202|Nguyễn Thị|Phương|10-12-1999|DH17DTA|Công nghệ thông tin A|0949250000|cinemabox2005@yahoo.com|Hà Nội|Còn học
+44|17130203|Trần Đình|Long|15-08-1999|DH17DTA|Công nghệ thông tin A|0994522222|lian27111985@yahoo.com|Hải Dương|Còn học
+45|17130204|Hồ Hùng|Anh|06-09-1999|DH17DTA|Công nghệ thông tin A|0994122222|kieuan08@yahoo.com|Thừa Thiên Huế|Còn học
+46|17130205|Nguyễn Đăng|Quang|01-07-1999|DH17DTA|Công nghệ thông tin A|0997422222|phaman24@yahoo.com|Hà Nội|Còn học
+47|17130206|Phạm Thu|Hương|20-08-1999|DH17DTA|Công nghệ thông tin A|0997772222|b2b12345@yahoo.com.vn|Hà Nội|Còn học	
+48|17130207|Bùi Thành|Nhơn|25-01-1999|DH17DTA|Công nghệ thông tin A|0994442222|mapsaigon270583@yahoo.com|Hải Dương|Còn học
+49|17130208|Phạm Thúy|Hằng|26-11-1999|DH17DTA|Công nghệ thông tin A|0918702222|thienthantuyet@yahoo.com|Hà Nội|Còn học
+50|17130209|Hồ Xuân|Năng|21-12-1999|DH17DTA|Công nghệ thông tin A|0967991111|vanan832001@yahoo.com|Nam Định|Còn học
+51|17130210|Nguyễn Đức|Tài|15-04-1999|DH17DTA|Công nghệ thông tin A|0965651111|mimian2003@yahoo.com|Quảng Ngãi|Còn học
+52|17130211|Nguyễn Văn|Đạt|19-03-1999|DH17DTA|Công nghệ thông tin A|0915651111|hoai_co_21@yahoo.com|Hải Phòng|Còn học
+53|17130212|Đỗ Hữu|Hạ|11-03-1999|DH17DTA|Công nghệ thông tin A|0965651111|tomato2thb@yahoo.com|Hà Nam|Còn học
+54|17130213|Trần Lê|Quân|15-03-1999|DH17DTA|Công nghệ thông tin A|0994441111|thanhcuong1902@yahoo.com|Đà Nẵng|Còn học	
+55|17130214|Trương Thị Lệ|Khanh|18-07-1999|DH17DTA|Công nghệ thông tin A|099641111|Thecuongpham@gmail.com|Nam Định|Còn học
+56|17130215|Nguyễn Hoàng|Yến|28-06-1999|DH17DTA|Công nghệ thông tin A|0943260000|haptn@saigontech.edu.vn|Hà Nội|Còn học
+57|17130216|Trương Gia|Bình|30-04-1999|DH17DTA|Công nghệ thông tin A|0943260000|lucycdsoverseas@yahoo.com|Thái Bình|Còn học
+58|17130217|Trần Tuấn|Dương|21-08-1999|DH17DTA|Công nghệ thông tin A|01242700000|no_one_know_81@yahoo.com|Hà Nam|Còn học	
+59|17130218|Nguyễn Mạnh|Tuấn|08-06-1999|DH17DTA|Công nghệ thông tin A|0947560000|vuhaiha@yahoo.com|Thừa Thiên Huế|Còn học
+60|17130219|Chu Thị|Bình|12-04-1999|DH17DTA|Công nghệ thông tin A|0947520000|thanhhieu7777@yahoo.com|Hải Dương|Còn học
+61|17130220|Trần Huy Thanh|Tùng|03-05-1999|DH17DTA|Công nghệ thông tin A|0982920000|dangxuanho@yahoo.com.vn|Thái Bình|Còn học
