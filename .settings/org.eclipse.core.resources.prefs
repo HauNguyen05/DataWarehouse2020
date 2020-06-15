@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
 encoding//data/source/sinhvien_chieu_nhom5.txt=UTF-8
-encoding//src/data/ExtractCSVToStaging.java=UTF-8
+encoding//src/data/DownloadFileData.java=UTF-8
+encoding//src/data/ExtractFileToStaging.java=UTF-8

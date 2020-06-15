@@ -6,10 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ExtractCSVToStaging {
+public class ExtractFileToStaging {
 	Connection connectStaging;
 
-	public ExtractCSVToStaging() throws SQLException {
+	public ExtractFileToStaging() throws SQLException {
 		// TODO Auto-generated constructor stub
 		this.connectStaging = ConnectDB.getConectionStaging();
 	}
@@ -18,12 +18,12 @@ public class ExtractCSVToStaging {
 	static void loadToStaging(String delimetter, String source, int ignore) {
 		try {
 			Connection connection = ConnectDB.getConectionStaging();
-			String loadQuery = "LOAD DATA INFILE '" + source + "' INTO TABLE `sinhvien` FIELDS TERMINATED BY '"
+			String loadQuery = "LOAD DATA INFILE '" + source + "' INTO TABLE `sinhvien` FIELDS TERMINATED BY '\\"
 					+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore+" LINES";
 			System.out.println(loadQuery);
-			PreparedStatement stmt = connection.prepareStatement(loadQuery);
-			stmt.execute(loadQuery);
-			stmt.close();
+//			PreparedStatement stmt = connection.prepareStatement(loadQuery);
+//			stmt.execute(loadQuery);
+//			stmt.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,7 +40,7 @@ public class ExtractCSVToStaging {
 	}
 
 	public static void main(String[] args) throws SQLException, IOException {
-		new ExtractCSVToStaging().insetDataAllFile();
+		new ExtractFileToStaging().insetDataAllFile();
 	}
 
 	public void insetDataAllFile() throws SQLException, IOException {
@@ -57,7 +57,7 @@ public class ExtractCSVToStaging {
 			source =source.concat(fileName);
 			// Load data from file csv to table staging in Database Staging
 			loadToStaging(deli, source, ignore);
-			changeStatusFile(fileName,"TF");
+//			changeStatusFile(fileName,"TF");
 		}
 	}
 
