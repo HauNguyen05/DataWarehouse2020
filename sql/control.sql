@@ -11,7 +11,7 @@
  Target Server Version : 100408
  File Encoding         : 65001
 
- Date: 15/06/2020 16:47:49
+ Date: 15/06/2020 20:15:40
 */
 
 SET NAMES utf8mb4;
@@ -38,7 +38,7 @@ CREATE TABLE `data_config`  (
 -- ----------------------------
 -- Records of data_config
 -- ----------------------------
-INSERT INTO `data_config` VALUES (1, 'D:\\\\DataWarehouse\\\\data\\\\source\\\\', '', 'guest_access', 'root', '123456', NULL, 'sinhvien', 'STT,MSSV,Ho_Ten,Ngay_Sinh,Ma_Lop,Ten_Lop,SDT,Email,Que_Quan,Ghi_chu', '2227');
+INSERT INTO `data_config` VALUES (1, 'D:\\\\DataWarehouse2020\\\\data\\\\source\\\\', '', 'guest_access', 'root', '123456', NULL, 'sinhvien', 'STT,MSSV,Ho_Ten,Ngay_Sinh,Ma_Lop,Ten_Lop,SDT,Email,Que_Quan,Ghi_chu', '2227');
 
 -- ----------------------------
 -- Table structure for data_config_log
@@ -58,6 +58,7 @@ CREATE TABLE `data_config_log`  (
 -- ----------------------------
 -- Records of data_config_log
 -- ----------------------------
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom5.txt', 'ER', 'txt', 0, 1, '|');
+INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom15.xlsx', 'ER', 'xlsx', 0, 1, '\\t');
+INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom5.txt', 'TF', 'txt', 0, 1, '|');
 
 SET FOREIGN_KEY_CHECKS = 1;
