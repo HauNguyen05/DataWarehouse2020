@@ -13,7 +13,7 @@
 
  Date: 15/06/2020 20:15:40
 */
-
+use warehouse_control;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -24,21 +24,29 @@ DROP TABLE IF EXISTS `data_config`;
 CREATE TABLE `data_config`  (
   `id` int(255) NOT NULL AUTO_INCREMENT,
   `source` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `destination` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `server_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `port_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `user_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `user_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `pwd_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `path_dir_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `delimiter_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  
+  `destination` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `server_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,  
+  `database` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `user_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `pwd_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `table_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `table_name_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `column_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `port` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  
+ 
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of data_config
 -- ----------------------------
-INSERT INTO `data_config` VALUES (1, 'D:\\\\DataWarehouse2020\\\\data\\\\source\\\\', '', 'guest_access', 'root', '123456', NULL, 'sinhvien', 'STT,MSSV,Ho_Ten,Ngay_Sinh,Ma_Lop,Ten_Lop,SDT,Email,Que_Quan,Ghi_chu', '2227');
+-- INSERT INTO `data_config` VALUES (1, 'D:\\\\DataWarehouse2020\\\\data\\\\source\\\\', '', 'guest_access', 'root', '123456', NULL, 'sinhvien', 'STT,MSSV,Ho_Ten,Ngay_Sinh,Ma_Lop,Ten_Lop,SDT,Email,Que_Quan,Ghi_chu', '2227');
 
 -- ----------------------------
 -- Table structure for data_config_log
