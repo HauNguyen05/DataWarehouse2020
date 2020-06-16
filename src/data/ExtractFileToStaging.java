@@ -21,9 +21,9 @@ public class ExtractFileToStaging {
 			String loadQuery = "LOAD DATA INFILE '" + source + "' INTO TABLE `sinhvien` FIELDS TERMINATED BY '\\"
 					+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore+" LINES";
 			System.out.println(loadQuery);
-//			PreparedStatement stmt = connection.prepareStatement(loadQuery);
-//			stmt.execute(loadQuery);
-//			stmt.close();
+			PreparedStatement stmt = connection.prepareStatement(loadQuery);
+			stmt.execute(loadQuery);
+			stmt.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -57,7 +57,7 @@ public class ExtractFileToStaging {
 			source =source.concat(fileName);
 			// Load data from file csv to table staging in Database Staging
 			loadToStaging(deli, source, ignore);
-//			changeStatusFile(fileName,"TF");
+			changeStatusFile(fileName,"TF");
 		}
 	}
 
