@@ -60,3 +60,23 @@ STT|MSSV|Họ Lót |Tên SV|Ngày sinh|Mã Lớp|Lớp|Số điện thoại|Emai
 59|17130218|Nguyễn Mạnh|Tuấn|08-06-1999|DH17DTA|Công nghệ thông tin A|0947560000|vuhaiha@yahoo.com|Thừa Thiên Huế|Còn học
 60|17130219|Chu Thị|Bình|12-04-1999|DH17DTA|Công nghệ thông tin A|0947520000|thanhhieu7777@yahoo.com|Hải Dương|Còn học
 61|17130220|Trần Huy Thanh|Tùng|03-05-1999|DH17DTA|Công nghệ thông tin A|0982920000|dangxuanho@yahoo.com.vn|Thái Bình|Còn học
+62|15418125|Lê Hoàng|Minh|28/04/1997|DH15CJ|KT|0987447132|15118125@st.hcmuaf.edu.vn|Quảng Trị|
+63|15113123|TRần Hoàng|Đức|28/05/1997|DH15CP|CNTT|0987447133|16115175@st.hcmuaf.edu.vn|Quảng Nam|
+64|15117124|Lê Bình|An|23/06/1997|DH15MT|MT|0987447134|17118127@st.hcmuaf.edu.vn|Quảng Bình|
+65|15178126|Hoàng Kiều|Anh|26/07/1997|DH15DH|CNTP|0987447135|15115145@st.hcmuaf.edu.vn|Phú Yên|
+66|15618127|Lê Ngọc|Chiểu|28/03/1997|DH15CK|NN|0987447136|17118135@st.hcmuaf.edu.vn|Hà Tĩnh|
+67|15118128|Nguyễn Lê|Thư|24/04/1997|DH15HK|CNTT|0987447137|14115125@st.hcmuaf.edu.vn|Nghệ An|
+68|15118121|Nguyễn Văn|Hùng|28/03/1997|DH15CA|KT|0987447138|17116145@st.hcmuaf.edu.vn|Khánh Hòa|
+69|15318323|Nguyễn Thị|Châu|25/06/1997|DH15MK|MT|0987447139|15115124@st.hcmuaf.edu.vn|Quảng Trị|
+70|15118125|Nguyễn Kiều|Hoa|28/11/1997|DH15PA|NY|0987447142|15118185@st.hcmuaf.edu.vn|Phú Yên|
+71|15118127|Lê Văn|Anh|26/04/1997|DH15CN|KT|0987447162|15118136@st.hcmuaf.edu.vn|Quảng Trị|
+72|15118123|Hứa Minh|Minh|28/12/1997|DH15CH|HH|0987447172|15118175@st.hcmuaf.edu.vn|Quảng Trị|
+73|15118626|Hoàng Lê|Minh|27/04/1997|DH15KL|KT|0987447182|15115125@st.hcmuaf.edu.vn|Phú Yên|
+74|15118123|Nguyễn Thị|Minh|28/02/1997|DH15CK|KT|0987447132|15118133@st.hcmuaf.edu.vn|Quảng Trị|
+75|15113125|Phan Thị|Minh|23/05/1997|DH15CK|VL|0987447122|15118165@st.hcmuaf.edu.vn|Long An|
+76|15118126|Nguyễn Hòa|Minh|26/04/1997|DH15DS|KT|0987447162|15118125@st.hcmuaf.edu.vn|Quảng Trị|
+77|15118126|Triệu Minh|Minh|23/07/1997|DH15CK|NN|0987447112|15118177@st.hcmuaf.edu.vn|Phú Yên|
+78|15118125|Văn Hiếu|Minh|27/04/1997|DH15CK|KT|0987447432|15118125@st.hcmuaf.edu.vn|Bình Định|
+79|15718121|Lê Hoàng|Minh|24/07/1997|DH15DS|NL|0987445432|15118122@st.hcmuaf.edu.vn|Quảng Trị|
+80|15178125|Bùi Tuấn|Minh|22/03/1997|DH15CK|KT|0987447524|15118121@st.hcmuaf.edu.vn|Bình Định|
+81|15113125|Nguyễn Lê|Minh|21/04/1997|DH15CK|KT|0987447635|15118126@st.hcmuaf.edu.vn|Quảng Ninh|
