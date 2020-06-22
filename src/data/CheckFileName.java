@@ -1,19 +1,14 @@
 package data;
 
 public class CheckFileName {
-	static boolean checkFileName(String fileName) {
+	static boolean checkFileName(String fileName, String[] syntaxs) {
 		fileName = fileName.trim();
-		String syntax1 = "sinhvien_sang_nhom";
-		String syntax2 = "sinhvien_chieu_nhom";
-
-		if (fileName.startsWith(syntax1)) {
-			String nameGroup = fileName.substring(syntax1.length());
-			return checkNameGroup(nameGroup);
-		} else if (fileName.startsWith(syntax2)) {
-			String nameGroup = fileName.substring(syntax2.length());
-			return checkNameGroup(nameGroup);
+		for (String syntax : syntaxs) {
+			if (fileName.startsWith(syntax)) {
+				String nameGroup = fileName.substring(syntax.length());
+				return checkNameGroup(nameGroup);
+			}
 		}
-
 		return false;
 	}
 
@@ -26,7 +21,7 @@ public class CheckFileName {
 	}
 
 	static boolean typeFile(String nameType) {
-		String[] type = { "xlsx", "csv", "txt", "zip", "rar" };
+		String[] type = { "docx", "doc", "xlsx", "csv", "txt", "zip", "rar" };
 		for (String string : type) {
 			if (nameType.equals(string)) {
 				return true;
@@ -43,5 +38,9 @@ public class CheckFileName {
 			return false;
 		}
 	}
-
+	public static void main(String[] args) {
+		String[] syntaxs = { "sinhvien_sang_nhom", "sinhvien_chieu_nhom" };
+		String fileName = "sinhvien1_sang_nhom1.xlsx";
+		System.out.println(checkFileName(fileName, syntaxs));
+	}
 }

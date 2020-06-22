@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/poi-ooxml-3.17.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.17 (2).jar"/>
 	<classpathentry kind="lib" path="lib/xmlbeans-3.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/chilkat.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
