@@ -33,7 +33,7 @@ CREATE TABLE `data_config`  (
   
   `destination` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `server_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,  
-  `database` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `databasse` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `user_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `pwd_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `table_name_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -53,14 +53,15 @@ CREATE TABLE `data_config`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `data_config_log`;
 CREATE TABLE `data_config_log`  (
-  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `id` int(255) NOT NULL,
   `file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `status` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `file_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `unzip` int(255) NULL DEFAULT NULL COMMENT '0: là không, 1 là có',
   `ignore_record` int(255) NULL DEFAULT NULL COMMENT 'số hàng bỏ qua khi đọc file',
   `delimeter` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  PRIMARY KEY (`id`, `file_name`) USING BTREE
+  PRIMARY KEY (`id`, `file_name`) USING BTREE,
+  foreign key(id) references data_config(id)
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
