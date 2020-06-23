@@ -1,4 +1,4 @@
-package data;
+package Component_2;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,67 +22,36 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import Common.ConnectDB;
+
 public class ExtractFileToStaging {
+	private Connection connectionControl = null;
+	private Connection connectionStaging = null;
 
-// ket noi database
-	public Connection getConnection(String destination, String server, String nameDatabasse, String userName,
-			String password, String tableName) {
+// tao table data
+	public void createTable(String fieldName, String nameTable) {
+		String[] field = fieldName.split(",");// cat chuoi từ field name
+		PreparedStatement pre = null;
 		try {
-			Class.forName(server);
-			String url = destination + nameDatabasse;
-			return DriverManager.getConnection(url, userName, password);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("kết nối connection failure!");
-			return null;
-		}
+			StringBuilder sql = new StringBuilder();
+			sql.append("create table " + nameTable + "(");
+			for (int i = 0; i < field.length; i++) {
+				sql.append("`" + (i + 1) + "` nvarchar(255),");
+				if (i == field.length - 1) {
+					sql.append("`" + (i + 1) + "` nvarchar(255) )");
+				}
 
+			}
+		//	connectionStaging.setAutoCommit(false);
+			pre = connectionStaging.prepareStatement(sql.toString());
+			pre.executeUpdate();
+			//connectionStaging.commit();
+		} catch (Exception e) {
+			System.out.println("create table failure");
+		}
 	}
 
-	public Connection connectionConfig() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/warehouse_control";
-			return DriverManager.getConnection(url, "root", "0985153812");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("kết nối connectionConfig failure!");
-			return null;
-		}
-
-	}
-
-//	public void unzip(String file) {
-//		try {
-//			File f = new File(file);
-//			if (f.exists()) {
-//				System.out.println("Zip exists");
-//				System.out.println(f.getAbsolutePath());
-//			}
-//			ZipArchiveInputStream archive = new ZipArchiveInputStream(
-//					new BufferedInputStream(new FileInputStream(f)));
-//
-//			ArchiveEntry entry = archive.getNextEntry();
-//				System.out.println(entry);
-//			byte[] b = new byte[2 * 1024];
-//			//while (ze != null) {
-////				String fileName = ze.getName();
-////			//	FileOutputStream fos = new FileOutputStream(f.getParent() + File.separator + fileName);
-////				int a;
-////				while ((a = zis.read(b)) != -1) {
-////					fos.write(b, 0, a);
-////				}
-////				fos.close();
-////				zis.closeEntry();
-////				ze = zis.getNextEntry();
-//		//	}
-//			System.out.println("unzip successfully");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			System.out.println("unzip failure");
-//		}
-//	}
-	public void addFileExcel(Connection connectionStagingDB, String file) {
+	public void addFileExcel(String file) {
 		try {
 			InputStream inputStream = new FileInputStream(new File(file));
 			Workbook workbook = new XSSFWorkbook(inputStream);
@@ -90,24 +59,24 @@ public class ExtractFileToStaging {
 			// Get iterator to all the rows in current sheet
 			Iterator<Row> rowIterator = sheet.iterator();
 			// Traversing over each row of XLSX file
-			Row r =rowIterator.next();
+			Row r = rowIterator.next();
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
 				List<String> data = new ArrayList<String>();
 				// For each row, iterate through each columns
 				Iterator<Cell> cellIterator = row.cellIterator();
 				while (cellIterator.hasNext()) {
-					String item =cellIterator.next().toString();
+					String item = cellIterator.next().toString();
 					System.out.println(item);
-					if(item.equals("")) {
+					if (item.equals("")) {
 						data.add("null");
-					}else {
+					} else {
 						data.add(item);
 					}
-					
+
 				}
-				//add data to database staging
-				addData(data,connectionStagingDB);
+				// add data to database staging
+				addData(data);
 			}
 		} catch (Exception e) {
 			System.out.println("poi failure");
@@ -115,49 +84,47 @@ public class ExtractFileToStaging {
 		}
 	}
 
-	public void addData(List<String> data,Connection connectionStagingDB ) throws ClassNotFoundException {
+	public void addData(List<String> data) throws ClassNotFoundException {
 
 		PreparedStatement statement = null;
 		try {
-			connectionStagingDB.setAutoCommit(false);
+			connectionStaging.setAutoCommit(false);
 			StringBuilder sql = new StringBuilder();
 			sql.append("insert into data(");
-			for (int i=0;i< data.size();i++) {
-				if(i==data.size()-1) {
-					sql.append("`"+(i+1)+"`)");
+			for (int i = 0; i < data.size(); i++) {
+				if (i == data.size() - 1) {
+					sql.append("`" + (i + 1) + "`)");
 					break;
 				}
-				sql.append("`"+(i+1)+"`,");
+				sql.append("`" + (i + 1) + "`,");
 			}
-			
+
 			sql.append(" value(");
-			for (int i=0;i< data.size();i++) {
-				if(i==data.size()-1) {
+			for (int i = 0; i < data.size(); i++) {
+				if (i == data.size() - 1) {
 					sql.append("?)");
 					break;
 				}
 				sql.append("?,");
 			}
-			
-			
-			statement =connectionStagingDB.prepareStatement(sql.toString());
-			for (int i=0;i< 11;i++) {
-				statement.setString(i+1, data.get(i));
+
+			statement = connectionStaging.prepareStatement(sql.toString());
+			for (int i = 0; i < 11; i++) {
+				statement.setString(i + 1, data.get(i));
 			}
 			statement.executeUpdate();
-			connectionStagingDB.commit();
+			connectionStaging.commit();
 			System.out.println("add 1 row ok");
 		} catch (SQLException e1) {
-			if (connectionStagingDB != null) {
+			if (connectionStaging != null) {
 				try {
-					connectionStagingDB.rollback();
+					connectionStaging.rollback();
 					System.out.println(" addData khong thanh cong");
 				} catch (SQLException e11) {
 					e11.printStackTrace();
 				}
 			}
 		}
-
 	}
 
 	public void moveFileToError(String file) {
@@ -183,46 +150,44 @@ public class ExtractFileToStaging {
 			System.out.println("Move file thanh bai");
 		}
 	}
-	
+
 	// Load data File CSV to Staging
-	public void loadToStaging(Connection connectionStagingDB, String path_dir_src, String file_name, String delimetter,
-			int ignore_record, String file_type) {
+	public void loadToStaging(String path_dir_src, String file_name, String delimetter, int ignore_record,
+			String file_type) {
 		String path = path_dir_src + "//" + file_name; // path File
 		File file = new File(path);
-		if(!file.exists()) {
+		if (!file.exists()) {
 			System.out.println("file not found");
 			return;
 		}
 		try {
-			
 			if (file_type.equals("xlsx")) {
-				addFileExcel(connectionStagingDB, path);
+				addFileExcel(path);
 			} else {
 
 				String loadQuery = "LOAD DATA INFILE '" + path + "' INTO TABLE data FIELDS TERMINATED BY '\\"
 						+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record + " LINES";
-				PreparedStatement state = connectionStagingDB.prepareStatement(loadQuery);
+				PreparedStatement state = connectionStaging.prepareStatement(loadQuery);
 				state.executeUpdate();
 				state.close();
 				System.out.println("Them data thanh cong");
 			}
 			// chuyen doi trang thai file
-			//changeStatusFile(file_name, "TF");
+			changeStatusFile(file_name, "TF");
 			// chuyen file den thu muc thanh cong
-		//	moveFileToSuccess(path);
+			moveFileToSuccess(path);
 		} catch (Exception e) {
-			System.out.println("Them data that bai");
+			System.out.println("that bai");
 			// chuyen file den thu muc error
-		//	moveFileToError(path);
+			moveFileToError(path);
 		}
 
 	}
 
 	public void changeStatusFile(String fileName, String status) throws SQLException {
 		// TODO Auto-generated method stub
-		Connection connection = connectionConfig();
 		String update = "UPDATE `data_config_log` SET status =? WHERE file_name=?";
-		PreparedStatement statement = connection.prepareStatement(update);
+		PreparedStatement statement = connectionControl.prepareStatement(update);
 		statement.setString(1, status);
 		statement.setString(2, fileName);
 		statement.executeUpdate();
@@ -231,14 +196,16 @@ public class ExtractFileToStaging {
 
 	public void insetDataAllFile() throws SQLException, IOException {
 		String destination, server_des, databasse, user_des, pwd_des, table_name_des, delimiter, file_type,
-				path_dir_src, file_name;
-		boolean unzip;
+				path_dir_src, file_name = null;
+		boolean unzip = false;
 		int ignore_record;
 
-		Connection connection = connectionConfig();
+		if (connectionControl == null) {
+			connectionControl = ConnectDB.getConectionControl();
+		}
 		String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name from data_config inner join data_config_log"
 				+ " on data_config_log.id = data_config.id where status = 'ER'";
-		PreparedStatement statement1 = connection.prepareStatement(sql);
+		PreparedStatement statement1 = connectionControl.prepareStatement(sql);
 		ResultSet r = statement1.executeQuery();
 		while (r.next()) {
 			destination = r.getString(1);
@@ -253,18 +220,19 @@ public class ExtractFileToStaging {
 			file_type = r.getString(10);
 			path_dir_src = r.getString(11);
 			file_name = r.getString(12);
-			Connection connectionStagingDB = getConnection(destination, server_des, databasse, user_des, pwd_des,
-					table_name_des);
-			loadToStaging(connectionStagingDB, path_dir_src, file_name, delimiter, ignore_record, file_type);
+			if (connectionStaging == null) {
+				connectionStaging = ConnectDB.getConnection(destination, server_des, databasse, user_des, pwd_des);
+			}
+			loadToStaging(path_dir_src, file_name, delimiter, ignore_record, file_type);
 			System.out.println("---------------------------------");
 		}
 	}
 
 	public static void main(String[] args) throws SQLException, IOException {
 		ExtractFileToStaging a = new ExtractFileToStaging();
-		 a.insetDataAllFile();
+		a.insetDataAllFile();
 		// a.moveFileToError("E:\\warehouse2020\\sinhvien_chieu_nhom1.txt");
-		//a.unzip("E://warehouse2020//sinhvien_chieu_nhom5.zip");
+		// a.unzip("E://warehouse2020//sinhvien_chieu_nhom5.zip");
 
 	}
 

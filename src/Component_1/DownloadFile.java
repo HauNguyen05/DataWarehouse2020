@@ -1,4 +1,4 @@
-package data;
+package Component_1;
 
 import java.io.IOException;
 import java.io.InputStream;

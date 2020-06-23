@@ -1,4 +1,4 @@
-package data;
+package Component_1;
 
 public class CheckFileName {
 	static boolean checkFileName(String fileName, String[] syntaxs) {

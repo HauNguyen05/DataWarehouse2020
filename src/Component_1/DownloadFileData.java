@@ -1,4 +1,4 @@
-package data;
+package Component_1;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
