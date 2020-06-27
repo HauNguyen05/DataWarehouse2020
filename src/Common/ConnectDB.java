@@ -5,14 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectDB {
-	// private static Connection connectionControl = null;
-	// private static Connection connectionStaging = null;
 
-	public static Connection getConectionControl() throws SQLException {
+	public static Connection getConectionControl(String user, String pass) throws SQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			String url = "jdbc:mysql://localhost:3306/warehouse_control?useSSL=false";
-			return DriverManager.getConnection(url, "root", "0985153812");
+			return DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Conneciton connectionConfig failure!");
@@ -36,6 +34,6 @@ public class ConnectDB {
 	}
 
 	public static void main(String[] args) throws SQLException {
-	
+		if(getConectionControl("root", "") != null) System.out.println("ok");;
 	}
 }

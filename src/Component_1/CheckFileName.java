@@ -1,12 +1,30 @@
 package Component_1;
 
+import java.util.ArrayList;
+
 public class CheckFileName {
-	static boolean checkFileName(String fileName, String[] syntaxs) {
-		fileName = fileName.trim();
-		for (String syntax : syntaxs) {
-			if (fileName.startsWith(syntax)) {
-				String nameGroup = fileName.substring(syntax.length());
-				return checkNameGroup(nameGroup);
+	private String nameGroup;
+	private String typeFile;
+	private String nameFile;
+	private boolean isZip;
+
+	public ArrayList<String> information() {
+		ArrayList<String> result = new ArrayList<String>();
+		return result;
+
+	}
+
+	static boolean checkFileName(String fileName, String listSyntax) {
+		String[] name = fileName.split("\\.");
+		String[] syntaxs = listSyntax.split(",");
+		if (name.length > 1) {
+			fileName = fileName.trim();
+			for (String syntax : syntaxs) {
+				syntax = syntax.trim();
+				if (fileName.startsWith(syntax.trim())) {
+					String nameGroup = fileName.substring(syntax.length());
+					return checkNameGroup(nameGroup);
+				}
 			}
 		}
 		return false;
@@ -14,6 +32,7 @@ public class CheckFileName {
 
 	static boolean checkNameGroup(String name) {
 		String[] split = name.split("\\.");
+		System.out.println("so " + split[0]);
 		if (parseInt(split[0]) && typeFile(split[1])) {
 			return true;
 		}
@@ -38,9 +57,10 @@ public class CheckFileName {
 			return false;
 		}
 	}
+
 	public static void main(String[] args) {
-		String[] syntaxs = { "sinhvien_sang_nhom", "sinhvien_chieu_nhom" };
-		String fileName = "sinhvien1_sang_nhom1.xlsx";
+		String syntaxs = "sinhvien_sang_nhom, sinhvien_chieu_nhom";
+		String fileName = "sinhvien_sang_nhom06.xlsx";
 		System.out.println(checkFileName(fileName, syntaxs));
 	}
 }

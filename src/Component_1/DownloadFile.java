@@ -1,120 +1,123 @@
 package Component_1;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+import com.chilkatsoft.CkGlobal;
+import com.chilkatsoft.CkScp;
+import com.chilkatsoft.CkSsh;
+
+import Common.ConnectDB;
 
 public class DownloadFile {
-	private static Session session;
-	static final String host = "drive.ecepvn.org";
-	static final String userName = "guest_access";
-	static final String password = "123456";
-	static final String remotePath = "/volume1/ECEP/song.nguyen/DW_2020/";
-	static final int port = 2227;
-
-	public static void main(String[] arg) throws JSchException {
-		DownloadFile DF = new DownloadFile();
-		String[] syntaxs = { "sinhvien_sang_nhom", "sinhvien_chieu_nhom" };
-		String remoteSource = DownloadFile.remotePath + "data";
-		ArrayList<String> fileNames = DF.getFileNameDownload(session, remoteSource, syntaxs);
-		System.out.println("size: " + fileNames.size());
-//		for (String fileName : fileNames) {
-//			System.out.println(fileName);
-//		}
-//		DF.downloadFile(fileNames, "D:\\DataWarehouse2020\\data\\source\\");
-		session.disconnect();
-		System.exit(0);
+	private String server;
+	private String userName;
+	private String password;
+	private String remotePath;
+	private String destinationPath;
+	private String syntaxFileName;
+	private int port;
+	private static CkSsh ssh;
+	private Connection connectionControl;
+	static {
+		try {
+			System.loadLibrary("chilkat");
+		} catch (UnsatisfiedLinkError e) {
+			System.err.println("Native code library failed to load.\n" + e);
+			System.exit(1);
+		}
 	}
 
 	public DownloadFile() {
-		getSession();
-	}
-
-	public Session getSession() {
-		if (session == null) {
-			JSch jsch = new JSch();
-			try {
-				session = jsch.getSession(userName, host, port);
-				session.setConfig("StrictHostKeyChecking", "no");
-				session.setPassword(password);
-				session.connect();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return session;
-	}
-
-	public ArrayList<String> getFileNameDownload(Session session, String remoteSource, String[] syntaxs) {
-		String command = "cd " + remoteSource + ";ls";
-		System.out.println(command);
-		Channel channel = null;
-		ArrayList<String> fileNames = new ArrayList<String>();
 		try {
-			channel = session.openChannel("exec");
-			((ChannelExec) channel).setCommand(command);
-			channel.setInputStream(null);
-			((ChannelExec) channel).setErrStream(System.err);
-			InputStream in = channel.getInputStream();
-			channel.connect();
-			byte[] tmp = new byte[1024];
-			while (true) {
-				while (in.available() > 0) {
-					int i = in.read(tmp, 0, 1024);
-					if (i < 0)
-						break;
-					String result = new String(tmp, 0, i);
-					String[] listfileName = result.split("\n");
-					System.out.println(listfileName.length);
-					for (int j = 0; j < listfileName.length; j++) {
-						String fileName = listfileName[j];
-						String[] isFile = fileName.split("\\.");
-						if (isFile.length > 1) {
-							boolean isDownload = CheckFileName.checkFileName(fileName, syntaxs);
-							if (isDownload) {
-								fileNames.add(fileName);
-							}
-						}
-					}
-				}
-				if (channel.isClosed()) {
-					System.out.println("exit status: " + channel.getExitStatus());
-					break;
-				}
-				try {
-					Thread.sleep(1000);
-				} catch (Exception ee) {
-					System.out.println(ee.getMessage());
-				}
-			}
-			channel.disconnect();
-		} catch (JSchException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			connectionControl = ConnectDB.getConectionControl("root", "");
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return fileNames;
 	}
 
-	public void downloadFile(ArrayList<String> fileNames, String des) {
-		String command = "scp " + remotePath + "data/" + fileNames.get(0) + " " + des + fileNames.get(0);
-		System.out.println(command);
-		Channel channel = null;
-		try {
-			channel = session.openChannel("sftp");
-			channel.connect();
-			System.out.println("connect shell");
-			channel.disconnect();
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println("lỗi " + e.getMessage());
+	/*
+	 * kết nối table config lấy các field thông tin kết nối server
+	 */
+	public void setup(String nameConfig) throws SQLException {
+		String sql = "SELECT server_src,user_src, pwd_src, port_src, path_dir_src, destination, syntax_file_name from data_config where id ="
+				+ nameConfig;
+		PreparedStatement statement = connectionControl.prepareStatement(sql);
+		ResultSet r = statement.executeQuery();
+		while (r.next()) {
+			this.server = r.getString(1);
+			this.userName = r.getString(2);
+			this.password = r.getString(3);
+			this.port = Integer.parseInt(r.getString(4));
+			this.remotePath = r.getString(5);
+			this.destinationPath = r.getString(6);
+			this.syntaxFileName = r.getString(7);
 		}
+		statement.close();
+	}
+
+	public CkSsh connectServer() {
+		CkGlobal glob = new CkGlobal();
+		glob.UnlockBundle("key");
+		glob.get_UnlockStatus();
+		ssh = new CkSsh();
+		ssh.Connect(server, port);
+		ssh.put_IdleTimeoutMs(5000);
+		ssh.AuthenticatePw(userName, password);
+		return ssh;
+	}
+
+	public String[] getListFileName() {
+		// Mở kênh để gửi lệnh qua
+		int channelNum = ssh.OpenSessionChannel();
+		// Nếu mở kênh bị lỗi thì hiện lỗi
+		if (channelNum < 0) {
+			System.out.println("Lỗi mở kênh");
+			System.exit(0);
+		}
+		// Câu lệnh list ra tất cả tên file có trong folder data
+		String cmd = "cd " + remotePath + "; ls";
+		ssh.SendReqExec(channelNum, cmd);
+		// Gọi Channel để đọc đầu ra cho đến khi nhận được lệnh đóng kênh của máy chủ.
+		ssh.ChannelReceiveToClose(channelNum);
+		// Lưu kết quả
+		String cmdResult = ssh.getReceivedText(channelNum, "ansi");
+		System.out.println(cmdResult);
+		String[] listFileNames = cmdResult.split("\n");
+		return listFileNames;
+	}
+
+	public void downloadFileProcess() throws SQLException {
+		setup("1");
+		connectServer();
+		String[] listFileNames = getListFileName();
+		for (String fileName : listFileNames) {
+			boolean isDownload = CheckFileName.checkFileName(fileName, syntaxFileName);
+			if (isDownload) {
+				boolean a = downloading(fileName);
+				System.out.println("download file " + fileName +" " +a );
+			}
+
+		}
+		ssh.Disconnect();
+	}
+
+	public boolean downloading(String fileName) {
+		CkScp scp = new CkScp();
+		boolean success = scp.UseSsh(ssh);
+		if (success != true) {
+			System.out.println(scp.lastErrorText());
+			return false;
+		}
+		success = scp.DownloadFile(remotePath+fileName, destinationPath+fileName);
+		
+		return success;
+	}
+
+	public static void main(String[] args) throws SQLException {
+		DownloadFile c = new DownloadFile();
+		c.downloadFileProcess();
 	}
 }

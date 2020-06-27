@@ -201,10 +201,10 @@ public class ExtractFileToStaging {
 		int ignore_record;
 
 		if (connectionControl == null) {
-			connectionControl = ConnectDB.getConectionControl();
+			connectionControl = ConnectDB.getConectionControl("root", "0985153812");
 		}
 		String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name from data_config inner join data_config_log"
-				+ " on data_config_log.id = data_config.id where status = 'ER'";
+				+ " on data_config_log.id_config = data_config.id where status = 'ER'";
 		PreparedStatement statement1 = connectionControl.prepareStatement(sql);
 		ResultSet r = statement1.executeQuery();
 		while (r.next()) {
