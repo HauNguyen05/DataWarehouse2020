@@ -3,6 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.49-bin.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.20.jar"/>
+	<classpathentry kind="lib" path="lib/junrar-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-vfs2-2.6.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jsch-0.1.54.jar" sourcepath="C:/Users/HAUNGU~1/AppData/Local/Temp/.org.sf.feeling.decompiler1592621347241/source/jsch-0.1.54-sources-1592669402012.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections4-4.1.jar"/>

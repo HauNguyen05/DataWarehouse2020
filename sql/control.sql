@@ -23,13 +23,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `data_config`;
 CREATE TABLE `data_config`  (
   `id` int(255) NOT NULL AUTO_INCREMENT,
-  `source` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `server_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `port_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `user_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `pwd_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `path_dir_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `delimiter_src` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   
   `destination` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `server_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,  
@@ -37,9 +35,10 @@ CREATE TABLE `data_config`  (
   `user_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `pwd_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `table_name_des` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `column_number` varchar(255)CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `column_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  
- 
+  `file_logs` varchar(255)CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -67,7 +66,8 @@ CREATE TABLE `data_config_log`  (
 -- ----------------------------
 -- Records of data_config_log
 -- ----------------------------
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom15.xlsx', 'ER', 'xlsx', 0, 1, '\\t');
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom5.txt', 'TF', 'txt', 0, 1, '|');
+INSERT INTO `data_config` VALUES (NULL,NULL,NULL,NULL,NULL,'E:\\warehouse2020','jdbc:mysql://localhost:3306/','com.mysql.jdbc.Driver','warehouse_extra_db','root','0985153812','data',11,'STT,MSSV,Họ Lót ,Tên SV,Ngày sinh,Mã Lớp,Lớp,Số điện thoại,Email,Quê quán,Ghi Chú','E:\\warehouse2020\\logs\\log_config_3.txt');
+INSERT INTO `data_config_log` VALUES (3, 'sinhvien_chieu_nhom15.xlsx', 'ER', 'xlsx', 0, 1, '\\t');
+INSERT INTO `data_config_log` VALUES (3, 'sinhvien_chieu_nhom5.txt', 'TF', 'txt', 0, 1, '|');
 
 SET FOREIGN_KEY_CHECKS = 1;
