@@ -317,8 +317,7 @@ public class ExtractFileToStaging {
 	public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException {
 		ExtractFileToStaging a = new ExtractFileToStaging();
 		a.insetDataAllFile();
-		// a.moveFileToError("E:\\warehouse2020\\sinhvien_chieu_nhom1.txt");
-		// a.unzip("E://warehouse2020//sinhvien_chieu_nhom5.rar", "E://warehouse2020");
+		System.out.println();
 //
 	}
 
