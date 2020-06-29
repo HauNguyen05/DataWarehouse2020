@@ -256,7 +256,7 @@ public class ExtractFileToStaging {
 				path_dir_src, file_name, file_logs = null;
 		int column_number = 0;
 		boolean unzip = false;
-		int ignore_record;
+		int ignore_record = 0;
 		// Tao connection den database controll, neu khac null thi bo qua .
 		if (CONNECTION_CONTROL == null) {
 			CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "0985153812");
