@@ -1,3 +1,9 @@
 eclipse.preferences.version=1
+<<<<<<< HEAD
+encoding//src/Component_2/ExtractFileToStaging.java=UTF-8
+encoding/<project>=UTF-8
+encoding/src=UTF-8
+=======
 encoding//src/Component_1=UTF-8
 encoding//src/Component_1/DownloadFile.java=UTF-8
+>>>>>>> f8ee157ce7d1edaaae2d180dec9d7c541aa8beda

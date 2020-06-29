@@ -33,8 +33,39 @@ public class ConnectDB {
 		}
 
 	}
+	
+	public static Connection getConnect(String db, String username, String password) {
+		Connection connection = null;
+		
+		String url = "jdbc:mysql://localhost:3306" + "/" + db +
+					"?useTimezone=true&serverTimezone=UTC&" +
+					"useUnicode=true&characterEndcoding=utf-8";
 
-	public static void main(String[] args) throws SQLException {
-		if(getConectionControl("root", "") != null) System.out.println("ok");;
+		try {
+			connection = DriverManager.getConnection(url, username, password);
+			System.out.println("Connected to the database");
+			
+		} catch(SQLException e) {	
+			System.out.println("Opps, error!");
+			e.printStackTrace();
+		}
+
+		return connection;
 	}
+
+	public static void main(String[] args) {
+		
+		Connection conn = getConnect("warehouse_control", "root", "chkdsk");
+		
+		if(conn != null) System.out.println("yes man");
+		else System.out.println("not ok");
+
+		
+
+	}
+
+
+//	public static void main(String[] args) throws SQLException {
+//		if(getConectionControl("root", "chkdsk") != null) System.out.println("ok");;
+//	}
 }
