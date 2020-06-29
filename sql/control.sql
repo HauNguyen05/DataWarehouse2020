@@ -71,3 +71,15 @@ INSERT INTO `data_config_log` VALUES (3, 'sinhvien_chieu_nhom15.xlsx', 'ER', 'xl
 INSERT INTO `data_config_log` VALUES (3, 'sinhvien_chieu_nhom5.txt', 'TF', 'txt', 0, 1, '|');
 
 SET FOREIGN_KEY_CHECKS = 1;
+*/
+ALTER TABLE data_config
+ADD dbwarehouse_name varchar(255);
+
+ALTER TABLE data_config
+ADD dbwarehouse_user varchar(255);
+
+ALTER TABLE data_config
+ADD dbwarehouse_password varchar(255);
+
+*/
+
