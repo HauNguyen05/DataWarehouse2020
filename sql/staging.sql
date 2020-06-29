@@ -47,5 +47,5 @@ create table data(
 `9` nvarchar(255),
 `10` nvarchar(255),
 `11` nvarchar(255)
-);
+)ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
