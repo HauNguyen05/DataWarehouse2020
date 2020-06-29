@@ -14,12 +14,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -36,14 +35,15 @@ public class ExtractFileToStaging {
 	public void createTable(int column_number, String nameTable) {
 		PreparedStatement pre = null;
 		try {
+			// Tao cau query
 			StringBuilder sql = new StringBuilder();
-			sql.append("create table " + nameTable + "(");
+			sql.append("create table if not exists " + nameTable + "(");
 			for (int i = 0; i < column_number; i++) {
-				sql.append("`" + (i + 1) + "` nvarchar(255),");
 				if (i == column_number - 1) {
 					sql.append("`" + (i + 1) + "` nvarchar(255) )");
+				} else {
+					sql.append("`" + (i + 1) + "` nvarchar(255),");
 				}
-
 			}
 			// CONNECTION_STAGING.setAutoCommit(false);
 			pre = CONNECTION_STAGING.prepareStatement(sql.toString());
@@ -56,43 +56,85 @@ public class ExtractFileToStaging {
 
 	public boolean addFileExcel(String path, String tableName, int column_number)
 			throws ClassNotFoundException, SQLException, IOException {
+		Workbook workbook = null;
+		InputStream inputStream = null;
 		try {
-			InputStream inputStream = new FileInputStream(new File(path));
-			Workbook workbook = new XSSFWorkbook(inputStream);
+			PreparedStatement statement = null;
+			CONNECTION_STAGING.setAutoCommit(false);
+			// Tao cau query
+			StringBuilder sql = new StringBuilder();
+			sql.append("insert into " + tableName);
+			sql.append(" value(");
+			for (int i = 0; i < column_number; i++) {
+				if (i == column_number - 1) {
+					sql.append("?)");
+					break;
+				}
+				sql.append("?,");
+			}
+			// Mo file xlsx bang thu vien poi
+			inputStream = new FileInputStream(new File(path));
+			workbook = new XSSFWorkbook(inputStream);
 			Sheet sheet = workbook.getSheetAt(0);
-			// Get iterator to all the rows in current sheet
+			// Duyet iterator
 			Iterator<Row> rowIterator = sheet.iterator();
-			// Traversing over each row of XLSX file
+			DataFormatter objDefaultFormat = new DataFormatter();
+			//Bo qua dong dau tien vi la field name
 			rowIterator.next();
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
-				List<String> data = new ArrayList<String>();
-				// For each row, iterate through each columns
-				Iterator<Cell> cellIterator = row.cellIterator();
-				int count = 1;
+				int index =  column_number;
+			//	System.out.println(index);
+				statement = CONNECTION_STAGING.prepareStatement(sql.toString());
+				// Duyet vong for theo so column trong table config
 				for (int i = 0; i < column_number; i++) {
 					Cell cell = row.getCell(i);
 					if (cell == null) {
-						data.add("");
+						statement.setString(i + 1, "");
+						index--;
 					} else {
-						data.add(cell.toString());
+						switch (cell.getCellType()) {
+						case NUMERIC:
+							Double d = (Double) cell.getNumericCellValue();
+							// Set gia tri preparestatement
+							statement.setDouble(i + 1, d);
+							break;
+						case BLANK:
+							// Set gia tri preparestatement
+							statement.setString(i + 1, "");
+							break;
+						case STRING:
+							// Set gia tri preparestatement
+							statement.setString(i + 1, cell.toString());
+							break;
+						}
 					}
-
 				}
-				// add data to database staging
-				if (!addData(data, tableName, column_number)) {
-					System.out.println("addFileExcel failure");
-					BW.write("thêm data không thành công");
-					return false;
+				// Thuc thi statement
+				if(index!=1) {
+				statement.executeUpdate();
+				CONNECTION_STAGING.commit();
+				}else {
+					statement.close();
 				}
 			}
+			System.out.println("add thành công");
+			workbook.close();
+			inputStream.close();
+			return true;
 		} catch (Exception e) {
+		
+			// dong file
+			inputStream.close();
+			workbook.close();
+			//  Rollback khi xay ra loi
+			CONNECTION_STAGING.rollback();
 			System.out.println("addFileExcel failure " + e);
-			BW.write("thêm data không thành công");
+			BW.write("thêm data thất bại \r\n");
+			BW.write("Bug: " + e + " \r\n");
+			BW.flush();
 			return false;
 		}
-
-		return true;
 
 	}
 
@@ -109,57 +151,21 @@ public class ExtractFileToStaging {
 //
 //	}
 
-	public boolean addData(List<String> data, String table_name_des, int column_number)
-			throws ClassNotFoundException, SQLException, IOException {
-		PreparedStatement statement = null;
-		try {
-			CONNECTION_STAGING.setAutoCommit(false);
-			StringBuilder sql = new StringBuilder();
-			sql.append("insert into " + table_name_des);
-			sql.append(" value(");
-			for (int i = 0; i < column_number; i++) {
-				if (i == data.size() - 1) {
-					sql.append("?)");
-					break;
-				}
-				sql.append("?,");
-			}
-
-			statement = CONNECTION_STAGING.prepareStatement(sql.toString());
-			for (int i = 0; i < column_number; i++) {
-				statement.setString(i + 1, data.get(i));
-			}
-			statement.executeUpdate();
-			CONNECTION_STAGING.commit();
-			return true;
-		} catch (SQLException e1) {
-			if (CONNECTION_STAGING != null) {
-				try {
-					CONNECTION_STAGING.rollback();
-					System.out.println(" addData khong thanh cong");
-					BW.write("Bug: JDBC không thể thêm data \r\n");
-					BW.flush();
-				} catch (SQLException e11) {
-					e11.printStackTrace();
-				}
-			}
-		}
-		return false;
-	}
-
+	//Chuyen file den thu muc error
 	public void moveFileToError(String file) {
 		File f = new File(file);
 		String newPath = f.getParent() + File.separator + "Error" + File.separator + f.getName();
 		try {
 			Files.move(Paths.get(file), Paths.get(newPath), StandardCopyOption.REPLACE_EXISTING);
 			BW.write("Move file " + f.getName() + " to folder error \r\n");
+			BW.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Move file thanh bai");
+			System.out.println("Move file thất bại " + e);
 		}
 	}
 
+	// Thuc hien chuyen file den thu muc success
 	public void moveFileToSuccess(String file) {
 		File f = new File(file);
 		String newPath = f.getParent() + File.separator + "Successfully" + File.separator + f.getName(); // path folder
@@ -167,65 +173,82 @@ public class ExtractFileToStaging {
 			Files.move(Paths.get(file), Paths.get(newPath), StandardCopyOption.REPLACE_EXISTING);
 			BW.write("Move file " + f.getName() + "  to folder successfully \r\n");
 		} catch (IOException e) {
-			System.out.println("Move file thanh bai");
+			System.out.println("Move file thất bại " + e);
 		}
 	}
 
-	// Load data File CSV to Staging
 	public void loadToStaging(String path_dir_src, String file_name, String delimetter, int ignore_record,
 			String file_type, String table_name_des, int column_number, boolean unzip)
 			throws ClassNotFoundException, SQLException, IOException {
+		// Tao duong dan den file
 		String path = path_dir_src + "//" + file_name; // path File
 		File file = new File(path);
 		boolean check = false;
+		// Kiem tra file ton tai hay khong
 		if (!file.exists()) {
 			System.out.println("file not found");
-			BW.write("Bug: file không tồn tại \r\n");
+			BW.write("Bug: file khong ton tai \r\n");
+			BW.flush();
 			return;
 		} else {
-			try {
-				if (file_type.equals("xlsx")) {
-					check = addFileExcel(path, table_name_des, column_number);
-				} else {
-
+			// Kiem tra type file
+			if (file_type.equals("xlsx")) {
+				// Chay ham load file xlsx
+				check = addFileExcel(path, table_name_des, column_number);
+			} else {
+				// Chay ham file txt,csv
+				try {
+					// Tao cau query load all file vao staging
 					String loadQuery = "LOAD DATA INFILE '" + path + "' INTO TABLE data FIELDS TERMINATED BY '\\"
 							+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record + " LINES";
 					System.out.println(loadQuery);
 					PreparedStatement state = CONNECTION_STAGING.prepareStatement(loadQuery);
+					CONNECTION_STAGING.setAutoCommit(false);
+					// Thuc thi cau query
 					state.executeUpdate();
+					CONNECTION_STAGING.commit();
 					state.close();
 					check = true;
-				}
-				if (check) {
-					BW.write("thêm data thành công \r\n");
+					System.out.println("Them data thanh cong");
+				} catch (Exception e) {
+					// rollback khi them data bi loi
+					System.out.println("rollback");
+					BW.write("Bug: " + e + " \r\n");
 					BW.flush();
-					// chuyen doi trang thai file
-					changeStatusFile(file_name, "TF");
-					// chuyen file den thu muc thanh cong
-					moveFileToSuccess(path);
-				} else {
-					// moveFileToError(path);
+					CONNECTION_STAGING.rollback();
+					check = false;
 				}
-			} catch (Exception e) {
-				System.out.println(" loadToStaging that bai ");
-				BW.write("thêm data thất bại \r\n");
-				BW.flush();
-				check = false;
-				// chuyen file den thu muc error
-				moveFileToError(path);
-			
 			}
+			// Kiem tra load data thanh cong hay khong
+			if (check) {
+				// Ghi vao file logs
+				BW.write("Them data thanh cong \r\n");
+				BW.flush();
+				// Chuyen trang thai file thanh 'TF'
+				changeStatusFile(file_name, "TF");
+				// Chuyen file den thu muc successfully
+				moveFileToSuccess(path);
+			} else {
+				// Chuyen file den thu muc error neu loi
+				moveFileToError(path);
+			}
+
 		}
 	}
 
 	public void changeStatusFile(String fileName, String status) throws SQLException, IOException {
 		// TODO Auto-generated method stub
+		// Tao cau query update logs
 		String update = "UPDATE `data_config_log` SET status =? WHERE file_name=?";
 		PreparedStatement statement = CONNECTION_CONTROL.prepareStatement(update);
+		// set cac gia tri trong preparestatement
 		statement.setString(1, status);
 		statement.setString(2, fileName);
 		statement.executeUpdate();
+		statement.close();
+		// Ghi logs
 		BW.write("Thay doi status  thanh '" + status + "' \r\n");
+		BW.flush();
 	}
 
 	public void insetDataAllFile() throws SQLException, IOException, ClassNotFoundException {
@@ -234,9 +257,11 @@ public class ExtractFileToStaging {
 		int column_number = 0;
 		boolean unzip = false;
 		int ignore_record;
+		// Tao connection den database controll, neu khac null thi bo qua .
 		if (CONNECTION_CONTROL == null) {
-			CONNECTION_CONTROL = ConnectDB.getConectionControl("root","0985153812");
+			CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "0985153812");
 		}
+		// Tao cau truy van query
 		String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
 				+ " on data_config_log.id = data_config.id where status = 'ER'";
 		PreparedStatement statement1 = CONNECTION_CONTROL.prepareStatement(sql);
@@ -256,35 +281,43 @@ public class ExtractFileToStaging {
 			file_name = r.getString(12);
 			column_number = Integer.valueOf(r.getString(13));
 			file_logs = r.getString(14);
+			//Tao connection den database staging, neu khac null thi bo qua
 			if (CONNECTION_STAGING == null) {
 				CONNECTION_STAGING = ConnectDB.getConnection(destination, server_des, databasse, user_des, pwd_des);
 			}
-			BW = new BufferedWriter(new FileWriter(new File(file_logs), true));
+			// Tao file logs va doi tuong FileWriter ghi vao logs
+			File file = new File(path_dir_src + "\\" + "logs" + "\\" + file_logs);
+			BW = new BufferedWriter(new FileWriter(file, true));
 			BW.write("\r\n");
-			BW.write("file: " + file_name + " " +new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date()) + "\r\n");
+			BW.write("file: " + file_name + " " + new SimpleDateFormat("HH:mm:ss dd.MM.yyyy").format(new Date())
+					+ "\r\n");
 			BW.flush();
 			try {
-			loadToStaging(path_dir_src, file_name, delimiter, ignore_record, file_type, table_name_des, column_number,
-					unzip);
-			}catch(Exception e) {
-				System.out.println(e);
-				BW.write("Bug:"+e+" \r\n");
+				// Taoj table data neu chua co
+				createTable(column_number, table_name_des);
+				// load data vao staging
+				loadToStaging(path_dir_src, file_name, delimiter, ignore_record, file_type, table_name_des,
+						column_number, unzip);
+			} catch (Exception e) {
+				// Ghi bug vao logs
+				BW.write("Them data that bai \r\n");
+				BW.write("Bug:" + e + " \r\n");
 				BW.flush();
 				continue;
 			}
 			System.out.println("---------------------------------");
 			BW.write("--------------------------------- \r\n");
 			BW.flush();
-			continue;
 		}
 		BW.close();
+		CONNECTION_CONTROL.close();
+		CONNECTION_STAGING.close();
 	}
 
 	public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException {
 		ExtractFileToStaging a = new ExtractFileToStaging();
 		a.insetDataAllFile();
-		// a.moveFileToError("E:\\warehouse2020\\sinhvien_chieu_nhom1.txt");
-		// a.unzip("E://warehouse2020//sinhvien_chieu_nhom5.rar", "E://warehouse2020");
+		System.out.println();
 //
 	}
 

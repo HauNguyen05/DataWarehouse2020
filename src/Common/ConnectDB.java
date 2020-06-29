@@ -12,6 +12,7 @@ public class ConnectDB {
 			String url = "jdbc:mysql://localhost:3306/warehouse_control?useSSL=false";
 			return DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {
+			System.out.println(e);
 			// TODO Auto-generated catch block
 			System.out.println("Conneciton connectionConfig failure!");
 			return null;
