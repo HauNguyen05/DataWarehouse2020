@@ -118,7 +118,7 @@ public class ExtractFileToStaging {
 					statement.close();
 				}
 			}
-			System.out.println("add thành công");
+			System.out.println("add thanh cong");
 			workbook.close();
 			inputStream.close();
 			return true;
@@ -130,7 +130,7 @@ public class ExtractFileToStaging {
 			//  Rollback khi xay ra loi
 			CONNECTION_STAGING.rollback();
 			System.out.println("addFileExcel failure " + e);
-			BW.write("thêm data thất bại \r\n");
+			BW.write("Them data that bai \r\n");
 			BW.write("Bug: " + e + " \r\n");
 			BW.flush();
 			return false;
@@ -161,7 +161,7 @@ public class ExtractFileToStaging {
 			BW.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Move file thất bại " + e);
+			System.out.println("Move file that bai " + e);
 		}
 	}
 
@@ -173,7 +173,7 @@ public class ExtractFileToStaging {
 			Files.move(Paths.get(file), Paths.get(newPath), StandardCopyOption.REPLACE_EXISTING);
 			BW.write("Move file " + f.getName() + "  to folder successfully \r\n");
 		} catch (IOException e) {
-			System.out.println("Move file thất bại " + e);
+			System.out.println("Move file that bai " + e);
 		}
 	}
 
@@ -263,7 +263,7 @@ public class ExtractFileToStaging {
 		}
 		// Tao cau truy van query
 		String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
-				+ " on data_config_log.id = data_config.id where status = 'ER'";
+				+ " on data_config_log.id = data_config.id where status = 'ER' limit 1";
 		PreparedStatement statement1 = CONNECTION_CONTROL.prepareStatement(sql);
 		ResultSet r = statement1.executeQuery();
 		while (r.next()) {
