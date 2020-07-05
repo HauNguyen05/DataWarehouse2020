@@ -1,4 +1,5 @@
-package Component_1;
+package component_1;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +11,7 @@ import com.chilkatsoft.CkGlobal;
 import com.chilkatsoft.CkScp;
 import com.chilkatsoft.CkSsh;
 
-import Common.ConnectDB;
+import common.ConnectDB;
 
 public class DownloadFile {
 	private String server;

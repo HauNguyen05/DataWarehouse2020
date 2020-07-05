@@ -1,4 +1,5 @@
-package Component_1;
+package component_1;
+
 
 import java.util.HashMap;
 import java.util.Map;

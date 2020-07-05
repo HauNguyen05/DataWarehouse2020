@@ -1,0 +1,37 @@
+
+file: sinhvien_chieu_nhom4.txt 13:46:57 05.07.2020
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_chieu_nhom4.txt 14:02:51 05.07.2020
+
+file: sinhvien_chieu_nhom4.txt 14:04:45 05.07.2020
+Thay doi status  thanh 'FAIL' 
+Move file sinhvien_chieu_nhom4.txt to folder error 
+Bug: java.sql.SQLException: Row 1 doesn't contain data for all columns
+--------------------------------- 
+
+file: sinhvien_chieu_nhom5.zip 14:06:33 05.07.2020
+
+file: sinhvien_chieu_nhom5.zip 14:07:34 05.07.2020
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_chieu_nhom6.xlsx 14:24:27 05.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom6.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom5.zip 14:25:27 05.07.2020
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_chieu_nhom5.zip 14:26:21 05.07.2020
+Thay doi status  thanh 'FAIL' 
+Move file sinhvien_chieu_nhom5.zip to folder error 
+Bug: java.lang.NullPointerException: Khong ho tro dinh dang file:zip
+--------------------------------- 
+
+file: sinhvien_chieu_nhom11.xlsx 14:27:26 05.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom11.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
