@@ -67,71 +67,73 @@ public class ExtractFileToStaging {
 		boolean check = false;
 		Workbook workbook = null;
 		InputStream inputStream = null;
-
-		PreparedStatement statement = null;
-		CONNECTION_STAGING.setAutoCommit(false);
-		// Tao cau query
-		StringBuilder sql = new StringBuilder();
-		sql.append("insert into " + tableName);
-		sql.append(" value(");
-		for (int i = 0; i < column_number; i++) {
-			if (i == column_number - 1) {
-				sql.append("?)");
-				break;
-			}
-			sql.append("?,");
-		}
-		// Mo file xlsx bang thu vien poi
-		inputStream = new FileInputStream(new File(path));
-		workbook = new XSSFWorkbook(inputStream);
-		Sheet sheet = workbook.getSheetAt(0);
-		// Duyet iterator
-		Iterator<Row> rowIterator = sheet.iterator();
-		DataFormatter objDefaultFormat = new DataFormatter();
-		// Bo qua dong dau tien vi la field name
-		rowIterator.next();
-		while (rowIterator.hasNext()) {
-			Row row = rowIterator.next();
-			int index = column_number;
-			// System.out.println(index);
-			statement = CONNECTION_STAGING.prepareStatement(sql.toString());
-			// Duyet vong for theo so column trong table config
+		try {
+			PreparedStatement statement = null;
+			CONNECTION_STAGING.setAutoCommit(false);
+			// Tao cau query
+			StringBuilder sql = new StringBuilder();
+			sql.append("insert into " + tableName);
+			sql.append(" value(");
 			for (int i = 0; i < column_number; i++) {
-				Cell cell = row.getCell(i);
-				if (cell == null) {
-					statement.setString(i + 1, "");
-					index--;
-				} else {
-					switch (cell.getCellType()) {
-					case NUMERIC:
-						Double d = (Double) cell.getNumericCellValue();
-						// Set gia tri preparestatement
-						statement.setDouble(i + 1, d);
-						break;
-					case BLANK:
-						// Set gia tri preparestatement
+				if (i == column_number - 1) {
+					sql.append("?)");
+					break;
+				}
+				sql.append("?,");
+			}
+			// Mo file xlsx bang thu vien poi
+			inputStream = new FileInputStream(new File(path));
+			workbook = new XSSFWorkbook(inputStream);
+			Sheet sheet = workbook.getSheetAt(0);
+			// Duyet iterator
+			Iterator<Row> rowIterator = sheet.iterator();
+			DataFormatter objDefaultFormat = new DataFormatter();
+			// Bo qua dong dau tien vi la field name
+			rowIterator.next();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				int index = column_number;
+				// System.out.println(index);
+				statement = CONNECTION_STAGING.prepareStatement(sql.toString());
+				// Duyet vong for theo so column trong table config
+				for (int i = 0; i < column_number; i++) {
+					Cell cell = row.getCell(i);
+					if (cell == null) {
 						statement.setString(i + 1, "");
-						break;
-					case STRING:
-						// Set gia tri preparestatement
-						statement.setString(i + 1, cell.toString());
-						break;
+						index--;
+					} else {
+						switch (cell.getCellType()) {
+						case NUMERIC:
+							Double d = (Double) cell.getNumericCellValue();
+							// Set gia tri preparestatement
+							statement.setDouble(i + 1, d);
+							break;
+						case BLANK:
+							// Set gia tri preparestatement
+							statement.setString(i + 1, "");
+							break;
+						case STRING:
+							// Set gia tri preparestatement
+							statement.setString(i + 1, cell.toString());
+							break;
+						}
 					}
 				}
+				// Thuc thi statement
+				if (index != 1) {
+					statement.executeUpdate();
+					CONNECTION_STAGING.commit();
+				} else {
+					statement.close();
+				}
 			}
-			// Thuc thi statement
-			if (index != 1) {
-				statement.executeUpdate();
-				CONNECTION_STAGING.commit();
-			} else {
-				statement.close();
-			}
-		}
-		System.out.println("add thanh cong");
-		workbook.close();
-		inputStream.close();
-		return check;
+			System.out.println("add thanh cong");
 
+			return check;
+		} finally {
+			workbook.close();
+			inputStream.close();
+		}
 	}
 
 //	public void unzip(String source, String des) {
@@ -150,7 +152,9 @@ public class ExtractFileToStaging {
 	// Chuyen file den thu muc error
 	public void moveFileToError(String file) throws Exception {
 		File f = new File(file);
-		String newPath = f.getParent() + File.separator + "Error" + File.separator + f.getName();
+		File parent = new File(f.getParent() + File.separator + "Error");
+		parent.mkdir();
+		String newPath = parent + File.separator + f.getName();
 		Files.move(Paths.get(file), Paths.get(newPath), StandardCopyOption.REPLACE_EXISTING);
 		BW.write("Move file " + f.getName() + " to folder error \r\n");
 		BW.flush();
@@ -160,7 +164,9 @@ public class ExtractFileToStaging {
 	// Thuc hien chuyen file den thu muc success
 	public void moveFileToSuccess(String file) throws Exception {
 		File f = new File(file);
-		String newPath = f.getParent() + File.separator + "Successfully" + File.separator + f.getName(); // path folder
+		File parent = new File(f.getParent() + File.separator + "Successfully");
+		parent.mkdir();
+		String newPath = parent + File.separator + f.getName();
 		Files.move(Paths.get(file), Paths.get(newPath), StandardCopyOption.REPLACE_EXISTING);
 		BW.write("Move file " + f.getName() + "  to folder successfully \r\n");
 		System.out.println("move successfully");
@@ -177,7 +183,7 @@ public class ExtractFileToStaging {
 			if (file_type.equals("xlsx")) {
 				// Chay ham load file xlsx
 				addFileExcel(path, table_name_des, column_number);
-			} else if(file_type.equals("txt") || file_type.equals("csv")) {
+			} else if (file_type.equals("txt") || file_type.equals("csv")) {
 				// Chay ham file txt,csv
 				String loadQuery = "LOAD DATA INFILE '" + path + "' INTO TABLE data FIELDS TERMINATED BY '\\"
 						+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record + " LINES";
@@ -189,16 +195,16 @@ public class ExtractFileToStaging {
 				CONNECTION_STAGING.commit();
 				state.close();
 				System.out.println("Them data thanh cong");
-			}else {
-				throw new NullPointerException("Khong ho tro dinh dang file:"+file_type);
+			} else {
+				throw new Exception("Khong ho tro dinh dang file:" + file_type);
 			}
 			// Chuyen trang thai file thanh 'TF'
 			changeStatusFile(file_name, "TF");
 			// Chuyen file den thu muc successfully
 			moveFileToSuccess(path);
-			//send mail
-			JavaMail.send(EMAIL, SUBJECT, "load file: "+file_name+"\n Thanh cong");
-			//ghi logs
+			// send mail
+			JavaMail.send(EMAIL, SUBJECT, "load file: " + file_name + "\nThanh cong");
+			// ghi logs
 			BW.write("Them du lieu thanh cong \r\n");
 			BW.flush();
 		} catch (Exception e) {
@@ -256,7 +262,9 @@ public class ExtractFileToStaging {
 				CONNECTION_STAGING = ConnectDB.getConnection(destination, server_des, databasse, user_des, pwd_des);
 			}
 			// Tao file logs va doi tuong FileWriter ghi vao logs
-			File file = new File(path_dir_src + "\\" + "logs" + "\\" + file_logs);
+			File parent = new File(path_dir_src + "\\" + "logs");
+			parent.mkdir();
+			File file = new File(parent + "\\" + file_logs);
 			System.out.println(file.getAbsolutePath());
 			BW = new BufferedWriter(new FileWriter(file, true));
 			BW.write("\r\n");
@@ -281,16 +289,16 @@ public class ExtractFileToStaging {
 	public void handleExcetion(Exception e, String fileName, String path) throws Exception {
 
 		if (e instanceof SQLException) {
-			//rollback du lieu
+			// rollback du lieu
 			CONNECTION_STAGING.rollback();
 		}
 		// chuyen doi trang thai
 		changeStatusFile(fileName, "FAIL");
 		// Chuyen file den thu muc error neu loi
 		moveFileToError(path);
-		//send mail
-		 JavaMail.send(EMAIL, SUBJECT, "load file: "+fileName+"\n That bai \n Bug: "+ e);
-		//ghi logs
+		// send mail
+		JavaMail.send(EMAIL, SUBJECT, "load file: " + fileName + "\nThat bai \nBug: " + e);
+		// ghi logs
 		BW.write("Bug: " + e + "\r\n");
 		BW.flush();
 	}

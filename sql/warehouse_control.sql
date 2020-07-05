@@ -45,7 +45,7 @@ CREATE TABLE `data_config`  (
 -- ----------------------------
 -- Records of data_config
 -- ----------------------------
-INSERT INTO `data_config` VALUES (1, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D://DataWarehouse2020//data//source', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', '0985153812', 'data', '11', 'STT,MSSV,Họ Lót ,Tên SV,Ngày sinh,Mã Lớp,Lớp,Số điện thoại,Email,Quê quán,Ghi Chú', 'log_config_3.txt', 'sinhvien_sang_nhom, sinhvien_chieu_nhom');
+INSERT INTO `data_config` VALUES (1, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'E:\\Java\\spring_mvc\\DataWarehouse2020\\data\\source', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', '0985153812', 'data', '11', 'STT,MSSV,Họ Lót ,Tên SV,Ngày sinh,Mã Lớp,Lớp,Số điện thoại,Email,Quê quán,Ghi Chú', 'log_config_3.txt', 'sinhvien_sang_nhom, sinhvien_chieu_nhom');
 
 -- ----------------------------
 -- Table structure for data_config_log
