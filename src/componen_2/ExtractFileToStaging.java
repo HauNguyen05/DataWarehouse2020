@@ -1,11 +1,14 @@
 package componen_2;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -177,8 +180,18 @@ public class ExtractFileToStaging {
 		// Tao duong dan den file
 		String path = path_dir_src + "//" + file_name; // path File
 		PreparedStatement state = null;
+		int countLineFile = 0;
+		int countAfterAddFile = 0;
+		int countBeforeAddFile = 0;
 		try {
+
 			File file = new File(path);
+			// dem so dong trong file
+			countLineFile = countLineFile(path);
+			System.out.println("countLineFile : " + countLineFile);
+			// dem so dong trong staging truoc khi add file
+			countBeforeAddFile = countLineDB(table_name_des);
+			System.out.println("countBeforeAddFile : " + countBeforeAddFile);
 			// Kiem tra type file
 			if (file_type.equals("xlsx")) {
 				// Chay ham load file xlsx
@@ -192,12 +205,23 @@ public class ExtractFileToStaging {
 				CONNECTION_STAGING.setAutoCommit(false);
 				// Thuc thi cau query
 				state.executeUpdate();
+
+				countAfterAddFile = countLineDB(table_name_des);
+				System.out.println("countAfterAddFile : " + countAfterAddFile);
+				if (countLineFile != (countAfterAddFile - countBeforeAddFile)) {
+					throw new SQLException("them du lieu khong du dong");
+				}
+
 				CONNECTION_STAGING.commit();
 				state.close();
 				System.out.println("Them data thanh cong");
 			} else {
 				throw new Exception("Khong ho tro dinh dang file:" + file_type);
 			}
+			// dem so dong trong staging sau khi add file
+
+			// kiem tra so dong co bang nhau khong
+
 			// Chuyen trang thai file thanh 'TF'
 			changeStatusFile(file_name, "TF");
 			// Chuyen file den thu muc successfully
@@ -207,7 +231,9 @@ public class ExtractFileToStaging {
 			// ghi logs
 			BW.write("Them du lieu thanh cong \r\n");
 			BW.flush();
+
 		} catch (Exception e) {
+			// CONNECTION_STAGING.rollback();
 			handleExcetion(e, file_name, path);
 		}
 	}
@@ -262,16 +288,7 @@ public class ExtractFileToStaging {
 				CONNECTION_STAGING = ConnectDB.getConnection(destination, server_des, databasse, user_des, pwd_des);
 			}
 			// Tao file logs va doi tuong FileWriter ghi vao logs
-			File parent = new File(path_dir_src + "\\" + "logs");
-			parent.mkdir();
-			File file = new File(parent + "\\" + file_logs);
-			System.out.println(file.getAbsolutePath());
-			BW = new BufferedWriter(new FileWriter(file, true));
-			BW.write("\r\n");
-			BW.write("file: " + file_name + " " + new SimpleDateFormat("HH:mm:ss dd.MM.yyyy").format(new Date())
-					+ "\r\n");
-			BW.flush();
-			String path_file = path_dir_src + "//" + file_name;
+			createFileLogs(path_dir_src, file_logs, file_name);
 			// Taoj table data neu chua co
 			createTable(column_number, table_name_des);
 			// load data vao staging
@@ -287,19 +304,58 @@ public class ExtractFileToStaging {
 	}
 
 	public void handleExcetion(Exception e, String fileName, String path) throws Exception {
-
-		if (e instanceof SQLException) {
-			// rollback du lieu
-			CONNECTION_STAGING.rollback();
-		}
 		// chuyen doi trang thai
 		changeStatusFile(fileName, "FAIL");
-		// Chuyen file den thu muc error neu loi
-		moveFileToError(path);
 		// send mail
 		JavaMail.send(EMAIL, SUBJECT, "load file: " + fileName + "\nThat bai \nBug: " + e);
 		// ghi logs
 		BW.write("Bug: " + e + "\r\n");
+		BW.flush();
+		if (e instanceof SQLException) {
+			// rollback du lieu
+			CONNECTION_STAGING.rollback();
+		} else if (e instanceof FileNotFoundException) {
+			return;
+		}
+
+		// Chuyen file den thu muc error neu loi
+		moveFileToError(path);
+
+	}
+
+	public int countLineFile(String file) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(file))));
+		br.readLine();
+		int count = 0;
+		while (br.readLine() != null) {
+			count++;
+		}
+		br.close();
+		return count;
+	}
+
+	public int countLineDB(String table) throws SQLException {
+		ResultSet r = null;
+		PreparedStatement pre = null;
+		int count = 0;
+		String sql = "select count(`1`) as count from " + table;
+		pre = CONNECTION_STAGING.prepareStatement(sql);
+		r = pre.executeQuery();
+		while (r.next()) {
+			count = Integer.valueOf(r.getString(1));
+		}
+		pre.close();
+		r.close();
+		return count;
+	}
+
+	public void createFileLogs(String pathDirSrc, String fileLogs, String fileName) throws IOException {
+		File parent = new File(pathDirSrc + "\\" + "logs");
+		parent.mkdir();
+		File file = new File(parent + "\\" + fileLogs);
+		BW = new BufferedWriter(new FileWriter(file, true));
+		BW.write("\r\n");
+		BW.write("file: " + fileName + " " + new SimpleDateFormat("HH:mm:ss dd.MM.yyyy").format(new Date()) + "\r\n");
 		BW.flush();
 	}
 

@@ -40,4 +40,4 @@ STT|Mã sinh viên|Họ lót|Tên|Ngay Sinh|Mã lớp|Tên lớp|ĐT liên lạc
 37|17130221|Nguyễn Chí|Thiện|15-08-1999|DH17DTC|Công nghệ thông tin C|0123456789|mssvst@hcmuaf.edu.vn|Bến Tre|
 38|17130225|Hoàng Trường|Thịnh|15-08-1999|DH17DTC|Công nghệ thông tin C|0123456789|mssvst@hcmuaf.edu.vn|Bến Tre|
 39|17130247|Trần Văn|Tình|15-08-1999|DH17DTA|Công nghệ thông tin A|0123456789|mssvst@hcmuaf.edu.vn|Bến Tre|
-40|17130246|Nguyễn Thanh|Tính|15-08-1999|DH17DTA|Công nghệ thông tin A|0123456789|mssvst@hcmuaf.edu.vn|Bến Tre|
+39|17130247|Trần Văn|Tình|15-08-1999|DH17DTA|Công nghệ thông tin A|0123456789|mssvst@hcmuaf.edu.vn|Bến Tre||
