@@ -1,0 +1,62 @@
+STT|MSSV|Họ Lót |Tên SV|Ngày sinh|Mã Lớp|Lớp|Số điện thoại|Email|Quê quán|Ghi Chú
+1|14138091|Lê Tuấn|Anh|02/05/1995|DH14TD|LN|0377026696|14138091@st.hcmuaf.edu.vn|Đăk Nông|
+2|14138096|Dương Công Phúc|Thịnh|31/03/1996|DH14TD|LN|0583594226|14138096@st.hcmuaf.edu.vn|An Giang|
+3|15118011|Vũ Thu|Hà|14/06/1997|DH15CC|KT|0398551770|15118011@st.hcmuaf.edu.vn|Bình Định|
+4|15118029|Lâm Thị|Vĩnh|20/09/1997|DH15CC|KT|0355404422|15118029@st.hcmuaf.edu.vn|Bình Thuận|
+5|15118034|Lương Sĩ|Mưu|17/12/1997|DH15CC|TS|0337417896|15118034@st.hcmuaf.edu.vn|Cà Mau|
+6|15118044|Bùi Thị|Hoan|11/7/1997|DH15CC|NH|0368104148|15118044@st.hcmuaf.edu.vn|Đăk lăk|
+7|15118064|Võ Hoàng|Phúc|20/03/1997|DH15CC|KT|0974726048|15118064@st.hcmuaf.edu.vn|Đăk Nông|
+8|15118091|Cao Văn|Quynh|22/01/1997|DH15CC|LN|0395855034|15118091@st.hcmuaf.edu.vn|Đồng Tháp|
+9|15118130|Sư Văn|Sang|11/4/1997|DH15CC|TS|0823664546|15118130@st.hcmuaf.edu.vn|Gia Lai|
+10|15153018|Lê Văn|Ngân|17/10/1997|DH15CD|TS|0962172022|15153018@st.hcmuaf.edu.vn|Hà Nam|
+11|15153028|Dương Vũ|Trường|15/09/1997|DH15CD|TS|0961636232|15153028@st.hcmuaf.edu.vn|Hà Tĩnh|
+12|15153034|Nguyễn Văn|Hải|25/12/1997|DH15CD|TS|0374833732|15153034@st.hcmuaf.edu.vn|Hải Dương|
+13|15153037|Nguyễn Đức Trọng|Quý|01/01/1997|DH15CD|CK|0368790036|15153037@st.hcmuaf.edu.vn|Hưng Yên|
+14|15153040|Trần Thị Tú|Anh|20/12/1997|DH15CD|KT|0379845694|15153040@st.hcmuaf.edu.vn|Khánh Hòa|
+15|15153041|Huỳnh Thị Thanh|Hằng|29/11/1997|DH15CD|KT|0326161659|15153041@st.hcmuaf.edu.vn|Kiên Giang|
+16|15153047|Nguyễn Thị Thùy|Liên|22/03/1997|DH15CD|KT|0928117881|15153047@st.hcmuaf.edu.vn|Kom Tum |
+17|15153054|Trần Thị Huỳnh|Như|09/12/1997|DH15CD|KT|0326128308|15153054@st.hcmuaf.edu.vn|Lâm Đồng|
+18|15153056|Trần Hoài|Thương|26/01/1997|DH15CD|KT|0398525235|15153056@st.hcmuaf.edu.vn|Nam Định|
+19|15118041|Ngô Ngọc Huyền|Trang|30/6/1997|DH15CK|KT|0964795487|15118041@st.hcmuaf.edu.vn|Nghệ An|
+20|15118055|Mai Nguyễn Phẩm|Duyên|07/04/1997|DH15CK|KT|0969947876|15118055@st.hcmuaf.edu.vn|Ninh Bình|
+21|15118058|Nguyễn Đức|Hào|22/8/1997|DH15CK|KT|0392897855|15118058@st.hcmuaf.edu.vn|Ninh Thuận|
+22|15118089|Nguyễn Linh|Tâm|24/4/1997|DH15CK|KT|0378838601|15118089@st.hcmuaf.edu.vn|Phú Thọ |
+23|15118092|Nguyễn Thị Mỹ|Lệ|04/04/1997|DH15CK|KT|0353711166|15118092@st.hcmuaf.edu.vn|Phú Yên|
+24|15118102|Trần Thị Thái|Thủy|22/03/1997|DH15CK|KT|0981454410|15118102@st.hcmuaf.edu.vn|Quảng Bình|
+25|15118111|Lê Thị Mỹ|Hạnh|28/10/1997|DH15CK|KT|0377369740|15118111@st.hcmuaf.edu.vn|Quảng Nam|
+26|15118121|Huỳnh Trúc|Thiên|05/01/1997|DH15CK|KT|0382552371|15118121@st.hcmuaf.edu.vn|Quảng Ngãi|
+27|15118125|Trần Ngọc Bình|Minh|28/04/1997|DH15CK|KT|0987447132|15118125@st.hcmuaf.edu.vn|Quảng Trị|
+28|15137010|Trần Thị Thanh|Tâm|24/03/1997|DH15NL|KT|0344220790|15137010@st.hcmuaf.edu.vn|Sóc Trăng|
+29|15137017|Huỳnh Thị Huế|Hương|13/11/1997|DH15NL|KT|0393490430|15137017@st.hcmuaf.edu.vn|Thái Bình|
+30|15137040|Nguyễn Hoàng|Trâm|22/11/1997|DH15NL|KT|0981086920|15137040@st.hcmuaf.edu.vn|Thanh Hóa|
+31|15137041|Nguyễn Kim|Huyền|28/03/1996|DH15NL|KT|0945513120|15137041@st.hcmuaf.edu.vn|Thừa Thiên Huế|
+32|15137044|Trần Thị Kim|Yến|16/06/1997|DH15NL|KT|0981612925|15137044@st.hcmuaf.edu.vn|Hải Dương|
+33|15137047|Phan Thanh|Thúy|07/07/1997|DH15NL|KT|0329858458|15137047@st.hcmuaf.edu.vn|Hưng Yên|
+34|15137058|Nguyễn Thị Kiều|Trang|03/03/1997|DH15NL|KT|0337224148|15137058@st.hcmuaf.edu.vn|Nam Định|
+35|15137068|Nguyễn Trọng|Tín|06/02/1996|DH15NL|KT|0942938648|15137068@st.hcmuaf.edu.vn|Ninh Bình|
+36|15154001|Nguyễn Ngọc Kỳ|Duyên|22/11/1997|DH15OT|KT|0925782125|15154001@st.hcmuaf.edu.vn|Phú Thọ |
+37|15154005|Mai Ngọc|Long|12/02/1997|DH15OT|KT|0967157338|15154005@st.hcmuaf.edu.vn|Thái Bình|
+38|15154026|Đậu Đức|Châu|11/09/1997|DH15OT|KT|0972346949|15154026@st.hcmuaf.edu.vn|An Giang|
+39|15154032|Cao Thị|Hiền|03/12/1997|DH15OT|KT|0373924375|15154032@st.hcmuaf.edu.vn|Cà Mau|
+40|15154035|Đan Châu Hạnh|Chi|02/10/1997|DH15OT|KT|0386525445|15154035@st.hcmuaf.edu.vn|Đồng Tháp|
+41|15154046|Nguyễn Thị Ngọc|Giàu|08/03/1997|DH15OT|KT|0853971922|15154046@st.hcmuaf.edu.vn|Kiên Giang| 
+42|17130201|Phạm Nhật|Vượng|05-02-1999|DH17DTA|Công nghệ thông tin A|0949380000|ayaz@sudima.com|Hà Tĩnh|Còn học
+43|17130202|Nguyễn Thị|Phương|10-12-1999|DH17DTA|Công nghệ thông tin A|0949250000|cinemabox2005@yahoo.com|Hà Nội|Còn học
+44|17130203|Trần Đình|Long|15-08-1999|DH17DTA|Công nghệ thông tin A|0994522222|lian27111985@yahoo.com|Hải Dương|Còn học
+45|17130204|Hồ Hùng|Anh|06-09-1999|DH17DTA|Công nghệ thông tin A|0994122222|kieuan08@yahoo.com|Thừa Thiên Huế|Còn học
+46|17130205|Nguyễn Đăng|Quang|01-07-1999|DH17DTA|Công nghệ thông tin A|0997422222|phaman24@yahoo.com|Hà Nội|Còn học
+47|17130206|Phạm Thu|Hương|20-08-1999|DH17DTA|Công nghệ thông tin A|0997772222|b2b12345@yahoo.com.vn|Hà Nội|Còn học	
+48|17130207|Bùi Thành|Nhơn|25-01-1999|DH17DTA|Công nghệ thông tin A|0994442222|mapsaigon270583@yahoo.com|Hải Dương|Còn học
+49|17130208|Phạm Thúy|Hằng|26-11-1999|DH17DTA|Công nghệ thông tin A|0918702222|thienthantuyet@yahoo.com|Hà Nội|Còn học
+50|17130209|Hồ Xuân|Năng|21-12-1999|DH17DTA|Công nghệ thông tin A|0967991111|vanan832001@yahoo.com|Nam Định|Còn học
+51|17130210|Nguyễn Đức|Tài|15-04-1999|DH17DTA|Công nghệ thông tin A|0965651111|mimian2003@yahoo.com|Quảng Ngãi|Còn học
+52|17130211|Nguyễn Văn|Đạt|19-03-1999|DH17DTA|Công nghệ thông tin A|0915651111|hoai_co_21@yahoo.com|Hải Phòng|Còn học
+53|17130212|Đỗ Hữu|Hạ|11-03-1999|DH17DTA|Công nghệ thông tin A|0965651111|tomato2thb@yahoo.com|Hà Nam|Còn học
+54|17130213|Trần Lê|Quân|15-03-1999|DH17DTA|Công nghệ thông tin A|0994441111|thanhcuong1902@yahoo.com|Đà Nẵng|Còn học	
+55|17130214|Trương Thị Lệ|Khanh|18-07-1999|DH17DTA|Công nghệ thông tin A|099641111|Thecuongpham@gmail.com|Nam Định|Còn học
+56|17130215|Nguyễn Hoàng|Yến|28-06-1999|DH17DTA|Công nghệ thông tin A|0943260000|haptn@saigontech.edu.vn|Hà Nội|Còn học
+57|17130216|Trương Gia|Bình|30-04-1999|DH17DTA|Công nghệ thông tin A|0943260000|lucycdsoverseas@yahoo.com|Thái Bình|Còn học
+58|17130217|Trần Tuấn|Dương|21-08-1999|DH17DTA|Công nghệ thông tin A|01242700000|no_one_know_81@yahoo.com|Hà Nam|Còn học	
+59|17130218|Nguyễn Mạnh|Tuấn|08-06-1999|DH17DTA|Công nghệ thông tin A|0947560000|vuhaiha@yahoo.com|Thừa Thiên Huế|
+60|17130219|Chu Thị|Bình|12-04-1999|DH17DTA|Công nghệ thông tin A|0947520000|thanhhieu7777@yahoo.com|Hải Dương|
+61|17130220|Trần Huy Thanh|Tùng|03-05-1999|DH17DTA|Công nghệ thông tin A||dangxuanho@yahoo.com.vn|Thái Bình|
