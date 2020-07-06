@@ -22,7 +22,7 @@ public class DownloadFile {
 	private int port;
 	private static CkSsh ssh;
 	private Connection connectionControl;
-	private CheckFileName check;
+	private CheckFileName checkFileName;
 	static {
 		try {
 			System.loadLibrary("chilkat");
@@ -32,19 +32,12 @@ public class DownloadFile {
 		}
 	}
 
-	public DownloadFile() {
-		try {
-			connectionControl = ConnectDB.getConectionControl("root", "");
-			check = new CheckFileName();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/*
 	 * connect table config to get information
 	 */
 	public void setup(String nameConfig) throws SQLException {
+		connectionControl = ConnectDB.getConectionControl("root", "");
+		checkFileName = new CheckFileName();
 		String sql = "SELECT server_src,user_src, pwd_src, port_src, path_remote, path_dir_src, syntax_file_name from data_config where id ="
 				+ nameConfig;
 		PreparedStatement statement = connectionControl.prepareStatement(sql);
@@ -63,11 +56,14 @@ public class DownloadFile {
 
 	public CkSsh connectServer() {
 		CkGlobal glob = new CkGlobal();
+		//unlock to use api connect server
 		glob.UnlockBundle("key");
 		glob.get_UnlockStatus();
 		ssh = new CkSsh();
+		//connect to server
 		ssh.Connect(server, port);
 		ssh.put_IdleTimeoutMs(5000);
+		// authenticate User
 		ssh.AuthenticatePw(userName, password);
 		return ssh;
 	}
@@ -95,11 +91,11 @@ public class DownloadFile {
 		connectServer();
 		String[] listFileNames = getListFileName();
 		for (String fileName : listFileNames) {
-			boolean isDownload = check.checkFileName(fileName, syntaxFileName);
+			boolean isDownload = checkFileName.checkFileName(fileName, syntaxFileName);
 			if (isDownload) {
 				boolean downloaded = downloading(fileName);
 				if (downloaded) {
-					Map<String, String> infor = check.information();
+					Map<String, String> infor = checkFileName.information();
 					infor.put("fileName", fileName);
 					insertLogTable(idConfig, infor);
 					System.out.println("insert log success");
