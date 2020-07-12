@@ -36,6 +36,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 use warehouse_extra_db;
 create table data(
+ID int primary key auto_increment,
 `1` nvarchar(255) ,
 `2` nvarchar(255),
 `3` nvarchar(255),

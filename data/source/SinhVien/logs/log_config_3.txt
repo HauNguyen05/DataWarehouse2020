@@ -144,3 +144,27 @@ file: sinhvien_chieu_nhom11.xlsx 21:51:13 05.07.2020
 Thay doi status  thanh 'FAIL' 
 Bug: java.io.FileNotFoundException: E:\Java\spring_mvc\DataWarehouse2020\data\source\sinhvien_chieu_nhom11.xlsx (The system cannot find the file specified)
 --------------------------------- 
+
+file: sinhvien_chieu_nhom14.xlsx 10:39:35 06.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom14.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom5.txt 12:03:54 12.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom5.txt  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom5.txt 12:05:50 12.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom5.txt  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom14.xlsx 12:14:02 12.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom14.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
