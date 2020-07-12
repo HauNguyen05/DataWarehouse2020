@@ -38,7 +38,7 @@ public class JavaMail {
 			}
 		});
 		// Used to debug SMTP issues
-		session.setDebug(true);
+		session.setDebug(false);
 
 		try {
 			// Create a default MimeMessage object.
@@ -56,10 +56,9 @@ public class JavaMail {
 			// Now set the actual message
 			message.setText(text);
 
-			System.out.println("sending...");
 			// Send message
 			Transport.send(message);
-			System.out.println("Sent message successfully....");
+			System.out.println("send information: \""+text +"\" to \""+ to +"\" sucessfully.");
 		} catch (MessagingException mex) {
 			mex.printStackTrace();
 		}
