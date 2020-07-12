@@ -53,6 +53,7 @@ public class ExtractFileToStaging {
 		// Tao cau query
 		StringBuilder sql = new StringBuilder();
 		sql.append("create table if not exists " + nameTable + "(");
+		sql.append("ID int primary key auto_increment,");
 		for (int i = 0; i < column_number; i++) {
 			if (i == column_number - 1) {
 				sql.append("`" + (i + 1) + "` nvarchar(255) )");
@@ -75,7 +76,14 @@ public class ExtractFileToStaging {
 			CONNECTION_STAGING.setAutoCommit(false);
 			// Tao cau query
 			StringBuilder sql = new StringBuilder();
-			sql.append("insert into " + tableName);
+			sql.append("insert into " + tableName+"(");
+			for (int i = 0; i < column_number; i++) {
+				if (i == column_number - 1) {
+					sql.append("`" + (i + 1) + "`)");
+					break;
+				}
+				sql.append("`" + (i + 1) + "`,");
+			}
 			sql.append(" value(");
 			for (int i = 0; i < column_number; i++) {
 				if (i == column_number - 1) {
@@ -186,6 +194,9 @@ public class ExtractFileToStaging {
 		try {
 
 			File file = new File(path);
+			// kiem tra file ton tai hay khong
+			if (!file.exists())
+				throw new FileNotFoundException("file khong ton tai");
 			// dem so dong trong file
 			countLineFile = countLineFile(path);
 			System.out.println("countLineFile : " + countLineFile);
@@ -199,7 +210,8 @@ public class ExtractFileToStaging {
 			} else if (file_type.equals("txt") || file_type.equals("csv")) {
 				// Chay ham file txt,csv
 				String loadQuery = "LOAD DATA INFILE '" + path + "' INTO TABLE data FIELDS TERMINATED BY '\\"
-						+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record + " LINES";
+						+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record + " LINES  (`1`,`2`,`3`,`4`,`5`,`6`,`7`,`8`,`9`,`10`,`11`) " + 
+								" set id=null" ;
 				System.out.println(loadQuery);
 				state = CONNECTION_STAGING.prepareStatement(loadQuery);
 				CONNECTION_STAGING.setAutoCommit(false);
@@ -227,13 +239,13 @@ public class ExtractFileToStaging {
 			// Chuyen file den thu muc successfully
 			moveFileToSuccess(path);
 			// send mail
-			JavaMail.send(EMAIL, SUBJECT, "load file: " + file_name + "\nThanh cong");
+			//JavaMail.send(EMAIL, SUBJECT, "load file: " + file_name + "\nThanh cong");
 			// ghi logs
 			BW.write("Them du lieu thanh cong \r\n");
 			BW.flush();
 
 		} catch (Exception e) {
-			// CONNECTION_STAGING.rollback();
+			CONNECTION_STAGING.rollback();
 			handleExcetion(e, file_name, path);
 		}
 	}
@@ -259,65 +271,72 @@ public class ExtractFileToStaging {
 		int column_number = 0;
 		boolean unzip = false;
 		int ignore_record = 0;
-		// Tao connection den database controll, neu khac null thi bo qua .
-		if (CONNECTION_CONTROL == null) {
-			CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "0985153812");
-		}
-		// Tao cau truy van query
-		String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
-				+ " on data_config_log.id = data_config.id where status = 'ER' limit 1";
-		PreparedStatement statement1 = CONNECTION_CONTROL.prepareStatement(sql);
-		ResultSet r = statement1.executeQuery();
-		while (r.next()) {
-			destination = r.getString(1);
-			server_des = r.getString(2);
-			databasse = r.getString(3);
-			user_des = r.getString(4);
-			pwd_des = r.getString(5);
-			table_name_des = r.getString(6);
-			unzip = r.getBoolean(7);
-			ignore_record = Integer.valueOf(r.getString(8));
-			delimiter = r.getString(9);
-			file_type = r.getString(10);
-			path_dir_src = r.getString(11);
-			file_name = r.getString(12);
-			column_number = Integer.valueOf(r.getString(13));
-			file_logs = r.getString(14);
-			// Tao connection den database staging, neu khac null thi bo qua
-			if (CONNECTION_STAGING == null) {
-				CONNECTION_STAGING = ConnectDB.getConnection(destination, server_des, databasse, user_des, pwd_des);
+		ResultSet r = null;
+		try {
+			// Tao connection den database controll, neu khac null thi bo qua .
+			if (CONNECTION_CONTROL == null) {
+				CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "0985153812");
 			}
-			// Tao file logs va doi tuong FileWriter ghi vao logs
-			createFileLogs(path_dir_src, file_logs, file_name);
-			// Taoj table data neu chua co
-			createTable(column_number, table_name_des);
-			// load data vao staging
-			loadToStaging(path_dir_src, file_name, delimiter, ignore_record, file_type, table_name_des, column_number,
-					unzip);
-			System.out.println("---------------------------------");
-			BW.write("--------------------------------- \r\n");
-			BW.flush();
+			// Tao cau truy van query
+			String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
+					+ " on data_config_log.id = data_config.id where status = 'ER' limit 1";
+			PreparedStatement statement1 = CONNECTION_CONTROL.prepareStatement(sql);
+			r = statement1.executeQuery();
+			while (r.next()) {
+				destination = r.getString(1);
+				server_des = r.getString(2);
+				databasse = r.getString(3);
+				user_des = r.getString(4);
+				pwd_des = r.getString(5);
+				table_name_des = r.getString(6);
+				unzip = r.getBoolean(7);
+				ignore_record = Integer.valueOf(r.getString(8));
+				delimiter = r.getString(9);
+				file_type = r.getString(10);
+				path_dir_src = r.getString(11);
+				file_name = r.getString(12);
+				column_number = Integer.valueOf(r.getString(13));
+				file_logs = r.getString(14);
+				// Tao connection den database staging, neu khac null thi bo qua
+				if (CONNECTION_STAGING == null) {
+					CONNECTION_STAGING = ConnectDB.getConnection(destination, server_des, databasse, user_des, pwd_des);
+				}
+				// Tao file logs va doi tuong FileWriter ghi vao logs
+				createFileLogs(path_dir_src, file_logs, file_name);
+				// Taoj table data neu chua co
+				createTable(column_number, table_name_des);
+				// load data vao staging
+				loadToStaging(path_dir_src, file_name, delimiter, ignore_record, file_type, table_name_des,
+						column_number, unzip);
+				System.out.println("---------------------------------");
+				BW.write("--------------------------------- \r\n");
+				BW.flush();
+			}
+			statement1.close();
+		} finally {
+
+			if (BW != null) {
+				BW.close();
+			} else if (CONNECTION_CONTROL != null) {
+				CONNECTION_CONTROL.close();
+			} else if (CONNECTION_STAGING != null) {
+				CONNECTION_STAGING.close();
+			}
 		}
-		BW.close();
-		CONNECTION_CONTROL.close();
-		CONNECTION_STAGING.close();
+
 	}
 
 	public void handleExcetion(Exception e, String fileName, String path) throws Exception {
 		// chuyen doi trang thai
 		changeStatusFile(fileName, "FAIL");
 		// send mail
-		JavaMail.send(EMAIL, SUBJECT, "load file: " + fileName + "\nThat bai \nBug: " + e);
+		//JavaMail.send(EMAIL, SUBJECT, "load file: " + fileName + "\nThat bai \nBug: " + e);
 		// ghi logs
 		BW.write("Bug: " + e + "\r\n");
 		BW.flush();
-		if (e instanceof SQLException) {
-			// rollback du lieu
-			CONNECTION_STAGING.rollback();
-		} else if (e instanceof FileNotFoundException) {
+		if (e instanceof FileNotFoundException) {
 			return;
 		}
-
 		// Chuyen file den thu muc error neu loi
 		moveFileToError(path);
 
