@@ -91,23 +91,8 @@ INSERT INTO `data_config_log` VALUES (1, 'sinhvien_sang_nhom4.xlsx', 'ER', 'xlsx
 INSERT INTO `data_config_log` VALUES (1, 'sinhvien_sang_nhom7.xlsx', 'ER', 'xlsx', 0, NULL, NULL);
 INSERT INTO `data_config_log` VALUES (1, 'sinhvien_sang_nhom8.txt', 'ER', 'txt', 0, NULL, NULL);
 INSERT INTO `data_config_log` VALUES (1, 'sinhvien_sang_nhom9.xlsx', 'ER', 'xlsx', 0, NULL, NULL);*/
-INSERT INTO `data_config_log` VALUES (1,'sinhvien_chieu_nhom11.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_chieu_nhom14.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_chieu_nhom15.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_chieu_nhom16.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_chieu_nhom2.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_chieu_nhom3.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_chieu_nhom4.csv','ER','csv',0,1,','),
-(1,'sinhvien_chieu_nhom4.txt','ER','txt',0,0,NULL),
-(1,'sinhvien_chieu_nhom4.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_chieu_nhom5.zip','ER','zip',1,0,NULL),
-(1,'sinhvien_chieu_nhom6.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_sang_nhom06.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_sang_nhom1.txt','ER','txt',0,0,'\t'),
-(1,'sinhvien_sang_nhom1.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_sang_nhom11.xlsx','ER','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom13.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_sang_nhom14.xlsx','ER','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom15.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_sang_nhom16.xlsx','ER','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom2.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_sang_nhom4.xlsx','ER','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom7.xlsx','ER','xlsx',0,0,NULL),
-(1,'sinhvien_sang_nhom8.txt','ER','txt',0,1,'|'),(1,'sinhvien_sang_nhom9.xlsx','ER','xlsx',0,0,NULL);
-SET FOREIGN_KEY_CHECKS = 1;
+-- data config
+INSERT INTO `data_config` VALUES (1,'drive.ecepvn.org','2227','guest_access','123456','/volume1/ECEP/song.nguyen/DW_2020/data/','E:\\\\Java\\\\spring_mvc\\\\DataWarehouse2020\\\\data\\\\source\\\\SinhVien','jdbc:mysql://localhost:3306/','com.mysql.jdbc.Driver','warehouse_extra_db','root','0985153812','data','11','STT,MSSV,Họ Lót ,Tên SV,Ngày sinh,Mã Lớp,Lớp,Số điện thoại,Email,Quê quán,Ghi Chú','log_config_SinhVien.txt','sinhvien_sang_nhom, sinhvien_chieu_nhom'),(4,NULL,NULL,NULL,NULL,NULL,'E:\\\\Java\\\\spring_mvc\\\\DataWarehouse2020\\\\data\\\\source\\\\MonHoc','jdbc:mysql://localhost:3306/','com.mysql.jdbc.Driver','warehouse_extra_db','root','0985153812','monhoc','6','STT, Mã MH,Tên Môn Học,TC,Khoa/BM quản lý,Ghi chú','log_config_MonHoc.txt',NULL);
+-- data logs
+INSERT INTO `data_config_log` VALUES (1,'sinhvien_chieu_nhom11.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_chieu_nhom14.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_chieu_nhom15.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_chieu_nhom16.xlsx','FAIL','xlsx',0,0,NULL),(1,'sinhvien_chieu_nhom2.xlsx','FAIL','xlsx',0,0,NULL),(1,'sinhvien_chieu_nhom3.xlsx','FAIL','xlsx',0,0,NULL),(1,'sinhvien_chieu_nhom4.csv','FAIL','csv',0,1,','),(1,'sinhvien_chieu_nhom4.txt','FAIL','txt',0,0,NULL),(1,'sinhvien_chieu_nhom4.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_chieu_nhom5.txt','TF','txt',0,1,'|'),(1,'sinhvien_chieu_nhom5.zip','FAIL','zip',1,0,NULL),(1,'sinhvien_chieu_nhom6.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_chieu_nhom7.csv','TF','csv',0,1,';'),(1,'sinhvien_sang_nhom06.xlsx','FAIL','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom1.txt','TF','txt',0,0,'	'),(1,'sinhvien_sang_nhom1.xlsx','FAIL','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom11.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom13.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom14.xlsx','FAIL','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom15.xlsx','FAIL','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom16.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom2.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom4.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom7.xlsx','TF','xlsx',0,0,NULL),(1,'sinhvien_sang_nhom8.txt','FAIL','txt',0,1,'|'),(1,'sinhvien_sang_nhom9.xlsx','TF','xlsx',0,0,NULL),(4,'MonHoc2013.csv','TF','csv',0,1,'|'),(4,'MonHoc2014.csv','TF','csv',0,1,'|');
+
