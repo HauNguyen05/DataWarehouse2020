@@ -1,10 +1,12 @@
 package component_1;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -35,7 +37,7 @@ public class DownloadFile {
 			System.exit(1);
 		}
 	}
-
+	
 	public DownloadFile() {
 		try {
 			connectionControl = ConnectDB.getConectionControl("root", "");
@@ -58,29 +60,39 @@ public class DownloadFile {
 	public void getIdConfig() {
 		boolean run = true;
 		while (run) {
-			System.out.println("please enter idConfig:");
+			System.out.println(
+					"Enter id = 1 for config SinhVien.\nEnter id = 2 for config MonHoc.\nEnter id = 3 for config LopHoc.");
+			System.out.print("You want to run config has id = ");
 			Scanner sc = new Scanner(System.in);
 			String id = sc.nextLine();
 			if (id.equalsIgnoreCase("exit"))
 				System.exit(0);
-			String sql = "select id from data_config where id=?";
-			PreparedStatement stmt;
-			try {
-				stmt = connectionControl.prepareStatement(sql);
-				stmt.setString(1, id);
-				ResultSet rs = stmt.executeQuery();
-				if (rs.next()) {
-					this.idConfig = rs.getString(1);
-					run = false;
-					break;
-				} else {
-					System.out.println("id you enter not found, please enter again!");
-				}
-
-			} catch (SQLException e) {
-				System.out.println("excute query fail");
+			List<String> list = getListIdConfig();
+			if (list.contains(id)) {
+				this.idConfig = id;
+				run = false;
+				break;
+			} else {
+				System.out.println("id you enter not found, please enter again!");
 			}
+
 		}
+	}
+
+	public List<String> getListIdConfig() {
+		List<String> list = new ArrayList<String>();
+		String sql = "select id from data_config";
+		PreparedStatement stmt;
+		try {
+			stmt = connectionControl.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				list.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("excute query fail");
+		}
+		return list;
 	}
 
 	/*
@@ -135,7 +147,9 @@ public class DownloadFile {
 		String[] listFileNames = cmdResult.split("\n");
 		return listFileNames;
 	}
-
+	/*
+	 * download file from server, insert to table log
+	 */
 	public void downloadFileProcess() {
 		if (connectServer() == null) {
 			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse - Connect to server",
@@ -144,23 +158,25 @@ public class DownloadFile {
 		}
 		String[] listFileNames = getListFileName();
 		for (String fileName : listFileNames) {
-			boolean isDownload = check.checkFileName(fileName, syntaxFileName);
-			if (isDownload) {
-				boolean downloaded = downloading(fileName);
-				if (downloaded) {
-					Map<String, String> infor = check.information();
-					infor.put("fileName", fileName);
-					insertLogTable(idConfig, infor);
+			File file = new File(destinationPath + "\\" + fileName);
+			if (!file.exists()) {
+				boolean isDownload = check.checkFileName(fileName, syntaxFileName);
+				if (isDownload) {
+					boolean downloaded = downloading(fileName);
+					if (downloaded) {
+						Map<String, String> infor = check.information();
+						infor.put("fileName", fileName);
+						insertLogTable(idConfig, infor);
+					}
 				}
 			}
-
 		}
-		JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse - Download file", "Download data successfully");
+		System.out.println("Download finished config "+this.idConfig);
 		ssh.Disconnect();
 	}
 
 	public void insertLogTable(String idConfig, Map<String, String> infor) {
-		String update = "INSERT INTO data_config_log(id, file_name,file_type, status, unzip) VALUES (?, ?,?,?, ?)";
+		String update = "INSERT INTO data_config_log(id, file_name,file_type, status, unzip) VALUES (?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = connectionControl.prepareStatement(update);
 			statement.setString(1, idConfig);
@@ -170,8 +186,7 @@ public class DownloadFile {
 			statement.setString(5, infor.get("isUnzip"));
 			statement.execute();
 		} catch (Exception e) {
-			System.out.println("can not insert into table log");
-			System.exit(0);
+			System.out.println("insert fail");
 		}
 	}
 
@@ -182,12 +197,11 @@ public class DownloadFile {
 			System.out.println(scp.lastErrorText());
 			return false;
 		}
-		success = scp.DownloadFile(remotePath + fileName, destinationPath + fileName);
-
+		success = scp.DownloadFile(remotePath + "\\" + fileName, destinationPath + "\\" + fileName);
 		return success;
 	}
 
 	public static void main(String[] args) throws SQLException {
-		DownloadFile c = new DownloadFile();
+		new DownloadFile();
 	}
 }
