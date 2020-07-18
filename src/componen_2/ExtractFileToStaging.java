@@ -209,11 +209,18 @@ public class ExtractFileToStaging {
 				addFileExcel(path, table_name_des, column_number);
 			} else if (file_type.equals("txt") || file_type.equals("csv")) {
 				// Chay ham file txt,csv
-				String loadQuery = "LOAD DATA INFILE '" + path + "' INTO TABLE data FIELDS TERMINATED BY '\\"
-						+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record + " LINES  (`1`,`2`,`3`,`4`,`5`,`6`,`7`,`8`,`9`,`10`,`11`) " + 
-								" set id=null" ;
-				System.out.println(loadQuery);
-				state = CONNECTION_STAGING.prepareStatement(loadQuery);
+				StringBuilder query = new StringBuilder();
+				String loadQuery = "LOAD DATA INFILE '" + path + "' INTO TABLE "+table_name_des+" FIELDS TERMINATED BY '\\"
+						+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record +" LINES ";
+				query.append(loadQuery);
+				query.append(" ( ");
+				for(int i =0 ;i< column_number;i++) {
+					if(i==column_number-1) { query.append("`"+(i+1)+"`)"); break;}
+					query.append("`"+(i+1)+"`,");
+				}
+				query.append(" set id=null;");
+				System.out.println(query.toString());
+				state = CONNECTION_STAGING.prepareStatement(query.toString());
 				CONNECTION_STAGING.setAutoCommit(false);
 				// Thuc thi cau query
 				state.executeUpdate();
@@ -239,7 +246,7 @@ public class ExtractFileToStaging {
 			// Chuyen file den thu muc successfully
 			moveFileToSuccess(path);
 			// send mail
-			//JavaMail.send(EMAIL, SUBJECT, "load file: " + file_name + "\nThanh cong");
+			JavaMail.send(EMAIL, SUBJECT, "load file: " + file_name + "\nThanh cong");
 			// ghi logs
 			BW.write("Them du lieu thanh cong \r\n");
 			BW.flush();
@@ -304,7 +311,7 @@ public class ExtractFileToStaging {
 				// Tao file logs va doi tuong FileWriter ghi vao logs
 				createFileLogs(path_dir_src, file_logs, file_name);
 				// Taoj table data neu chua co
-				createTable(column_number, table_name_des);
+				//createTable(column_number, table_name_des);
 				// load data vao staging
 				loadToStaging(path_dir_src, file_name, delimiter, ignore_record, file_type, table_name_des,
 						column_number, unzip);
@@ -330,7 +337,7 @@ public class ExtractFileToStaging {
 		// chuyen doi trang thai
 		changeStatusFile(fileName, "FAIL");
 		// send mail
-		//JavaMail.send(EMAIL, SUBJECT, "load file: " + fileName + "\nThat bai \nBug: " + e);
+		JavaMail.send(EMAIL, SUBJECT, "load file: " + fileName + "\nThat bai \nBug: " + e);
 		// ghi logs
 		BW.write("Bug: " + e + "\r\n");
 		BW.flush();

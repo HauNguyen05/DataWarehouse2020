@@ -49,4 +49,17 @@ ID int primary key auto_increment,
 `10` nvarchar(255),
 `11` nvarchar(255)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+-- ddd
+use warehouse_extra_db;
+create table monhoc(
+ID int primary key auto_increment,
+`1` nvarchar(255)  ,
+`2` nvarchar(255),
+`3` nvarchar(255),
+`4` nvarchar(255),
+`5` nvarchar(255),
+`6` nvarchar(255)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 
