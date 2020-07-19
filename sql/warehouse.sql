@@ -3,7 +3,8 @@ create database warehouse_main;
 use warehouse_main;
 
 create table warehouse_student (
-STT int PRIMARY KEY AUTO_INCREMENT,
+SK_SV int PRIMARY KEY AUTO_INCREMENT,
+STT nvarchar(10) DEFAULT 'NULL',
 MSSV nvarchar(10) DEFAULT 'NULL',
 HoLot nvarchar(50) DEFAULT 'NULL',
 Ten nvarchar(20) DEFAULT 'NULL',
