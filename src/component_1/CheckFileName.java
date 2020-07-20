@@ -1,48 +1,68 @@
 package component_1;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class CheckFileName {
 	private String typeFile;
 	private String isUnzip;
+	private String ignore;
 
 	public Map<String, String> information() {
 		Map<String, String> result = new HashMap<String, String>();
 		result.put("typeFile", this.typeFile);
 		result.put("isUnzip", this.isUnzip);
+		result.put("ignore", this.ignore);
 		return result;
 
 	}
 
 	boolean checkFileName(String fileName, String listSyntax) {
 		String[] name = fileName.split("\\.");
-		String[] syntaxs = listSyntax.split(",");
-		boolean result = false;
-		if (name.length > 1) {
-			fileName = fileName.trim();
-			for (String syntax : syntaxs) {
-				syntax = syntax.trim();
-				if (fileName.startsWith(syntax.trim())) {
-					String nameGroup = fileName.substring(syntax.length());
-					result = checkNameGroup(nameGroup);
-					if (result) {
-						information();
-						return true;
+		if (name.length > 1 && checkTypeFile(name[1]) && checkName(name[0], listSyntax)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	boolean checkName(String fileName, String syntaxs) {
+		fileName = fileName.trim();
+		syntaxs = syntaxs.trim();
+		String[] textSyntax = syntaxs.split("_");
+		String[] arrName = fileName.split("_");
+		boolean checkGroup = false;
+		boolean checkSeq = false;
+		boolean checkCa = false;
+		if (arrName.length == textSyntax.length) {
+			for (int i = 0; i < arrName.length; i++) {
+				if (i == 1) {
+					if (arrName[i].equals("sang") || arrName[i].equals("chieu")) {
+						checkCa = true;
+					}
+				} else if (i == 2 && arrName[i].contains("nhom")) {
+					String group = (String) arrName[i].subSequence(4, arrName[i].length());
+					if (!parseInt(group)) {
+						return false;
+					} else {
+						checkGroup = true;
+					}
+				} else {
+					if (!arrName[i].equals(textSyntax[i])) {
+						checkSeq = false;
+						return false;
+					} else {
+						checkSeq = true;
 					}
 				}
 			}
+			if (checkGroup && checkSeq && checkCa) {
+				return true;
+			} else
+				return false;
+		} else {
+			return false;
 		}
-		return false;
-	}
-
-	boolean checkNameGroup(String name) {
-		String[] split = name.split("\\.");
-		if (parseInt(split[0]) && checkTypeFile(split[1])) {
-			return true;
-		}
-		return false;
 	}
 
 	public boolean checkTypeFile(String nameType) {
@@ -54,6 +74,11 @@ public class CheckFileName {
 					this.isUnzip = "1";
 				} else {
 					this.isUnzip = "0";
+					if (nameType.equals("xlsx")) {
+						this.ignore = "0";
+					} else {
+						this.ignore = "1";
+					}
 				}
 				return true;
 			}
@@ -69,10 +94,10 @@ public class CheckFileName {
 			return false;
 		}
 	}
+	
 	public static void main(String[] args) {
 		CheckFileName c = new CheckFileName();
-		boolean a =c.checkFileName("sinhvien_chieu_nhom11.xlsx", "sinhvien_sang_nhom, sinhvien_chieu_nhom");
+		boolean a = c.checkFileName("monhoc_chieu_nhom5_2020.zip", "monhoc_ca_nhom_2020");
 		System.out.println(a);
-		System.out.println(c.information().get("typeFile"));
 	}
 }

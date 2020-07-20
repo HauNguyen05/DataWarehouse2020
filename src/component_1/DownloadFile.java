@@ -37,8 +37,9 @@ public class DownloadFile {
 			System.exit(1);
 		}
 	}
-	
-	public DownloadFile() {
+
+	public DownloadFile(String idConfig) {
+		this.idConfig = idConfig;
 		try {
 			connectionControl = ConnectDB.getConectionControl("root", "");
 			check = new CheckFileName();
@@ -46,37 +47,11 @@ public class DownloadFile {
 			e.printStackTrace();
 			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse", "I can't connect to database");
 		}
-		// step 1: get id config for process
-		getIdConfig();
-		// step 2: get necessary informations for process
+		// step 1: get necessary informations for process
 		setup();
 		// run process
 		downloadFileProcess();
-	}
 
-	/*
-	 * get id_config from user
-	 */
-	public void getIdConfig() {
-		boolean run = true;
-		while (run) {
-			System.out.println(
-					"Enter id = 1 for config SinhVien.\nEnter id = 2 for config MonHoc.\nEnter id = 3 for config LopHoc.");
-			System.out.print("You want to run config has id = ");
-			Scanner sc = new Scanner(System.in);
-			String id = sc.nextLine();
-			if (id.equalsIgnoreCase("exit"))
-				System.exit(0);
-			List<String> list = getListIdConfig();
-			if (list.contains(id)) {
-				this.idConfig = id;
-				run = false;
-				break;
-			} else {
-				System.out.println("id you enter not found, please enter again!");
-			}
-
-		}
 	}
 
 	public List<String> getListIdConfig() {
@@ -147,6 +122,7 @@ public class DownloadFile {
 		String[] listFileNames = cmdResult.split("\n");
 		return listFileNames;
 	}
+
 	/*
 	 * download file from server, insert to table log
 	 */
@@ -171,12 +147,12 @@ public class DownloadFile {
 				}
 			}
 		}
-		System.out.println("Download finished config "+this.idConfig);
+		System.out.println("Download finished config " + this.idConfig);
 		ssh.Disconnect();
 	}
 
 	public void insertLogTable(String idConfig, Map<String, String> infor) {
-		String update = "INSERT INTO data_config_log(id, file_name,file_type, status, unzip) VALUES (?, ?, ?, ?, ?)";
+		String update = "INSERT INTO data_config_log(id, file_name,file_type, status, unzip, ignore_record) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = connectionControl.prepareStatement(update);
 			statement.setString(1, idConfig);
@@ -184,7 +160,9 @@ public class DownloadFile {
 			statement.setString(3, infor.get("typeFile"));
 			statement.setString(4, "ER");
 			statement.setString(5, infor.get("isUnzip"));
+			statement.setString(6, infor.get("ignore"));
 			statement.execute();
+
 		} catch (Exception e) {
 			System.out.println("insert fail");
 		}
@@ -202,6 +180,6 @@ public class DownloadFile {
 	}
 
 	public static void main(String[] args) throws SQLException {
-		new DownloadFile();
+		new DownloadFile("4");
 	}
 }
