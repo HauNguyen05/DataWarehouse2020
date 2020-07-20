@@ -66,6 +66,6 @@ public class JavaMail {
 	}
 
 	public static void main(String[] args) {
-		 send("thongdeptrai9x@gmail.com", "Java Mail", "thong test");
+		 send("aloxinhfacebook@gmail.com", "HelloWorld", "Demo");
 	}
 }

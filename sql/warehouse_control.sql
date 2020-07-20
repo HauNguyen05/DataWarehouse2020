@@ -96,4 +96,11 @@ INSERT INTO `data_config_log` VALUES (1, 'sinhvien_sang_nhom9.xlsx', 'TF', 'xlsx
 INSERT INTO `data_config_log` VALUES (2, 'MonHoc2013.csv', 'TF', 'csv', 0, 1, '|');
 INSERT INTO `data_config_log` VALUES (2, 'MonHoc2014.csv', 'TF', 'csv', 0, 1, '|');
 
+--alter for datawarehouse. add extra field
+alter table data_config
+add dbwarehouse_name nvarchar(100), 
+add dbwarehouse_user nvarchar(100), 
+add dbwarehouse_password nvarchar(100), 
+add dbwarehouse_table nvarchar(100);
+
 SET FOREIGN_KEY_CHECKS = 1;
