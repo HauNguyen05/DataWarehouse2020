@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
@@ -52,8 +53,8 @@ public class ExtractFileToStaging {
 		PreparedStatement pre = null;
 		// Tao cau query
 		StringBuilder sql = new StringBuilder();
+		System.out.println(column_number);
 		sql.append("create table if not exists " + nameTable + "(");
-		sql.append("ID int primary key auto_increment,");
 		for (int i = 0; i < column_number; i++) {
 			if (i == column_number - 1) {
 				sql.append("`" + (i + 1) + "` nvarchar(255) )");
@@ -66,8 +67,17 @@ public class ExtractFileToStaging {
 		pre.executeUpdate();
 		// CONNECTION_STAGING.commit();
 	}
+	public void truncateTable(String nameTable) throws SQLException {
+		PreparedStatement pre = null;
+		// Tao cau query
+		StringBuilder sql = new StringBuilder();
+		sql.append("truncate " + nameTable );
+		pre = CONNECTION_STAGING.prepareStatement(sql.toString());
+		pre.executeUpdate();
+		pre.close();
+	}
 
-	public boolean addFileExcel(String path, String tableName, int column_number) throws Exception {
+	public boolean addFileExcel(String path, String tableName, int column_number,int countLineFile ) throws Exception {
 		boolean check = false;
 		Workbook workbook = null;
 		InputStream inputStream = null;
@@ -109,15 +119,15 @@ public class ExtractFileToStaging {
 				// Duyet vong for theo so column trong table config
 				for (int i = 0; i < column_number; i++) {
 					Cell cell = row.getCell(i);
-					if (cell == null) {
+					if (cell == null || cell.equals(" ") ||cell.toString().isEmpty()) {
 						statement.setString(i + 1, "");
 						index--;
 					} else {
 						switch (cell.getCellType()) {
 						case NUMERIC:
-							Double d = (Double) cell.getNumericCellValue();
+							int d = (int) cell.getNumericCellValue();
 							// Set gia tri preparestatement
-							statement.setDouble(i + 1, d);
+							statement.setInt(i + 1, d);
 							break;
 						case BLANK:
 							// Set gia tri preparestatement
@@ -131,13 +141,20 @@ public class ExtractFileToStaging {
 					}
 				}
 				// Thuc thi statement
-				if (index != 1) {
+				if (index <= 1) {
+					statement.close();
+					break;
+				} else {
 					statement.executeUpdate();
 					CONNECTION_STAGING.commit();
-				} else {
-					statement.close();
+					
 				}
 			}
+//			int  countAfterAddFile = countLineDB(tableName);
+//			if (countLineFile != countAfterAddFile) {	// kiem tra so dong co bang nhau khong
+//				truncateTable(tableName);
+//				throw new SQLException("them du lieu khong du dong");
+//			}
 			System.out.println("add thanh cong");
 
 			return check;
@@ -190,7 +207,6 @@ public class ExtractFileToStaging {
 		PreparedStatement state = null;
 		int countLineFile = 0;
 		int countAfterAddFile = 0;
-		int countBeforeAddFile = 0;
 		try {
 
 			File file = new File(path);
@@ -199,35 +215,26 @@ public class ExtractFileToStaging {
 				throw new FileNotFoundException("file khong ton tai");
 			// dem so dong trong file
 			countLineFile = countLineFile(path);
-			System.out.println("countLineFile : " + countLineFile);
-			// dem so dong trong staging truoc khi add file
-			countBeforeAddFile = countLineDB(table_name_des);
-			System.out.println("countBeforeAddFile : " + countBeforeAddFile);
+			//System.out.println("countLineFile : " + countLineFile);
 			// Kiem tra type file
 			if (file_type.equals("xlsx")) {
 				// Chay ham load file xlsx
-				addFileExcel(path, table_name_des, column_number);
+				addFileExcel(path, table_name_des, column_number,countLineFile);
 			} else if (file_type.equals("txt") || file_type.equals("csv")) {
 				// Chay ham file txt,csv
-				StringBuilder query = new StringBuilder();
 				String loadQuery = "LOAD DATA INFILE '" + path + "' INTO TABLE "+table_name_des+" FIELDS TERMINATED BY '\\"
 						+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record +" LINES ";
-				query.append(loadQuery);
-				query.append(" ( ");
-				for(int i =0 ;i< column_number;i++) {
-					if(i==column_number-1) { query.append("`"+(i+1)+"`)"); break;}
-					query.append("`"+(i+1)+"`,");
-				}
-				query.append(" set id=null;");
-				System.out.println(query.toString());
-				state = CONNECTION_STAGING.prepareStatement(query.toString());
+				
+				System.out.println(loadQuery);
+				state = CONNECTION_STAGING.prepareStatement(loadQuery);
 				CONNECTION_STAGING.setAutoCommit(false);
 				// Thuc thi cau query
 				state.executeUpdate();
 
-				countAfterAddFile = countLineDB(table_name_des);
+				countAfterAddFile = countLineDB(table_name_des);// dem so dong trong staging sau khi add file
 				System.out.println("countAfterAddFile : " + countAfterAddFile);
-				if (countLineFile != (countAfterAddFile - countBeforeAddFile)) {
+				
+				if (countLineFile != countAfterAddFile) {	// kiem tra so dong co bang nhau khong
 					throw new SQLException("them du lieu khong du dong");
 				}
 
@@ -237,16 +244,15 @@ public class ExtractFileToStaging {
 			} else {
 				throw new Exception("Khong ho tro dinh dang file:" + file_type);
 			}
-			// dem so dong trong staging sau khi add file
-
-			// kiem tra so dong co bang nhau khong
+		
+		
 
 			// Chuyen trang thai file thanh 'TF'
 			changeStatusFile(file_name, "TF");
 			// Chuyen file den thu muc successfully
 			moveFileToSuccess(path);
 			// send mail
-			JavaMail.send(EMAIL, SUBJECT, "load file: " + file_name + "\nThanh cong");
+		//	JavaMail.send(EMAIL, SUBJECT, "load file: " + file_name + "\nThanh cong");
 			// ghi logs
 			BW.write("Them du lieu thanh cong \r\n");
 			BW.flush();
@@ -272,7 +278,7 @@ public class ExtractFileToStaging {
 		BW.flush();
 	}
 
-	public void insetDataAllFile() throws Exception {
+	public void insetDataAllFile(int idConfig) throws Exception {
 		String destination, server_des, databasse, user_des, pwd_des, table_name_des, delimiter, file_type,
 				path_dir_src, file_name, file_logs = null;
 		int column_number = 0;
@@ -286,7 +292,7 @@ public class ExtractFileToStaging {
 			}
 			// Tao cau truy van query
 			String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
-					+ " on data_config_log.id = data_config.id where status = 'ER' limit 1";
+					+ " on data_config_log.id = data_config.id where data_config_log.id="+idConfig+" and status = 'ER' limit 1";
 			PreparedStatement statement1 = CONNECTION_CONTROL.prepareStatement(sql);
 			r = statement1.executeQuery();
 			while (r.next()) {
@@ -310,8 +316,9 @@ public class ExtractFileToStaging {
 				}
 				// Tao file logs va doi tuong FileWriter ghi vao logs
 				createFileLogs(path_dir_src, file_logs, file_name);
+			//	truncateTable(table_name_des);
 				// Taoj table data neu chua co
-				//createTable(column_number, table_name_des);
+				createTable(column_number, table_name_des);
 				// load data vao staging
 				loadToStaging(path_dir_src, file_name, delimiter, ignore_record, file_type, table_name_des,
 						column_number, unzip);
@@ -353,7 +360,8 @@ public class ExtractFileToStaging {
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(file))));
 		br.readLine();
 		int count = 0;
-		while (br.readLine() != null) {
+		String s="";
+		while ((s=br.readLine()) != null) {
 			count++;
 		}
 		br.close();
@@ -387,8 +395,9 @@ public class ExtractFileToStaging {
 
 	public static void main(String[] args) throws Exception {
 		ExtractFileToStaging a = new ExtractFileToStaging();
-		a.insetDataAllFile();
+		a.insetDataAllFile(4);
 		System.out.println();
+		
 //
 
 	}

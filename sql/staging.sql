@@ -16,7 +16,8 @@
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
+create database staging;
+use staging;
 -- ----------------------------
 -- Table structure for sinhvien
 -- ----------------------------
@@ -34,9 +35,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 --   `Que_quan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
 --   `Ghi_chu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL
 -- ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-use warehouse_extra_db;
-create table data(
-ID int primary key auto_increment,
+
+create table sinhvien(
 `1` nvarchar(255) ,
 `2` nvarchar(255),
 `3` nvarchar(255),
@@ -50,9 +50,8 @@ ID int primary key auto_increment,
 `11` nvarchar(255)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 -- ddd
-use warehouse_extra_db;
+
 create table monhoc(
-ID int primary key auto_increment,
 `1` nvarchar(255)  ,
 `2` nvarchar(255),
 `3` nvarchar(255),
