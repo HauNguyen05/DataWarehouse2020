@@ -22,3 +22,9 @@ Thay doi status  thanh 'TF'
 Move file dangky_sang_nhom15_2020.xlsx  to folder successfully 
 Them du lieu thanh cong 
 --------------------------------- 
+
+file: dangky_sang_nhom4_2020.xlsx 19:56:00 22.07.2020
+Thay doi status  thanh 'TF' 
+Move file dangky_sang_nhom4_2020.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
