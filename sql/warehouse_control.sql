@@ -46,16 +46,17 @@ CREATE TABLE `data_config`  (
   `dbwarehouse_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `dbwarehouse_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `dbwarehouse_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `dbwarehouse_table` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of data_config
 -- ----------------------------
-INSERT INTO `data_config` VALUES (1, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/SinhVien', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', '', 'sinhvien', '11', 'STT,MSSV,Họ Lót ,Tên SV,Ngày sinh,Mã Lớp,Lớp,Số điện thoại,Email,Quê quán,Ghi Chú', 'log_config_SinhVien.txt', 'sinhvien_ca_nhom', '|', 'warehouse_main', 'root', ' ');
-INSERT INTO `data_config` VALUES (2, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/MonHoc', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', '', 'monhoc', '6', 'STT, ma_MH, ten_MH, tin_chi, khoa_QL, ghi_chu, date_exprite, date_change', 'log_config_MonHoc.txt', '', '|', 'warehouse_main', 'root', ' ');
-INSERT INTO `data_config` VALUES (3, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/LopHoc', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', ' ', 'lophoc', '4', 'STT,ma_LH,ma_MH,namhoc',' log_config_LopHoc.txt', 'lophoc_ca_nhom_2020', '|', 'warehouse_main', 'root', ' ');
-INSERT INTO `data_config` VALUES (4, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/DangKy', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', ' ', 'dangky', 5, 'STT,ma_DK,ma_SV,ma_LH,time_DK', 'log_config_DangKy.txt', 'dangky_ca_nhom_2020', '|', 'warehouse_main', 'root', ' ');
+INSERT INTO `data_config` VALUES (1, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/SinhVien', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', '', 'sinhvien', '11', 'STT,MSSV,Họ Lót ,Tên SV,Ngày sinh,Mã Lớp,Lớp,Số điện thoại,Email,Quê quán,Ghi Chú', 'log_config_SinhVien.txt', 'sinhvien_ca_nhom', '|', 'warehouse_main', 'root', '', '');
+INSERT INTO `data_config` VALUES (2, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/MonHoc', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', '', 'monhoc', '6', 'STT, ma_MH, ten_MH, tin_chi, khoa_QL, ghi_chu, date_exprite, date_change', 'log_config_MonHoc.txt', '', '|', 'warehouse_main', 'root', ' ', '');
+INSERT INTO `data_config` VALUES (3, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/LopHoc', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', ' ', 'lophoc', '4', 'STT,ma_LH,ma_MH,namhoc',' log_config_LopHoc.txt', 'lophoc_ca_nhom_2020', '|', 'warehouse_main', 'root', ' ', '');
+INSERT INTO `data_config` VALUES (4, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/DangKy', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'warehouse_extra_db', 'root', ' ', 'dangky', 5, 'STT,ma_DK,ma_SV,ma_LH,time_DK', 'log_config_DangKy.txt', 'dangky_ca_nhom_2020', '|', 'warehouse_main', 'root', ' ', '');
 
 -- ----------------------------
 -- Table structure for data_config_log
