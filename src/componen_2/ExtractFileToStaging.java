@@ -223,8 +223,6 @@ public class ExtractFileToStaging {
 				// Chay ham file txt,csv
 				String loadQuery = "LOAD DATA INFILE '" + path + "' INTO TABLE "+table_name_des+" FIELDS TERMINATED BY '\\"
 						+ delimetter + "' LINES TERMINATED BY '\n' IGNORE " + ignore_record +" LINES ";
-				
-				System.out.println(loadQuery);
 				state = CONNECTION_STAGING.prepareStatement(loadQuery);
 				CONNECTION_STAGING.setAutoCommit(false);
 				// Thuc thi cau query
@@ -243,9 +241,6 @@ public class ExtractFileToStaging {
 			} else {
 				throw new Exception("Khong ho tro dinh dang file:" + file_type);
 			}
-		
-		
-
 			// Chuyen trang thai file thanh 'TF'
 			changeStatusFile(file_name, "TF");
 			// Chuyen file den thu muc successfully

@@ -9,7 +9,8 @@ import component_3.DataWarehouseMonHoc;
 
 public class ProcessETL {
 	public static void main(String[] args) {
-		String id = args[0];
+//		String id = args[0];
+		String id ="1";
 		new DownloadFile(id);
 		System.out.println("download finished");
 		try {
@@ -22,9 +23,11 @@ public class ProcessETL {
 		}
 		if (id == "2") {
 			new DataWarehouseMonHoc(id);
+			System.out.println("transform done");
 		} else {
 			try {
 				new DataWarehouse(args[0]).addDataToWarehouse();
+				System.out.println("transform done");
 			} catch (SQLException e) {
 				System.out.println("Process transform fail");
 				System.out.println(e.getMessage());

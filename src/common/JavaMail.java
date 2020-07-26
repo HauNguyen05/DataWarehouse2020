@@ -58,7 +58,6 @@ public class JavaMail {
 
 			// Send message
 			Transport.send(message);
-			System.out.println("send information: \""+text +"\" to \""+ to +"\" sucessfully.");
 		} catch (MessagingException mex) {
 			mex.printStackTrace();
 		}

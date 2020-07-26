@@ -164,7 +164,7 @@ public class DataWarehouseMonHoc {
 	}
 
 	public void insertMonHoc(List<String> monhoc) {
-		String insert = "insert into monhoc(STT, ma_MH, ten_MH, tin_chi, khoa_QL, ghi_chu, date_exprite, date_change) VALUES(?,?,?,?,?,?,'9999-12-31', '9999-12-31')";
+		String insert = "insert into monhoc("+this.information.get("column_name")+") VALUES(?,?,?,?,?,?,'9999-12-31', '9999-12-31')";
 		try {
 			PreparedStatement statement = connectWarehouse.prepareStatement(insert);
 			statement = connectWarehouse.prepareStatement(insert);

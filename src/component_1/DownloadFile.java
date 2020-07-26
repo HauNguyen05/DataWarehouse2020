@@ -1,6 +1,5 @@
 package component_1;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import com.chilkatsoft.CkGlobal;
 import com.chilkatsoft.CkScp;
@@ -34,10 +32,12 @@ public class DownloadFile {
 			System.loadLibrary("chilkat");
 		} catch (UnsatisfiedLinkError e) {
 			System.err.println("Native code library failed to load.\n" + e);
-			System.exit(1);
+			System.exit(0);
 		}
 	}
-
+	public static void main(String[] args) {
+		new DownloadFile("4");
+	}
 	public DownloadFile(String idConfig) {
 		this.idConfig = idConfig;
 		try {
