@@ -53,7 +53,6 @@ public class ExtractFileToStaging {
 		PreparedStatement pre = null;
 		// Tao cau query
 		StringBuilder sql = new StringBuilder();
-		System.out.println(column_number);
 		sql.append("create table if not exists " + nameTable + "(");
 		for (int i = 0; i < column_number; i++) {
 			if (i == column_number - 1) {
@@ -288,7 +287,7 @@ public class ExtractFileToStaging {
 		try {
 			// Tao connection den database controll, neu khac null thi bo qua .
 			if (CONNECTION_CONTROL == null) {
-				CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "0985153812");
+				CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "");
 			}
 			// Tao cau truy van query
 			String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
@@ -322,7 +321,6 @@ public class ExtractFileToStaging {
 				// load data vao staging
 				loadToStaging(path_dir_src, file_name, delimiter, ignore_record, file_type, table_name_des,
 						column_number, unzip);
-				System.out.println("---------------------------------");
 				BW.write("--------------------------------- \r\n");
 				BW.flush();
 			}
@@ -395,10 +393,6 @@ public class ExtractFileToStaging {
 
 	public static void main(String[] args) throws Exception {
 		ExtractFileToStaging a = new ExtractFileToStaging();
-		a.insetDataAllFile("4");
-		System.out.println();
-		
-//
-
+		a.insetDataAllFile("2");
 	}
 }

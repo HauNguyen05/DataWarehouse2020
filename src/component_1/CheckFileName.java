@@ -24,6 +24,7 @@ public class CheckFileName {
 			syntax = syntax.trim();
 			if (fileName.matches(syntax)) {
 				String[] name = fileName.split("\\.");
+				this.typeFile = name[1];
 				switch (name[1]) {
 				case "zip":
 					this.isUnzip = "1";
@@ -42,8 +43,9 @@ public class CheckFileName {
 				case "xlsx":
 					this.isUnzip = "0";
 					this.ignore = "0";
-				default:
 					break;
+				default:
+					return false;
 				}
 				return true;
 			}
@@ -52,9 +54,9 @@ public class CheckFileName {
 	}
 
 	public static void main(String[] args) {
+//		System.out.println("sinhvien_sang_nhom10.xlsx".matches("sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx"));
 		CheckFileName c = new CheckFileName();
-		boolean a = c.checkFileName("monhoc_chieu_nhom5_2020.csv",
-				"monhoc_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.csv, monhoc_(sang|chieu)_nhom[0-16]_2020.txt, monhoc_(sang|chieu)_nhom[0-16]_2020.zip");
+		boolean a = c.checkFileName("sinhvien_sang_nhom0.xlsx","sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx");
 		System.out.println(a);
 	}
 }

@@ -1,30 +1,6 @@
 
-file: sinhvien_chieu_nhom11.xlsx 15:31:21 21.07.2020
+file: sinhvien_chieu_nhom11.xlsx 16:17:52 26.07.2020
 Thay doi status  thanh 'TF' 
 Move file sinhvien_chieu_nhom11.xlsx  to folder successfully 
 Them du lieu thanh cong 
---------------------------------- 
-
-file: sinhvien_chieu_nhom13.xlsx 15:37:48 21.07.2020
-Thay doi status  thanh 'FAIL' 
-Bug: java.sql.SQLException: No value specified for parameter 9
-Move file sinhvien_chieu_nhom13.xlsx to folder error 
---------------------------------- 
-
-file: sinhvien_chieu_nhom14.csv 15:38:40 21.07.2020
-Thay doi status  thanh 'FAIL' 
-Bug: java.sql.SQLException: Invalid utf8mb4 character string: '߉y'
-Move file sinhvien_chieu_nhom14.csv to folder error 
---------------------------------- 
-
-file: sinhvien_chieu_nhom15.xlsx 15:38:54 21.07.2020
-Thay doi status  thanh 'TF' 
-Move file sinhvien_chieu_nhom15.xlsx  to folder successfully 
-Them du lieu thanh cong 
---------------------------------- 
-
-file: sinhvien_chieu_nhom16.xlsx 16:13:02 21.07.2020
-Thay doi status  thanh 'FAIL' 
-Bug: java.sql.SQLException: No value specified for parameter 3
-Move file sinhvien_chieu_nhom16.xlsx to folder error 
 --------------------------------- 

@@ -134,8 +134,7 @@ public class DownloadFile {
 		}
 		String[] listFileNames = getListFileName();
 		for (String fileName : listFileNames) {
-			File file = new File(destinationPath + "\\" + fileName);
-			if (!file.exists()) {
+			if (!checkFileDownloaded(fileName)) {
 				boolean isDownload = check.checkFileName(fileName, syntaxFileName);
 				if (isDownload) {
 					boolean downloaded = downloading(fileName);
@@ -147,7 +146,6 @@ public class DownloadFile {
 				}
 			}
 		}
-		System.out.println("Download finished config " + this.idConfig);
 		ssh.Disconnect();
 	}
 
@@ -165,6 +163,7 @@ public class DownloadFile {
 
 		} catch (Exception e) {
 			System.out.println("insert fail");
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -179,7 +178,18 @@ public class DownloadFile {
 		return success;
 	}
 
-	public static void main(String[] args) throws SQLException {
-		new DownloadFile("4");
+	public boolean checkFileDownloaded(String filename) {
+		String sql = "select file_name from data_config_log where id+'" + this.idConfig + "' and file_name='" + filename
+				+ "';";
+		try {
+			ResultSet rs = connectionControl.createStatement().executeQuery(sql);
+			while (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+
 	}
 }

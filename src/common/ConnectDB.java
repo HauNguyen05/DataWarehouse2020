@@ -41,14 +41,11 @@ public class ConnectDB {
 		String url = "jdbc:mysql://localhost:3306" + "/" + db +
 					"?useTimezone=true&serverTimezone=UTC&" +
 					"useUnicode=true&characterEndcoding=utf-8";
-
 		try {
 			connection = DriverManager.getConnection(url, username, password);
-			System.out.println("Connected to the database");
 			
 		} catch(SQLException e) {	
-			System.out.println("Opps, error!");
-			e.printStackTrace();
+			System.out.println("Opps, error!\n"+e.getMessage());
 		}
 
 		return connection;
