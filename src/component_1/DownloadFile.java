@@ -1,6 +1,5 @@
 package component_1;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import com.chilkatsoft.CkGlobal;
 import com.chilkatsoft.CkScp;
@@ -34,10 +32,12 @@ public class DownloadFile {
 			System.loadLibrary("chilkat");
 		} catch (UnsatisfiedLinkError e) {
 			System.err.println("Native code library failed to load.\n" + e);
-			System.exit(1);
+			System.exit(0);
 		}
 	}
-
+	public static void main(String[] args) {
+		new DownloadFile("4");
+	}
 	public DownloadFile(String idConfig) {
 		this.idConfig = idConfig;
 		try {
@@ -134,8 +134,7 @@ public class DownloadFile {
 		}
 		String[] listFileNames = getListFileName();
 		for (String fileName : listFileNames) {
-			File file = new File(destinationPath + "\\" + fileName);
-			if (!file.exists()) {
+			if (!checkFileDownloaded(fileName)) {
 				boolean isDownload = check.checkFileName(fileName, syntaxFileName);
 				if (isDownload) {
 					boolean downloaded = downloading(fileName);
@@ -147,7 +146,6 @@ public class DownloadFile {
 				}
 			}
 		}
-		System.out.println("Download finished config " + this.idConfig);
 		ssh.Disconnect();
 	}
 
@@ -165,6 +163,7 @@ public class DownloadFile {
 
 		} catch (Exception e) {
 			System.out.println("insert fail");
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -179,7 +178,18 @@ public class DownloadFile {
 		return success;
 	}
 
-	public static void main(String[] args) throws SQLException {
-		new DownloadFile("4");
+	public boolean checkFileDownloaded(String filename) {
+		String sql = "select file_name from data_config_log where id+'" + this.idConfig + "' and file_name='" + filename
+				+ "';";
+		try {
+			ResultSet rs = connectionControl.createStatement().executeQuery(sql);
+			while (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+
 	}
 }

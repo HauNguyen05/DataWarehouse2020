@@ -22,14 +22,10 @@ public class DataWarehouseMonHoc {
 	private String idConfig;
 	private Map<String, String> information = new HashMap<String, String>();
 
-	public static void main(String[] args) {
-		new DataWarehouseMonHoc();
-	}
-
-	public DataWarehouseMonHoc() {
+	public DataWarehouseMonHoc(String id) {
+		this.idConfig = id;
 		try {
 			connectControl = ConnectDB.getConectionControl("root", "");
-			getIdConfig();
 			information = getInformation();
 			getConnectToStaging();
 			getConnectToWarehouse();
@@ -62,7 +58,7 @@ public class DataWarehouseMonHoc {
 	public Connection getConnectToWarehouse() {
 		try {
 			return connectWarehouse = ConnectDB.getConnection(information.get("destination"),
-					information.get("server_des"), "warehouse_main", information.get("user_des"),
+					information.get("server_des"), information.get("db_warehouse_main"), information.get("db_warehouse_user"),
 					information.get("pwd_des"));
 		} catch (SQLException e) {
 			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse - Can not connect to database Warehouse",
@@ -72,55 +68,11 @@ public class DataWarehouseMonHoc {
 	}
 
 	/*
-	 * get id_config from user
-	 */
-	public void getIdConfig() {
-		boolean run = true;
-		while (run) {
-			System.out.println(
-					"Enter id = 1 for config SinhVien.\nEnter id = 2 for config MonHoc.\nEnter id = 3 for config LopHoc.");
-			System.out.print("You want to run config has id = ");
-			Scanner sc = new Scanner(System.in);
-			String id = sc.nextLine();
-			if (id.equalsIgnoreCase("exit"))
-				System.exit(0);
-			List<String> list = getListIdConfig();
-			if (list.contains(id)) {
-				this.idConfig = id;
-				run = false;
-				break;
-			} else {
-				System.out.println("id you enter not found, please enter again!");
-			}
-
-		}
-	}
-
-	/*
-	 * get list idConfig from database control
-	 */
-	public List<String> getListIdConfig() {
-		List<String> list = new ArrayList<String>();
-		String sql = "select id from data_config";
-		PreparedStatement stmt;
-		try {
-			stmt = connectControl.prepareStatement(sql);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				list.add(rs.getString(1));
-			}
-		} catch (SQLException e) {
-			System.out.println("excute query fail");
-		}
-		return list;
-	}
-
-	/*
 	 * get infor to implement transform data
 	 */
 	public Map<String, String> getInformation() {
 		Map<String, String> result = new HashMap<String, String>();
-		String sql = "SELECT  destination, server_des, databasse,user_des,pwd_des,table_name_des, path_dir_src,column_number, column_name ,file_logs from data_config WHERE data_config.id = '"
+		String sql = "SELECT  destination, server_des, databasse,user_des,pwd_des,table_name_des, path_dir_src,column_number, column_name ,file_logs, dbwarehouse_name, dbwarehouse_user, dbwarehouse_password from data_config WHERE data_config.id = '"
 				+ this.idConfig + "'";
 		try {
 			ResultSet rs = connectControl.createStatement().executeQuery(sql);
@@ -135,6 +87,10 @@ public class DataWarehouseMonHoc {
 				result.put("column_number", rs.getString(8));
 				result.put("column_name", rs.getString(9));
 				result.put("file_logs", rs.getString(10));
+				result.put("db_warehouse_main", rs.getString(11));
+				result.put("db_warehouse_user", rs.getString(12));
+				result.put("db_warehouse_password", rs.getString(13));
+				
 			}
 		} catch (SQLException e) {
 			System.out.println("excute query fail");
@@ -183,9 +139,8 @@ public class DataWarehouseMonHoc {
 				String khoaQL = changeData(monhoc.get(4));
 				String ghichu = changeData(monhoc.get(5));
 				update = true;
-				String sql1 = "select STT from monhoc where STT='" + STT + "' and ma_MH ='" + maMH
-						+ "' and ten_MH='" + tenMH + "' and tin_chi=" + tc + " and khoa_QL='"
-						+ khoaQL + "' and ghi_chu='" + ghichu + "'";
+				String sql1 = "select STT from monhoc where STT='" + STT + "' and ma_MH ='" + maMH + "' and ten_MH='"
+						+ tenMH + "' and tin_chi=" + tc + " and khoa_QL='" + khoaQL + "' and ghi_chu='" + ghichu + "'";
 				rs = connectWarehouse.createStatement().executeQuery(sql1);
 				while (rs.next()) {
 					update = false;
@@ -209,7 +164,7 @@ public class DataWarehouseMonHoc {
 	}
 
 	public void insertMonHoc(List<String> monhoc) {
-		String insert = "insert into monhoc(STT, ma_MH, ten_MH, tin_chi, khoa_QL, ghi_chu, date_exprite, date_change) VALUES(?,?,?,?,?,?,'9999-12-31', '9999-12-31')";
+		String insert = "insert into monhoc("+this.information.get("column_name")+") VALUES(?,?,?,?,?,?,'9999-12-31', '9999-12-31')";
 		try {
 			PreparedStatement statement = connectWarehouse.prepareStatement(insert);
 			statement = connectWarehouse.prepareStatement(insert);
@@ -219,7 +174,6 @@ public class DataWarehouseMonHoc {
 			statement.setInt(4, changeDataInt((monhoc.get(3))));
 			statement.setString(5, changeData(monhoc.get(4)));
 			statement.setString(6, changeData(monhoc.get(5)));
-			System.out.println(statement);
 			statement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println("can not insert monhoc");
@@ -246,5 +200,7 @@ public class DataWarehouseMonHoc {
 		Calendar cal = Calendar.getInstance();
 		return format.format(cal.getTime());
 	}
-
+public static void main(String[] args) {
+	new DataWarehouseMonHoc("2");
+}
 }

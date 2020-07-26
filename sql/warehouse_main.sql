@@ -11,11 +11,38 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 20/07/2020 22:10:11
+ Date: 26/07/2020 18:27:37
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for dangki
+-- ----------------------------
+DROP TABLE IF EXISTS `dangki`;
+CREATE TABLE `dangki`  (
+  `SK_DK` int(11) NOT NULL AUTO_INCREMENT,
+  `STT` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  `MaDK` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  `MaSV` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  `MaLH` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  `TimeDK` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  PRIMARY KEY (`SK_DK`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for lophoc
+-- ----------------------------
+DROP TABLE IF EXISTS `lophoc`;
+CREATE TABLE `lophoc`  (
+  `SK_LH` int(11) NOT NULL AUTO_INCREMENT,
+  `STT` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  `MaLH` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  `MaMH` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  `NamHoc` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
+  PRIMARY KEY (`SK_LH`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for monhoc
@@ -32,10 +59,10 @@ CREATE TABLE `monhoc`  (
   `date_expired` date NULL DEFAULT '9999-12-31',
   `date_change` date NULL DEFAULT '9999-12-31',
   PRIMARY KEY (`SK_MH`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 180 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for warehouse_student
+-- Table structure for sinhvien
 -- ----------------------------
 DROP TABLE IF EXISTS `sinhvien`;
 CREATE TABLE `sinhvien`  (
@@ -53,34 +80,6 @@ CREATE TABLE `sinhvien`  (
   `GhiChu` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `dt_expired` date NULL DEFAULT '9999-12-31',
   PRIMARY KEY (`SK_SV`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
-
-
-DROP TABLE IF EXISTS `lophoc`;
-CREATE TABLE `lophoc`  (
-  `SK_LH` int(11) NOT NULL AUTO_INCREMENT,
-  `STT` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  `MaLH` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  `MaMH` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  `NamHoc` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  PRIMARY KEY (`SK_LH`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
-
-DROP TABLE IF EXISTS `dangki`;
-CREATE TABLE `dangki`  (
-  `SK_DK` int(11) NOT NULL AUTO_INCREMENT,
-  `STT` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  `MaDK` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  `MaSV` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  `MaLH` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  `TimeDK` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'NULL',
-  PRIMARY KEY (`SK_DK`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 175 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

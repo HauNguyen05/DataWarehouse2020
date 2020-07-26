@@ -5,9 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 
 import common.ConnectDB;
 
@@ -24,21 +22,26 @@ public class DataWarehouse {
 	List<String> dataWarehouse;
 
 	// Các thuộc tính fix cứng
-	final String PASSWORD = "chkdsk"; // password my-sql
+	final String PASSWORD = ""; // password my-sql
 	final String TRANSFORM_SUCCESS = "TS"; // transform successful
 	final String TRANSFORM_FAIL = "TF"; // transform
+
+	String id;
+
+	public DataWarehouse(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * 1. Connect tới db_control 2. Lấy các thuộc tính cần thiết add vào list
 	 * dataControl
 	 */
-	
 	public void connectDataControl() throws SQLException {
 		CONNECTION_CONTROL = ConnectDB.getConectionControl("root", PASSWORD);
 		Statement statementControl = CONNECTION_CONTROL.createStatement();
 		String sql = "select databasse, user_des, pwd_des, table_name_des,"
 				+ "column_number, column_name,dbwarehouse_name, dbwarehouse_user,"
-				+ "dbwarehouse_password, dbwarehouse_table from data_config limit 1;";
+				+ "dbwarehouse_password, dbwarehouse_table from data_config where id='" + this.id + "'";
 
 		ResultSet rsControl = statementControl.executeQuery(sql);
 
@@ -57,7 +60,7 @@ public class DataWarehouse {
 			dataControl.add(rsControl.getString(10)); // Table_Warehouse
 
 		}
-		System.out.println(dataControl);
+//		System.out.println(dataControl);
 
 	}
 
@@ -80,20 +83,19 @@ public class DataWarehouse {
 			String temp = "";
 			for (int i = 1; i < Integer.parseInt(dataControl.get(4)) + 1; i++) { // column_number
 				String a = rsStaging.getString(i);
-				
-				if (rsStaging.getString(i).equalsIgnoreCase("\r") 
-					|| rsStaging.getString(i).equalsIgnoreCase("")) {
+
+				if (rsStaging.getString(i).equalsIgnoreCase("\r") || rsStaging.getString(i).equalsIgnoreCase("")) {
 					temp += "," + "NULL";
 					continue;
 				}
-				
+
 				temp += "," + rsStaging.getString(i);
 			}
 			temp = temp.substring(1);
 			dataStaging.add(temp);
 
 		}
-		System.out.println(dataStaging);
+//		System.out.println(dataStaging);
 
 	}
 
@@ -120,7 +122,7 @@ public class DataWarehouse {
 			dataWarehouse.add(temp);
 
 		}
-		System.out.println(dataWarehouse);
+//		System.out.println(dataWarehouse);
 
 	}
 
@@ -144,6 +146,7 @@ public class DataWarehouse {
 			}
 
 		}
+		truncateStaging();
 
 	}
 
@@ -158,13 +161,13 @@ public class DataWarehouse {
 	private void executeSuccess() throws SQLException {
 		// Update status file trong log thành TS
 		updateStatus(TRANSFORM_SUCCESS);
-		
+
 		// Truncate Staging
 		truncateStaging();
 	}
 
 	private void updateStatus(String status) throws SQLException {
-		String sql = "UPDATE " + "data_config_log" +" SET status =" + status +"WHERE status = TF limit 1";
+		String sql = "UPDATE " + "data_config_log" + " SET status =" + status + "WHERE status = TF limit 1";
 		Statement statementControl = CONNECTION_CONTROL.createStatement();
 		ResultSet rsControl = statementControl.executeQuery(sql);
 	}
@@ -175,9 +178,9 @@ public class DataWarehouse {
 		Statement statementStaging = CONNECTION_STAGING.createStatement();
 		ResultSet rsStaging = statementStaging.executeQuery(sql);
 	}
-	
+
 	private void checkStatus() {
-		
+
 	}
 
 	private void addData(String dataIndex) throws SQLException {
@@ -192,15 +195,10 @@ public class DataWarehouse {
 
 		value = value.substring(1);
 		// CHU Y
-		String sql = "INSERT INTO " + dataControl.get(9)
-				+ " (STT, MSSV, HoLot, Ten, NgaySinh, MaLop, TenLop,"
-				+ " DienThoai, Email, QueQuan, GhiChu)" 
-				+ " VALUES(" + value
-				+ ");";
+		String sql = "INSERT INTO " + dataControl.get(9) + " (STT, MSSV, HoLot, Ten, NgaySinh, MaLop, TenLop,"
+				+ " DienThoai, Email, QueQuan, GhiChu)" + " VALUES(" + value + ");";
 		Statement statementWarehouse = CONNECTION_WAREHOUSE.createStatement();
 		int rows = statementWarehouse.executeUpdate(sql);
-		System.out.println(rows);
-
 	}
 
 	private int checkData(String dataIndex) throws SQLException {
@@ -210,12 +208,12 @@ public class DataWarehouse {
 		}
 		// 2. Giống trường khóa chính (MSSV)
 		String arrDataIndex[] = dataIndex.split(",");
-		
+
 		int i = 0;
 		for (String dtWareHouse : dataWarehouse) {
 			i += 1;
 			String arrWarehouse[] = dtWareHouse.split(",");
-			if (arrDataIndex[1].equals(arrWarehouse[1])) {			
+			if (arrDataIndex[1].equals(arrWarehouse[1])) {
 				setExpireDate(Integer.toString(i));
 				return 2;
 			}
@@ -234,7 +232,7 @@ public class DataWarehouse {
 	}
 
 	public static void main(String[] args) throws SQLException {
-		DataWarehouse dw = new DataWarehouse();
+		DataWarehouse dw = new DataWarehouse("1");
 		dw.addDataToWarehouse();
 
 //		dw.connectDataControl();

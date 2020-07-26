@@ -2,6 +2,7 @@ package component_1;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class CheckFileName {
 	private String typeFile;
@@ -18,67 +19,33 @@ public class CheckFileName {
 	}
 
 	boolean checkFileName(String fileName, String listSyntax) {
-		String[] name = fileName.split("\\.");
-		if (name.length > 1 && checkTypeFile(name[1]) && checkName(name[0], listSyntax)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	boolean checkName(String fileName, String syntaxs) {
-		fileName = fileName.trim();
-		syntaxs = syntaxs.trim();
-		String[] textSyntax = syntaxs.split("_");
-		String[] arrName = fileName.split("_");
-		boolean checkGroup = false;
-		boolean checkSeq = false;
-		boolean checkCa = false;
-		if (arrName.length == textSyntax.length) {
-			for (int i = 0; i < arrName.length; i++) {
-				if (i == 1) {
-					if (arrName[i].equals("sang") || arrName[i].equals("chieu")) {
-						checkCa = true;
-					}
-				} else if (i == 2 && arrName[i].contains("nhom")) {
-					String group = (String) arrName[i].subSequence(4, arrName[i].length());
-					if (!parseInt(group)) {
-						return false;
-					} else {
-						checkGroup = true;
-					}
-				} else {
-					if (!arrName[i].equals(textSyntax[i])) {
-						checkSeq = false;
-						return false;
-					} else {
-						checkSeq = true;
-					}
-				}
-			}
-			if (checkGroup && checkSeq && checkCa) {
-				return true;
-			} else
-				return false;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean checkTypeFile(String nameType) {
-		String[] type = { "docx", "doc", "xlsx", "csv", "txt", "zip", "rar" };
-		for (String string : type) {
-			if (nameType.equals(string)) {
-				this.typeFile = string;
-				if (nameType.equals("zip") || nameType.equals("rar")) {
+		String[] a = listSyntax.split(",");
+		for (String syntax : a) {
+			syntax = syntax.trim();
+			if (fileName.matches(syntax)) {
+				String[] name = fileName.split("\\.");
+				this.typeFile = name[1];
+				switch (name[1]) {
+				case "zip":
 					this.isUnzip = "1";
-				} else {
+					break;
+				case "rar":
+					this.isUnzip = "1";
+					break;
+				case "txt":
 					this.isUnzip = "0";
-					if (nameType.equals("xlsx")) {
-						this.ignore = "0";
-					} else {
-						this.ignore = "1";
-					}
+					this.ignore = "1";
+					break;
+				case "csv":
+					this.isUnzip = "0";
+					this.ignore = "1";
+					break;
+				case "xlsx":
+					this.isUnzip = "0";
+					this.ignore = "0";
+					break;
+				default:
+					return false;
 				}
 				return true;
 			}
@@ -86,18 +53,10 @@ public class CheckFileName {
 		return false;
 	}
 
-	static boolean parseInt(String number) {
-		try {
-			Integer.parseInt(number);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-	
 	public static void main(String[] args) {
+//		System.out.println("sinhvien_sang_nhom10.xlsx".matches("sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx"));
 		CheckFileName c = new CheckFileName();
-		boolean a = c.checkFileName("monhoc_chieu_nhom5_2020.zip", "monhoc_ca_nhom_2020");
+		boolean a = c.checkFileName("sinhvien_sang_nhom0.xlsx","sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx");
 		System.out.println(a);
 	}
 }
