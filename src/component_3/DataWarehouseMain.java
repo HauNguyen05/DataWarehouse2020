@@ -44,7 +44,8 @@ public class DataWarehouseMain {
 		Statement statementControl = CONNECTION_CONTROL.createStatement();
 		String sql = "select databasse, user_des, pwd_des, table_name_des,"
 				+ "column_number, column_name,dbwarehouse_name, dbwarehouse_user,"
-				+ "dbwarehouse_password, dbwarehouse_table, date_dim_name from data_config where id =" + idConfig;
+				+ "dbwarehouse_password, dbwarehouse_table, date_dim_name "
+				+ "from data_config where id =" + idConfig;
 
 		ResultSet rsControl = statementControl.executeQuery(sql);
 
@@ -92,8 +93,8 @@ public class DataWarehouseMain {
 		while (rsStaging.next()) {
 			String temp = "";
 			for (int i = 1; i < Integer.parseInt(dataControl.get("number_of_column")) + 1; i++) { // column_number
-				
 				if (rsStaging.getString(i).equalsIgnoreCase("\r") 
+					|| rsStaging.getString(i).equalsIgnoreCase(" \r")
 					|| rsStaging.getString(i).equalsIgnoreCase("")) {
 					temp += "," + "NULL";
 					continue;
@@ -248,8 +249,9 @@ public class DataWarehouseMain {
 	private String getIdDateDim(String date) {
 		if(!date.equals("NULL")) {
 			for (Map.Entry me : dateDim.entrySet()) {
-		          if(date.equalsIgnoreCase((String) me.getValue()))
-		        	  return (String) me.getKey();
+				String a = (String) me.getKey();
+		          if(date.equalsIgnoreCase(dateDim.get(a)))
+		        	  return a;
 		        }
 			
 		} 
@@ -262,7 +264,7 @@ public class DataWarehouseMain {
 		String arrFieldColumn[] = dataControl.get("column_name").split(",");
 		String value = "";
 		String valueColumn = "";
-		String dateDim = getIdDateDim(arr[4]);
+		String dateDimValue = getIdDateDim(arr[4]);
 
 		
 		for (String string : arrFieldColumn) {
@@ -279,7 +281,7 @@ public class DataWarehouseMain {
 		value = value.substring(1);
 		valueColumn = valueColumn.substring(1);
 		
-		if(!dateDim.equals("")) {
+		if(!dateDimValue.equals("")) {
 			value += "," + dateDim;
 			valueColumn += " " + dataControl.get("date_dim_name");
 		}
@@ -287,9 +289,11 @@ public class DataWarehouseMain {
 		// CHU Y
 		String sql = "INSERT INTO " + dataControl.get("table_name_warehouse") + 
 					 "(" + valueColumn + ") VALUES(" + value + ");";
+		System.out.println(sql);
 		
 		Statement statementWarehouse = CONNECTION_WAREHOUSE.createStatement();
 		int rows = statementWarehouse.executeUpdate(sql);
+		System.out.println(rows);
 	}
 
 	private void handleDataMonHoc() {
