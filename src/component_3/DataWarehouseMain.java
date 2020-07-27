@@ -26,6 +26,8 @@ public class DataWarehouseMain {
 	Map<String, String> dataControl;
 	List<String> dataStaging;
 	List<String> dataWarehouse;
+	Map<String, String> dateDim;
+	
 	
 	// Các thuộc tính fix cứng
 	final String PASSWORD = "chkdsk"; // password my-sql
@@ -42,7 +44,7 @@ public class DataWarehouseMain {
 		Statement statementControl = CONNECTION_CONTROL.createStatement();
 		String sql = "select databasse, user_des, pwd_des, table_name_des,"
 				+ "column_number, column_name,dbwarehouse_name, dbwarehouse_user,"
-				+ "dbwarehouse_password, dbwarehouse_table from data_config where id =" + idConfig;
+				+ "dbwarehouse_password, dbwarehouse_table, date_dim_name from data_config where id =" + idConfig;
 
 		ResultSet rsControl = statementControl.executeQuery(sql);
 
@@ -52,7 +54,7 @@ public class DataWarehouseMain {
 			//Alt + Shirt + R
 			dataControl.put("db_name_staging", rsControl.getString(1));
 			dataControl.put("user_name_staging", rsControl.getString(2));
-			dataControl.put("password_name_staging", rsControl.getString(3));
+			dataControl.put("password_staging", rsControl.getString(3));
 			dataControl.put("table_name_staging", rsControl.getString(4));
 			dataControl.put("number_of_column", rsControl.getString(5));
 			dataControl.put("column_name", rsControl.getString(6));
@@ -60,7 +62,8 @@ public class DataWarehouseMain {
 			dataControl.put("user_name_warehouse", rsControl.getString(8));
 			dataControl.put("password_warehouse", rsControl.getString(9));
 			dataControl.put("table_name_warehouse", rsControl.getString(10));
-			dataControl.put("file_logs", rsControl.getString(10));
+			dataControl.put("date_dim_name", rsControl.getString(11));
+			
 
 		}
 		System.out.println(dataControl);
@@ -77,7 +80,7 @@ public class DataWarehouseMain {
 		CONNECTION_STAGING = ConnectDB.getConnection
 							(dataControl.get("db_name_staging"),
 							 dataControl.get("user_name_staging"),
-							 dataControl.get("password_name_staging"));
+							 dataControl.get("password_staging"));
 
 		Statement statementStaging = CONNECTION_STAGING.createStatement();
 
@@ -89,7 +92,6 @@ public class DataWarehouseMain {
 		while (rsStaging.next()) {
 			String temp = "";
 			for (int i = 1; i < Integer.parseInt(dataControl.get("number_of_column")) + 1; i++) { // column_number
-				String a = rsStaging.getString(i);
 				
 				if (rsStaging.getString(i).equalsIgnoreCase("\r") 
 					|| rsStaging.getString(i).equalsIgnoreCase("")) {
@@ -97,7 +99,7 @@ public class DataWarehouseMain {
 					continue;
 				}
 				
-				temp += "," + rsStaging.getString(i);
+				temp += "," + rsStaging.getString(i).trim();
 			}
 			temp = temp.substring(1);
 			dataStaging.add(temp);
@@ -122,7 +124,7 @@ public class DataWarehouseMain {
 		while (rsWarehouse.next()) {
 			String temp = "";
 			
-			for (int i = 2; i < Integer.parseInt(dataControl.get(4)) + 2; i++) {
+			for (int i = 2; i < Integer.parseInt(dataControl.get("number_of_column")) + 2; i++) {
 				temp += "," + rsWarehouse.getString(i);
 			}
 			
@@ -131,12 +133,23 @@ public class DataWarehouseMain {
 
 		}
 		System.out.println(dataWarehouse);
+		
+		
+		ResultSet rsDateDim = statementWarehouse.executeQuery("select `1`, `2` from " + dataControl.get("date_dim_name"));
+		dateDim = new HashMap<String, String>();
+		
+		while (rsDateDim.next()) {
+			dateDim.put(rsDateDim.getString(1), rsDateDim.getString(2));
+			
+		}
+		System.out.println(dateDim);
+		
 
 	}
 	
 	private int checkHandlingData() {
 		
-		switch (dataControl.get("table_of_name")) {
+		switch (dataControl.get("table_name_staging")) {
 		case "sinhvien":
 			return 1;
 			
@@ -154,7 +167,7 @@ public class DataWarehouseMain {
 		}
 	}
 	
-	private void directHandlingData() {
+	private void directHandlingData() throws SQLException {
 		
 		switch (checkHandlingData()) {
 		// sinhvien
@@ -180,8 +193,103 @@ public class DataWarehouseMain {
 		}
 	}
 	
-	private void handleDataSinhVien() {
+	private void handleDataSinhVien() throws SQLException {
+		// Chạy lần lượt từng phần tử trong dataStaging
+				for (String dataIndex : dataStaging) {
+
+					switch (checkData(dataIndex)) {
+					// 1. Nếu trùng hoàn toàn thì nhảy sang record tiếp theo
+					case 1:
+						break;
+					// 2. Nếu nó trùng MSSV thì update lại SV trong dt_warehouse và addData();
+					case 2:
+						addData(dataIndex);
+						break;
+					// 0. Nếu bình thường thì addData();
+					default:
+						addData(dataIndex);
+						break;
+					}
+
+				}
 		
+	}
+	
+	private int checkData(String dataIndex) throws SQLException {
+		// 1. Giống hoàn toàn
+		if (dataWarehouse.contains(dataIndex)) {
+			return 1;
+		}
+		// 2. Giống trường khóa chính (MSSV)
+		String arrDataIndex[] = dataIndex.split(",");
+
+		int i = 0;
+		for (String dtWareHouse : dataWarehouse) {
+			i += 1;
+			String arrWarehouse[] = dtWareHouse.split(",");
+			if (arrDataIndex[1].equals(arrWarehouse[1])) {
+				setExpireDate(Integer.toString(i));
+				return 2;
+			}
+
+		}
+		return 0;
+	}
+
+	private void setExpireDate(String id) throws SQLException {
+		String sql = "UPDATE " + dataControl.get("table_name_warehouse") +
+					 " SET dt_expired = CURDATE()" + " WHERE SK_SV = " + id;
+
+		Statement statementWarehouse = CONNECTION_WAREHOUSE.createStatement();
+		int rsWarehouse = statementWarehouse.executeUpdate(sql);
+		System.out.println(rsWarehouse);
+
+	}
+	private String getIdDateDim(String date) {
+		if(!date.equals("NULL")) {
+			for (Map.Entry me : dateDim.entrySet()) {
+		          if(date.equalsIgnoreCase((String) me.getValue()))
+		        	  return (String) me.getKey();
+		        }
+			
+		} 
+		return "";
+	}
+	
+	private void addData(String dataIndex) throws SQLException {
+
+		String arr[] = dataIndex.split(",");
+		String arrFieldColumn[] = dataControl.get("column_name").split(",");
+		String value = "";
+		String valueColumn = "";
+		String dateDim = getIdDateDim(arr[4]);
+
+		
+		for (String string : arrFieldColumn) {
+			valueColumn += ", " + string;
+		}
+
+		for (String string : arr) {
+			string = "N" + "'" + string + "'";
+			value += ", " + string;
+		}
+		
+		
+		
+		value = value.substring(1);
+		valueColumn = valueColumn.substring(1);
+		
+		if(!dateDim.equals("")) {
+			value += "," + dateDim;
+			valueColumn += " " + dataControl.get("date_dim_name");
+		}
+		
+		// CHU Y
+		String sql = "INSERT INTO " + dataControl.get("table_name_warehouse") + 
+					 "(" + valueColumn + ") VALUES(" + value + ");";
+		
+		Statement statementWarehouse = CONNECTION_WAREHOUSE.createStatement();
+		int rows = statementWarehouse.executeUpdate(sql);
 	}
 
 	private void handleDataMonHoc() {
@@ -201,6 +309,7 @@ public class DataWarehouseMain {
 			connectDataControl();
 			connectDataStaging();
 			connectDataWarehouse();
+			directHandlingData();
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
