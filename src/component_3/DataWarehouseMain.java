@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import common.ConnectDB;
+import common.JavaMail;
 
 
 public class DataWarehouseMain {
@@ -110,6 +111,11 @@ public class DataWarehouseMain {
 
 	}
 	
+	/**
+	 * 1. Kết nối tới database_warehouse
+	 * 2. Lấy ra toàn bộ dữ liệu của warehouse add vào data_warehouse
+	 * 3. Lấy ra toàn bộ record của date_dim add vào dateDim
+	 */
 	public void connectDataWarehouse() throws SQLException {
 		
 		CONNECTION_WAREHOUSE = ConnectDB.getConnection(
@@ -155,13 +161,13 @@ public class DataWarehouseMain {
 			return 1;
 			
 		case "monhoc":
-			return 2;
+			return 1;
 			
 		case "lophoc":
-			return 3;
+			return 1;
 			
 		case "dangki":
-			return 4;
+			return 1;
 
 		default:
 			return 0;
@@ -204,10 +210,12 @@ public class DataWarehouseMain {
 						break;
 					// 2. Nếu nó trùng MSSV thì update lại SV trong dt_warehouse và addData();
 					case 2:
+						System.out.println("\n 2");
 						addData(dataIndex);
 						break;
 					// 0. Nếu bình thường thì addData();
 					default:
+						System.out.println("\n 0");
 						addData(dataIndex);
 						break;
 					}
@@ -223,12 +231,13 @@ public class DataWarehouseMain {
 		}
 		// 2. Giống trường khóa chính (MSSV)
 		String arrDataIndex[] = dataIndex.split(",");
+		String valueIndex = arrDataIndex[1].trim();
 
 		int i = 0;
 		for (String dtWareHouse : dataWarehouse) {
 			i += 1;
 			String arrWarehouse[] = dtWareHouse.split(",");
-			if (arrDataIndex[1].equals(arrWarehouse[1])) {
+			if (valueIndex.equals(arrWarehouse[1].trim())) {
 				setExpireDate(Integer.toString(i));
 				return 2;
 			}
@@ -243,7 +252,6 @@ public class DataWarehouseMain {
 
 		Statement statementWarehouse = CONNECTION_WAREHOUSE.createStatement();
 		int rsWarehouse = statementWarehouse.executeUpdate(sql);
-		System.out.println(rsWarehouse);
 
 	}
 	private String getIdDateDim(String date) {
@@ -307,13 +315,34 @@ public class DataWarehouseMain {
 	private void handleDataDangKi() {
 		
 	}
+	private boolean checkStatus() throws SQLException {
+		Statement statementControl = CONNECTION_CONTROL.createStatement();
+		String sql = "select count(*) from data_config_log where status = \"ER\";";
+
+		ResultSet rsControl = statementControl.executeQuery(sql);
+		String result = "";
+		while (rsControl.next()) {
+				result = rsControl.getString(1);
+				
+		}
+		
+		if(result.equals(0)) return false;
+		return true;
+	}
 	
 	public void addDataToWarehouse() {
 		try {
 			connectDataControl();
-			connectDataStaging();
-			connectDataWarehouse();
-			directHandlingData();
+			if(checkStatus()) {
+				connectDataStaging();
+				connectDataWarehouse();
+				directHandlingData();
+			}
+			else {
+				JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Nothing file to load");
+				
+			}
+			
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
@@ -323,8 +352,10 @@ public class DataWarehouseMain {
 	
 	public static void main(String[] args) {
 		DataWarehouseMain main = new DataWarehouseMain();
-		main.idConfig = "1";
+		main.idConfig = "2";
 		main.addDataToWarehouse();
+		
+		
 	}
 
 }
