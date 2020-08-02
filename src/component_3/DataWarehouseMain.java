@@ -350,6 +350,16 @@ public class DataWarehouseMain {
 		
 	}
 	
+	private void truncateTable() throws SQLException {
+		
+		String sql = "TRUNCATE TABLE " + dataControl.get("table_name_staging");
+		
+		Statement statementControl = CONNECTION_CONTROL.createStatement();
+		
+		statementControl.execute(sql);
+		
+	}
+	
 	public void addDataToWarehouse() {
 		try {
 			connectDataControl();
@@ -357,6 +367,9 @@ public class DataWarehouseMain {
 				connectDataStaging();
 				connectDataWarehouse();
 				handleData();
+			// Khi nào chạy thiệt mới mở comment, chứ không nó xóa hết data test hết :v 
+			//	editStatus();
+			//	truncateTable();
 			}
 			else {
 				JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Nothing file to load");
