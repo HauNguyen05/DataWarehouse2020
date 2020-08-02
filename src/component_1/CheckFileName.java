@@ -2,13 +2,13 @@ package component_1;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class CheckFileName {
 	private String typeFile;
 	private String isUnzip;
 	private String ignore;
-
+	
+	// lấy thông tin của file lưu vào map
 	public Map<String, String> information() {
 		Map<String, String> result = new HashMap<String, String>();
 		result.put("typeFile", this.typeFile);
@@ -17,12 +17,15 @@ public class CheckFileName {
 		return result;
 
 	}
-
+	// kiểm tra tên file, nhận vào fileName và list các syntax
 	boolean checkFileName(String fileName, String listSyntax) {
 		String[] a = listSyntax.split(",");
 		for (String syntax : a) {
+			// bỏ khoảng trắng trước syntax
 			syntax = syntax.trim();
+			//kiểm tra tên file có đúng syntax không
 			if (fileName.matches(syntax)) {
+				// chia tên file thành 2 phần theo dấu .
 				String[] name = fileName.split("\\.");
 				this.typeFile = name[1];
 				switch (name[1]) {
@@ -54,7 +57,6 @@ public class CheckFileName {
 	}
 
 	public static void main(String[] args) {
-//		System.out.println("sinhvien_sang_nhom10.xlsx".matches("sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx"));
 		CheckFileName c = new CheckFileName();
 		boolean a = c.checkFileName("sinhvien_sang_nhom0.xlsx","sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx");
 		System.out.println(a);

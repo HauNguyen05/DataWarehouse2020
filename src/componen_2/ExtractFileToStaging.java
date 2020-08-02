@@ -388,6 +388,6 @@ public class ExtractFileToStaging {
 
 	public static void main(String[] args) throws Exception {
 		ExtractFileToStaging a = new ExtractFileToStaging();
-		a.insetDataAllFile("2");
+		a.insetDataAllFile("1");
 	}
 }

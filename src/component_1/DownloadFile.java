@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.chilkatsoft.CkGlobal;
@@ -27,17 +25,7 @@ public class DownloadFile {
 	private Connection connectionControl;
 	private CheckFileName check;
 	private String idConfig;
-	static {
-		try {
-			System.loadLibrary("chilkat");
-		} catch (UnsatisfiedLinkError e) {
-			System.err.println("Native code library failed to load.\n" + e);
-			System.exit(0);
-		}
-	}
-	public static void main(String[] args) {
-		new DownloadFile("4");
-	}
+
 	public DownloadFile(String idConfig) {
 		this.idConfig = idConfig;
 		try {
@@ -47,31 +35,18 @@ public class DownloadFile {
 			e.printStackTrace();
 			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse", "I can't connect to database");
 		}
-		// step 1: get necessary informations for process
-		setup();
-		// run process
-		downloadFileProcess();
 
-	}
-
-	public List<String> getListIdConfig() {
-		List<String> list = new ArrayList<String>();
-		String sql = "select id from data_config";
-		PreparedStatement stmt;
-		try {
-			stmt = connectionControl.prepareStatement(sql);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				list.add(rs.getString(1));
-			}
-		} catch (SQLException e) {
-			System.out.println("excute query fail");
-		}
-		return list;
 	}
 
 	/*
-	 * connect table config to get information
+	 * kết nối db control để lấy thông tin cần thiết:
+	 * - server
+	 * - tên user
+	 * - mật khẩu của server
+	 * - cổng kết nối
+	 * - đường dẫn trên server
+	 * - đường dẫn ở local
+	 * - syntax của tên file
 	 */
 	public void setup() {
 		String sql = "SELECT server_src,user_src, pwd_src, port_src, path_remote, path_dir_src, syntax_file_name from data_config where id ="
@@ -79,7 +54,7 @@ public class DownloadFile {
 		try {
 			PreparedStatement statement = connectionControl.prepareStatement(sql);
 			ResultSet r = statement.executeQuery();
-			while (r.next()) {
+			if (r.next()) {
 				this.server = r.getString(1);
 				this.userName = r.getString(2);
 				this.password = r.getString(3);
@@ -97,58 +72,94 @@ public class DownloadFile {
 
 	public CkSsh connectServer() {
 		CkGlobal glob = new CkGlobal();
+		// mo khoa method
 		glob.UnlockBundle("key");
-		glob.get_UnlockStatus();
 		ssh = new CkSsh();
-		ssh.Connect(server, port);
+		// kết nối tới server qua port
+		boolean success = ssh.Connect(server, port);
+		if(!success) {
+//			JavaMail.send("haunguyen0528@gmail.com", "DataWarehouse - Download File", "i can not access to server");
+			System.out.println("can not access to server");
+			System.exit(0);
+		}
+		// Đợi tối đa 5 giây khi đọc phản hồi
 		ssh.put_IdleTimeoutMs(5000);
-		ssh.AuthenticatePw(userName, password);
+		// xac thuc user voi userName va password
+		boolean connect = ssh.AuthenticatePw(userName, password);
+		// neu connect khong thanh cong thi gui mail bao loi va ket thuc chuong trinh
+		if (!connect) {
+			// gui mail den "haunguyen0528@gmail.com" với subject "DataWarehouse- Download file
+			// va noi dung "i can not access to server with userName and pass da cho
+			JavaMail.send("haunguyen0528@gmail.com", "DataWarehouse - Download File",
+					"i can not access to server with userName: [" + this.userName + "] and pass [" + this.password
+							+ "]");
+			// ket thuc chuong trinh
+			System.exit(0);
+		}
 		return ssh;
 	}
 
 	public String[] getListFileName() {
-		// open channel to excute cmd
+		// mo channel de thuc hien cau lenh cmd
 		int channelNum = ssh.OpenSessionChannel();
-		// if fail print fail
+		// neu khong thanh cong thi in ra loi va dung chuong trinh
 		if (channelNum < 0) {
 			System.out.println("open channel failure");
 			System.exit(0);
 		}
-		// cmd list all file in folder
+		// cau lenh cmd de liet ke ten cac file co trong thu muc remote
 		String cmd = "cd " + remotePath + "; ls";
+		// thực hiện lệnh cmd trên channelNum được chỉ định
 		ssh.SendReqExec(channelNum, cmd);
+		//đọc dữ liệu đến channelNum cho đến khi máy chủ bị đóng
 		ssh.ChannelReceiveToClose(channelNum);
-		String cmdResult = ssh.getReceivedText(channelNum, "ansi");
+		// trả về văn bản nhận được trên channelNum theo chartSet ansi
+		String cmdResult = ssh.getReceivedText(channelNum, "utf-8");
+		System.out.println(cmd);
+		//chia kết quả trả về của câu lệnh theo "\n" để được mảng tên file
 		String[] listFileNames = cmdResult.split("\n");
 		return listFileNames;
 	}
 
 	/*
-	 * download file from server, insert to table log
+	 * download file trên server, insert vào table log
 	 */
 	public void downloadFileProcess() {
-		if (connectServer() == null) {
-			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse - Connect to server",
-					"I can't connect to server with account name: " + this.userName + " and password: "
-							+ this.password);
-		}
+		System.loadLibrary("chilkat");
+		//method lấy các thông tin cần thiết để thực hiện download process
+		setup();
+		// kết nối tới server để thực hiện download
+		connectServer();
+		// lấy ra tên tất cả các file có trong thư mục remote
 		String[] listFileNames = getListFileName();
+		// lấy từng tên file trong mảng ra
 		for (String fileName : listFileNames) {
+			// kiểm tra nếu file chưa được download thì mới tiếp tục
 			if (!checkFileDownloaded(fileName)) {
+				// kiểm tra tên file có đúng theo syntax lấy từ db không
 				boolean isDownload = check.checkFileName(fileName, syntaxFileName);
+				// nếu đúng theo syntax thì download
 				if (isDownload) {
+					// download file
 					boolean downloaded = downloading(fileName);
+					// nếu download file thành công thì insert vào table log
 					if (downloaded) {
+						// dùng map để lưu thông tin của file (tên file, đuôi file, số dòng ignore..)
 						Map<String, String> infor = check.information();
 						infor.put("fileName", fileName);
+						// insert thông tin file vào table log
 						insertLogTable(idConfig, infor);
 					}
 				}
 			}
 		}
+		// ngắt kết nối tới server
 		ssh.Disconnect();
 	}
 
+	/*
+	 * thêm thông tin của file vừa download về vào table log
+	 */
 	public void insertLogTable(String idConfig, Map<String, String> infor) {
 		String update = "INSERT INTO data_config_log(id, file_name,file_type, status, unzip, ignore_record) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
@@ -160,30 +171,31 @@ public class DownloadFile {
 			statement.setString(5, infor.get("isUnzip"));
 			statement.setString(6, infor.get("ignore"));
 			statement.execute();
-
 		} catch (Exception e) {
 			System.out.println("insert fail");
 			System.out.println(e.getMessage());
 		}
 	}
-
+	// download file bằng api của chilkat
 	public boolean downloading(String fileName) {
+		//gọi class CkScp của chilkat
 		CkScp scp = new CkScp();
-		boolean success = scp.UseSsh(ssh);
-		if (success != true) {
-			System.out.println(scp.lastErrorText());
-			return false;
-		}
-		success = scp.DownloadFile(remotePath + "\\" + fileName, destinationPath + "\\" + fileName);
+		//Sử dụng kết nối SSH của ssh để chuyển SCP.
+		scp.UseSsh(ssh);
+		//Tải tệp từ máy chủ SSH từ xa về local
+		// nhận vào đường dẫn của file cần download trên server và đường dẫn lưu file ở local
+		boolean  success = scp.DownloadFile(remotePath + "\\" + fileName, destinationPath + "\\" + fileName);
 		return success;
 	}
-
+	/*
+	 * kiểm tra xem file đã được download trước đó chưa
+	 */
 	public boolean checkFileDownloaded(String filename) {
 		String sql = "select file_name from data_config_log where id+'" + this.idConfig + "' and file_name='" + filename
 				+ "';";
 		try {
 			ResultSet rs = connectionControl.createStatement().executeQuery(sql);
-			while (rs.next()) {
+			if (rs.next()) {
 				return true;
 			}
 		} catch (SQLException e) {
@@ -191,5 +203,10 @@ public class DownloadFile {
 		}
 		return false;
 
+	}
+
+	public static void main(String[] args) {
+		new DownloadFile("1").downloadFileProcess();
+		
 	}
 }
