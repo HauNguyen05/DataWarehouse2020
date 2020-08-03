@@ -8,8 +8,8 @@ public class ProcessETL {
 	public static void main(String[] args) {
 //		String id = args[0];
 		String id = "1";
-		new DownloadFile(id).downloadFileProcess();
-		System.out.println("download finished");
+//		new DownloadFile(id).downloadFileProcess();
+//		System.out.println("download finished");
 		try {
 			new ExtractFileToStaging().insetDataAllFile(id);
 		} catch (Exception e) {
@@ -18,7 +18,7 @@ public class ProcessETL {
 			System.out.println(e.getMessage());
 			System.exit(0);
 		}
-		new DataWarehouseMain(args[0]).addDataToWarehouse();
+		new DataWarehouseMain(id).addDataToWarehouse();
 		System.out.println("transform done");
 	}
 }
