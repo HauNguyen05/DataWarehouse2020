@@ -206,7 +206,7 @@ public class DownloadFile {
 	}
 
 	public static void main(String[] args) {
-		new DownloadFile("1").downloadFileProcess();
+		new DownloadFile(args[0]).downloadFileProcess();
 		
 	}
 }

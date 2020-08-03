@@ -64,11 +64,12 @@ public class ConnectDB {
 
 	public static void main(String[] args) throws SQLException {
 
-		Connection conn = getConnection("warehouse_control", "root", "");
+		Connection conn = getConnection("warehouse_control", "root", "chkdsk");
 
 		if (conn != null)
 			System.out.println("yes man");
 		else
 			System.out.println("not ok");
+
 	}
 }
