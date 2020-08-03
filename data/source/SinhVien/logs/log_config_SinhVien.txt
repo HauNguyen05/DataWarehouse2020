@@ -10,3 +10,71 @@ Thay doi status  thanh 'FAIL'
 Bug: java.sql.SQLException: No value specified for parameter 9
 Move file sinhvien_chieu_nhom13.xlsx to folder error 
 --------------------------------- 
+
+file: sinhvien_chieu_nhom11.xlsx 18:34:53 26.07.2020
+
+file: sinhvien_chieu_nhom11.xlsx 18:35:34 26.07.2020
+
+file: sinhvien_chieu_nhom11.xlsx 18:36:06 26.07.2020
+
+file: sinhvien_chieu_nhom11.xlsx 18:36:46 26.07.2020
+
+file: sinhvien_chieu_nhom11.xlsx 18:37:43 26.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom11.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom13.xlsx 18:38:00 26.07.2020
+Thay doi status  thanh 'FAIL' 
+Bug: java.sql.SQLException: No value specified for parameter 9
+Move file sinhvien_chieu_nhom13.xlsx to folder error 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom14.xlsx 18:38:27 26.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom14.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom15.xlsx 18:43:54 26.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom15.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom16.xlsx 18:46:04 26.07.2020
+Thay doi status  thanh 'FAIL' 
+Bug: java.sql.SQLException: No value specified for parameter 3
+Move file sinhvien_chieu_nhom16.xlsx to folder error 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom2.xlsx 18:46:20 26.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom2.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom3.xlsx 09:03:10 27.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom3.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom4.csv 09:19:30 27.07.2020
+Thay doi status  thanh 'FAIL' 
+Bug: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Incorrect string value: '\xC5\x1En\x00 \x00...' for column `staging`.`sinhvien`.`1` at row 1
+Move file sinhvien_chieu_nhom4.csv to folder error 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom4.txt 09:23:48 27.07.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom4.txt  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom11.csv 12:32:22 27.07.2020
+Thay doi status  thanh 'FAIL' 
+Bug: java.sql.SQLException: Row 1 doesn't contain data for all columns
+Move file sinhvien_chieu_nhom11.csv to folder error 
+--------------------------------- 

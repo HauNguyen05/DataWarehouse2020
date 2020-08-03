@@ -8,20 +8,23 @@ import component_3.DataWarehouse;
 import component_3.DataWarehouseMonHoc;
 
 public class ProcessETL {
+	public ProcessETL() {
+		// TODO Auto-generated constructor stub
+	}
 	public static void main(String[] args) {
-//		String id = args[0];
-		String id ="1";
+		String id = args[0];
 		new DownloadFile(id);
-		System.out.println("download finished");
+		System.out.println("download finished\n");
 		try {
-			new ExtractFileToStaging().insetDataAllFile(id);
+			new ExtractFileToStaging(id);
+			System.out.println("\n");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.out.println("Process load to staging fail");
+			System.out.println("Process load to staging fail\n");
 			System.out.println(e.getMessage());
 			System.exit(0);
 		}
-		if (id == "2") {
+		if (id.equals("2")) {
 			new DataWarehouseMonHoc(id);
 			System.out.println("transform done");
 		} else {
