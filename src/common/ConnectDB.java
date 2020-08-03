@@ -1,6 +1,5 @@
 package common;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -34,7 +33,7 @@ public class ConnectDB {
 		}
 
 	}
-	
+
 	public static Connection getConnection(String db, String username, String password) throws SQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -47,36 +46,22 @@ public class ConnectDB {
 		}
 
 	}
-	
+
 	public static Connection getConnect(String db, String username, String password) {
 		Connection connection = null;
-		
-		String url = "jdbc:mysql://localhost:3306" + "/" + db +
-					"?useTimezone=true&serverTimezone=UTC&" +
-					"useUnicode=true&characterEndcoding=utf-8";
+
+		String url = "jdbc:mysql://localhost:3306" + "/" + db + "?useTimezone=true&serverTimezone=UTC&"
+				+ "useUnicode=true&characterEndcoding=utf-8";
 		try {
 			connection = DriverManager.getConnection(url, username, password);
-			
-		} catch(SQLException e) {	
-			System.out.println("Opps, error!\n"+e.getMessage());
-		}
 
+		} catch (SQLException e) {
+			System.out.println("Opps, error!\n" + e.getMessage());
+		}
 		return connection;
 	}
 
-	public static void main(String[] args) throws SQLException {
-		
-		Connection conn = getConnection("warehouse_control", "root", "chkdsk");
-		
-		if(conn != null) System.out.println("yes man");
-		else System.out.println("not ok");
-
-		
-
+	public static void main(String[] args) {
+		System.out.println("ok");
 	}
-
-
-//	public static void main(String[] args) throws SQLException {
-//		if(getConectionControl("root", "chkdsk") != null) System.out.println("ok");;
-//	}
 }

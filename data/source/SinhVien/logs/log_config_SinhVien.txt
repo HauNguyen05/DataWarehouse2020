@@ -4,3 +4,30 @@ Thay doi status  thanh 'TF'
 Move file sinhvien_chieu_nhom11.xlsx  to folder successfully 
 Them du lieu thanh cong 
 --------------------------------- 
+
+file: sinhvien_chieu_nhom13.xlsx 17:02:17 02.08.2020
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_chieu_nhom14.xlsx 17:03:20 02.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom14.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom15.xlsx 19:07:38 02.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom15.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom16.xlsx 19:07:58 02.08.2020
+Thay doi status  thanh 'FAIL' 
+Bug: java.sql.SQLException: No value specified for parameter 3
+Move file sinhvien_chieu_nhom16.xlsx to folder error 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom2.xlsx 19:11:07 02.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom2.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
