@@ -11,7 +11,7 @@ public class ProcessETL {
 		new DownloadFile(id).downloadFileProcess();
 		System.out.println("download finished");
 		try {
-			new ExtractFileToStaging().insetDataAllFile(id);
+			new ExtractFileToStaging(id);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Process load to staging fail");
