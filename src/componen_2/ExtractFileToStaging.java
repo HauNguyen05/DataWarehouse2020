@@ -48,6 +48,9 @@ public class ExtractFileToStaging {
 	private String SUBJECT = "Load file to staging";
 	private BufferedWriter BW = null;
 
+	public ExtractFileToStaging(String id) throws Exception {
+		insetDataAllFile(id);
+	}
 // tao table data
 	public void createTable(int column_number, String nameTable) throws Exception {
 		PreparedStatement pre = null;
@@ -282,14 +285,14 @@ public class ExtractFileToStaging {
 		try {
 			// Tao connection den database controll, neu khac null thi bo qua .
 			if (CONNECTION_CONTROL == null) {
-				CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "");
+				CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "0985153812");
 			}
 			// Tao cau truy van query
 			String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
 					+ " on data_config_log.id = data_config.id where data_config_log.id="+Integer.valueOf(idConfig)+" and status = 'ER' limit 1";
 			PreparedStatement statement1 = CONNECTION_CONTROL.prepareStatement(sql);
 			r = statement1.executeQuery();
-			while (r.next()) {
+			if (r.next()) {
 				destination = r.getString(1);
 				server_des = r.getString(2);
 				databasse = r.getString(3);
@@ -387,7 +390,6 @@ public class ExtractFileToStaging {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ExtractFileToStaging a = new ExtractFileToStaging();
-		a.insetDataAllFile("1");
+		ExtractFileToStaging a = new ExtractFileToStaging("1");
 	}
 }

@@ -10,7 +10,7 @@ public class ConnectDB {
 	public static Connection getConectionControl(String user, String pass) throws SQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/warehouse_control?useSSL=false";
+			String url = "jdbc:mysql://localhost:3306/warehouse_control";
 			return DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {
 			System.out.println(e);
