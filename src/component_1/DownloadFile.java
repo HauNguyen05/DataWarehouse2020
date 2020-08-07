@@ -42,14 +42,7 @@ public class DownloadFile {
 
 	public DownloadFile(String idConfig) {
 		this.idConfig = idConfig;
-		try {
-			connectionControl = ConnectDB.getConectionControl("root", "");
-			check = new CheckFileName();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse", "I can't connect to database");
-		}
-
+		check = new CheckFileName();
 	}
 
 	/*
@@ -73,15 +66,7 @@ public class DownloadFile {
 				this.syntaxFileName = r.getString(7);
 
 			}
-			// đường dẫn chứa file logs của id config
-			File pathDir = new File(destinationPath + "/" + "logs");
-			// kiểm tra nếu thư mục chưa có thì tạo ra
-			if (!pathDir.exists()) {
-				pathDir.mkdir();
-			}
-			// tạo file log để ghi lại file nào được download
-			File file = new File(pathDir + "/LogDownloadConfig" + idConfig + ".txt");
-			logFile = new BufferedWriter(new FileWriter(file, true));
+
 			statement.close();
 		} catch (Exception e) {
 			System.out.println("can not get information from database control");
@@ -121,6 +106,7 @@ public class DownloadFile {
 
 	public String[] getListFileName() {
 		String[] listFileNames = null;
+		// nếu server không phải là localhost thì dùng chilkat thực hiện
 		if (!server.equals("localhost")) {
 			// mo channel de thuc hien cau lenh cmd
 			int channelNum = ssh.OpenSessionChannel();
@@ -140,9 +126,18 @@ public class DownloadFile {
 			System.out.println(cmd);
 			// chia kết quả trả về của câu lệnh theo "\n" để được mảng tên file
 			listFileNames = cmdResult.split("\n");
-		} else {
+		} else {//server là localhost
 			File d = new File(remotePath);
-			listFileNames = d.list();
+			//kiểm tra xem có phải là thư mục không
+			if(d.isDirectory()) {
+				// lưu tất cả các file vào mảng
+				listFileNames = d.list();
+			}else {//nếu không phải thư mục
+				//gửi mail báo đường dẫn không đúng
+				JavaMail.send("haunguyen2805@gmail.com", "DW2020 - Download file", "Path does not exist");
+				//kết thúc chương trình
+				System.exit(0);
+			}
 		}
 		return listFileNames;
 	}
@@ -151,41 +146,64 @@ public class DownloadFile {
 	 * download file trên server, insert vào table log
 	 */
 	public void downloadFileProcess() {
-		System.loadLibrary("chilkat");
-		// method lấy các thông tin cần thiết để thực hiện download process
+		// bước 1: kết nối database control
+		try {
+			connectionControl = ConnectDB.getConectionControl("root", "");
+		} catch (SQLException e) {
+			System.out.println("can not connect to database control");
+			//nếu lỗi kết nối thì gửi mail báo
+			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse", "I can't connect to database");
+		}
+		// bước 2: lấy các thông tin cần thiết để thực hiện download process
 		setup();
-		// kết nối tới server để thực hiện download
+		// bước 3: kết nối tới server để thực hiện download nếu server không phải là
+		// local
+		System.loadLibrary("chilkat");
 		if (!server.equals("localhost")) {
 			connectServer();
 		}
-		// lấy ra tên tất cả các file có trong thư mục remote
+		// bước 4: lấy ra tên tất cả các file có trong thư mục remote
 		String[] listFileNames = getListFileName();
-		// lấy từng tên file trong mảng ra
+		// bước 5: lấy từng tên file trong mảng ra
 		for (String fileName : listFileNames) {
-			// kiểm tra tên file có đúng theo syntax lấy từ db không nếu đúng theo syntax
-			// thì tiếp tục
+			// bước 6: kiểm tra tên file có đúng theo syntax lấy từ db không?
+			// nếu đúng theo syntax thì tiếp tục
 			if (check.checkFileName(fileName, syntaxFileName)) {
-				// kiểm tra file được download chưa
-				boolean isDownload = checkFileDownloaded(fileName);
+				// bước 7: kiểm tra file được download chưa
+				boolean isDownloaded = checkFileDownloaded(fileName);
 				// nếu chưa thì mới tiếp tục
-				if (!isDownload) {
-					// download file
+				if (!isDownloaded) {
+					//bước 8: download file
 					boolean downloaded = downloading(fileName);
-					// nếu download file thành công thì insert vào table log
+					// nếu download file thành công thì ghi log và insert vào table log
 					if (downloaded) {
-
+						// bước 9: ghi vào file log là download file thành công
+						writeLog("Download file ",fileName, "successfully");
 						// dùng map để lưu thông tin của file (tên file, đuôi file, số dòng ignore..)
 						Map<String, String> infor = check.information();
 						infor.put("fileName", fileName);
-						// insert thông tin file vào table log
+						// bước 10: insert thông tin file vào table log
 						insertLogTable(idConfig, infor);
 					}
 				}
 			}
 		}
-		// ngắt kết nối tới server
+		// bước 11: ngắt kết nối tới server nếu server không phải là local
 		if (!server.equals("localhost")) {
 			ssh.Disconnect();
+		}
+	}
+
+	/*
+	 * viết vào file log là đã download fileName thành công
+	 */
+	private void writeLog(String subject,String fileName, String status) {
+		try {
+			logFile.write(subject+" " + fileName + " on "
+					+ new SimpleDateFormat("HH:mm:ss dd.MM.yyyy").format(new Date()) +" "+status + "\n");
+			logFile.flush();
+		} catch (IOException e) {
+			System.out.println("write log file fails");
 		}
 	}
 
@@ -205,13 +223,16 @@ public class DownloadFile {
 			statement.execute();
 		} catch (Exception e) {
 			System.out.println("insert fail");
-			System.out.println(e.getMessage());
+			// ghi vào file log là insert file fails. với lỗi e.getMessage()
+			writeLog("Insert file ",infor.get("fileName"), "fails\n" );
+
 		}
 	}
 
 	// download file bằng api của chilkat
 	public boolean downloading(String fileName) {
 		boolean success = false;
+		// nếu server không phải localhost
 		if (!server.equals("localhost")) {
 			// gọi class CkScp của chilkat
 			CkScp scp = new CkScp();
@@ -221,29 +242,27 @@ public class DownloadFile {
 			// nhận vào đường dẫn của file cần download trên server và đường dẫn lưu file ở
 			// local
 			success = scp.DownloadFile(remotePath + "\\" + fileName, destinationPath + "\\" + fileName);
-		} else {
+		} else {// nếu server là local thì copy file
 			File fileRemote = new File(remotePath + "\\" + fileName);
-			File localFile = new File(destinationPath + "\\" + fileName);
+			File destFile = new File(destinationPath + "\\" + fileName);
 			try {
+				//file sẽ copy ở remotePath
 				InputStream in = new BufferedInputStream(new FileInputStream(fileRemote));
-				OutputStream out = new BufferedOutputStream(new FileOutputStream(localFile));
+				// nội dung file copy sẽ được lưu vào out.
+				OutputStream out = new BufferedOutputStream(new FileOutputStream(destFile));
 				byte[] buffer = new byte[1024];
 				int lengthRead;
+				//đọc file in cho tới khi hết dữ liệu
 				while ((lengthRead = in.read(buffer)) > 0) {
+					//viết nội dung đọc được vào out
 					out.write(buffer, 0, lengthRead);
 					out.flush();
 				}
+				// copy xong file thì gán success là true
 				success = true;
 			} catch (Exception e) {
+				// nếu có lỗi thì trả về false
 				return success = false;
-			}
-		}
-		if (success) {
-			try {
-				logFile.write("file: " + fileName + " " + new SimpleDateFormat("HH:mm:ss dd.MM.yyyy").format(new Date())
-						+ " download successfully\n");
-				logFile.flush();
-			} catch (IOException e) {
 			}
 		}
 		return success;
@@ -256,7 +275,9 @@ public class DownloadFile {
 		String sql = "select file_name from data_config_log where id+'" + this.idConfig + "' and file_name='" + filename
 				+ "';";
 		try {
+			// thực hiện câu query và lưu kết quả trong resultSet
 			ResultSet rs = connectionControl.createStatement().executeQuery(sql);
+			// nếu có kết quả thì trả về true không thì trả về false
 			if (rs.next()) {
 				return true;
 			}
