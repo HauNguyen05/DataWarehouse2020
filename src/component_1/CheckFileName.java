@@ -58,7 +58,7 @@ public class CheckFileName {
 
 	public static void main(String[] args) {
 		CheckFileName c = new CheckFileName();
-		boolean a = c.checkFileName("sinhvien_sang_nhom0.xlsx","sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx");
+		boolean a = c.checkFileName("Monhoc2013.csv","Monhoc(2013|2014).csv");
 		System.out.println(a);
 	}
 }

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,6 +15,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import com.chilkatsoft.CkGlobal;
@@ -35,6 +38,7 @@ public class DownloadFile {
 	private Connection connectionControl;
 	private CheckFileName check;
 	private String idConfig;
+	private BufferedWriter logFile;
 
 	public DownloadFile(String idConfig) {
 		this.idConfig = idConfig;
@@ -69,6 +73,15 @@ public class DownloadFile {
 				this.syntaxFileName = r.getString(7);
 
 			}
+			// đường dẫn chứa file logs của id config
+			File pathDir = new File(destinationPath + "/" + "logs");
+			// kiểm tra nếu thư mục chưa có thì tạo ra
+			if (!pathDir.exists()) {
+				pathDir.mkdir();
+			}
+			// tạo file log để ghi lại file nào được download
+			File file = new File(pathDir + "/LogDownloadConfig" + idConfig + ".txt");
+			logFile = new BufferedWriter(new FileWriter(file, true));
 			statement.close();
 		} catch (Exception e) {
 			System.out.println("can not get information from database control");
@@ -171,7 +184,9 @@ public class DownloadFile {
 			}
 		}
 		// ngắt kết nối tới server
-		ssh.Disconnect();
+		if (!server.equals("localhost")) {
+			ssh.Disconnect();
+		}
 	}
 
 	/*
@@ -221,6 +236,14 @@ public class DownloadFile {
 				success = true;
 			} catch (Exception e) {
 				return success = false;
+			}
+		}
+		if (success) {
+			try {
+				logFile.write("file: " + fileName + " " + new SimpleDateFormat("HH:mm:ss dd.MM.yyyy").format(new Date())
+						+ " download successfully\n");
+				logFile.flush();
+			} catch (IOException e) {
 			}
 		}
 		return success;
