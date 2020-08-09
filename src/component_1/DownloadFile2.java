@@ -29,7 +29,7 @@ import com.chilkatsoft.CkSsh;
 import common.ConnectDB;
 import common.JavaMail;
 
-public class DownloadFile {
+public class DownloadFile2 {
 	private String server;
 	private String userName;
 	private String password;
@@ -43,28 +43,15 @@ public class DownloadFile {
 	private String idConfig;
 	private BufferedWriter logFile;
 
-	public DownloadFile(String idConfig) {
+	public DownloadFile2(String idConfig) {
 		this.idConfig = idConfig;
-		try {
-			connectionControl = ConnectDB.getConectionControl("root", "0985153812");
-			check = new CheckFileName();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse", "I can't connect to database");
-		}
-
 		check = new CheckFileName();
 	}
 
 	/*
-	 * kết nối db control để lấy thông tin cần thiết:
-	 * - server
-	 * - tên user
-	 * - mật khẩu của server
-	 * - cổng kết nối
-	 * - đường dẫn trên server
-	 * - đường dẫn ở local
-	 * - syntax của tên file
+	 * kết nối db control để lấy thông tin cần thiết: - server - tên user - mật khẩu
+	 * của server - cổng kết nối - đường dẫn trên server - đường dẫn ở local -
+	 * syntax của tên file
 	 */
 	public void setup() {
 		String sql = "SELECT server_src,user_src, pwd_src, port_src, path_remote, path_dir_src, syntax_file_name from data_config where id ="
@@ -122,24 +109,39 @@ public class DownloadFile {
 
 	public List<String> getListFileName() {
 		String[] listFileNames = null;
-		// mo channel de thuc hien cau lenh cmd
-		int channelNum = ssh.OpenSessionChannel();
-		// neu khong thanh cong thi in ra loi va dung chuong trinh
-		if (channelNum < 0) {
-			System.out.println("open channel failure");
-			System.exit(0);
+		// nếu server không phải là localhost thì dùng chilkat thực hiện
+		if (!server.equals("localhost")) {
+			// mo channel de thuc hien cau lenh cmd
+			int channelNum = ssh.OpenSessionChannel();
+			// neu khong thanh cong thi in ra loi va dung chuong trinh
+			if (channelNum < 0) {
+				System.out.println("open channel failure");
+				System.exit(0);
+			}
+			// cau lenh cmd de liet ke ten cac file co trong thu muc remote
+			String cmd = "cd " + remotePath + "; ls";
+			// thực hiện lệnh cmd trên channelNum được chỉ định
+			ssh.SendReqExec(channelNum, cmd);
+			// đọc dữ liệu đến channelNum cho đến khi máy chủ bị đóng
+			ssh.ChannelReceiveToClose(channelNum);
+			// trả về văn bản nhận được trên channelNum theo chartSet ansi
+			String cmdResult = ssh.getReceivedText(channelNum, "utf-8");
+			System.out.println(cmd);
+			// chia kết quả trả về của câu lệnh theo "\n" để được mảng tên file
+			listFileNames = cmdResult.split("\n");
+		} else {// server là localhost
+			File d = new File(remotePath);
+			// kiểm tra xem có phải là thư mục không
+			if (d.isDirectory()) {
+				// lưu tất cả các file vào mảng
+				listFileNames = d.list();
+			} else {// nếu không phải thư mục
+					// gửi mail báo đường dẫn không đúng
+				JavaMail.send("haunguyen2805@gmail.com", "DW2020 - Download file", "Path does not exist");
+				// kết thúc chương trình
+				System.exit(0);
+			}
 		}
-		// cau lenh cmd de liet ke ten cac file co trong thu muc remote
-		String cmd = "cd " + remotePath + "; ls";
-		// thực hiện lệnh cmd trên channelNum được chỉ định
-		ssh.SendReqExec(channelNum, cmd);
-		// đọc dữ liệu đến channelNum cho đến khi máy chủ bị đóng
-		ssh.ChannelReceiveToClose(channelNum);
-		// trả về văn bản nhận được trên channelNum theo chartSet ansi
-		String cmdResult = ssh.getReceivedText(channelNum, "utf-8");
-		System.out.println(cmd);
-		// chia kết quả trả về của câu lệnh theo "\n" để được mảng tên file
-		listFileNames = cmdResult.split("\n");
 		List<String> list = Arrays.asList(listFileNames);
 		return list;
 	}
@@ -155,19 +157,20 @@ public class DownloadFile {
 			System.out.println("can not connect to database control");
 			// nếu lỗi kết nối thì gửi mail báo
 			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse", "I can't connect to database");
-			// kết thúc chương trình
-			System.exit(0);
 		}
 		// bước 2: lấy các thông tin cần thiết để thực hiện download process
 		setup();
-		// bước 3: kết nối tới server để thực hiện download
+		// bước 3: kết nối tới server để thực hiện download nếu server không phải là
+		// local
 		System.loadLibrary("chilkat");
-		connectServer();
+		if (!server.equals("localhost")) {
+			connectServer();
+		}
 		// bước 4: lấy ra tên tất cả các file có trong thư mục remote
 		List<String> listFileNames = getListFileName();
 		// bước 5: kiểm tra còn file trong list không
 		while (!listFileNames.isEmpty()) {
-			// bước 6: lấy ra 1 tên file và xóa nó trong list
+			// bước 6: lấy từng tên file trong mảng ra
 			String fileName = listFileNames.remove(0);
 			// bước 7: kiểm tra tên file có đúng theo syntax lấy từ db không?
 			// nếu đúng theo syntax thì tiếp tục
@@ -191,12 +194,14 @@ public class DownloadFile {
 				}
 			}
 		}
-		// ngắt kết nối tới server
-		ssh.Disconnect();
+		// bước 12: ngắt kết nối tới server nếu server không phải là local
+		if (!server.equals("localhost")) {
+			ssh.Disconnect();
+		}
 	}
 
 	/*
-	 * viết vào file log 
+	 * viết vào file log là đã download fileName thành công
 	 */
 	private void writeLog(String subject, String fileName, String status) {
 		try {
@@ -233,14 +238,39 @@ public class DownloadFile {
 	// download file bằng api của chilkat
 	public boolean downloading(String fileName) {
 		boolean success = false;
-		// gọi class CkScp của chilkat
-		CkScp scp = new CkScp();
-		// Sử dụng kết nối SSH của ssh để chuyển SCP.
-		scp.UseSsh(ssh);
-		// Tải tệp từ máy chủ SSH từ xa về local
-		// nhận vào đường dẫn của file cần download trên server và đường dẫn lưu file ở
-		// local
-		success = scp.DownloadFile(remotePath + "\\" + fileName, destinationPath + "\\" + fileName);
+		// nếu server không phải localhost
+		if (!server.equals("localhost")) {
+			// gọi class CkScp của chilkat
+			CkScp scp = new CkScp();
+			// Sử dụng kết nối SSH của ssh để chuyển SCP.
+			scp.UseSsh(ssh);
+			// Tải tệp từ máy chủ SSH từ xa về local
+			// nhận vào đường dẫn của file cần download trên server và đường dẫn lưu file ở
+			// local
+			success = scp.DownloadFile(remotePath + "\\" + fileName, destinationPath + "\\" + fileName);
+		} else {// nếu server là local thì copy file
+			File fileRemote = new File(remotePath + "\\" + fileName);
+			File destFile = new File(destinationPath + "\\" + fileName);
+			try {
+				// file sẽ copy ở remotePath
+				InputStream in = new BufferedInputStream(new FileInputStream(fileRemote));
+				// nội dung file copy sẽ được lưu vào out.
+				OutputStream out = new BufferedOutputStream(new FileOutputStream(destFile));
+				byte[] buffer = new byte[1024];
+				int lengthRead;
+				// đọc file in cho tới khi hết dữ liệu
+				while ((lengthRead = in.read(buffer)) > 0) {
+					// viết nội dung đọc được vào out
+					out.write(buffer, 0, lengthRead);
+					out.flush();
+				}
+				// copy xong file thì gán success là true
+				success = true;
+			} catch (Exception e) {
+				// nếu có lỗi thì trả về false
+				return success = false;
+			}
+		}
 		return success;
 	}
 
@@ -265,7 +295,7 @@ public class DownloadFile {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		new DownloadFile(args[0]).downloadFileProcess();
+		new DownloadFile2(args[0]).downloadFileProcess();
 
 	}
 }

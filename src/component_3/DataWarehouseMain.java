@@ -329,8 +329,8 @@ public class DataWarehouseMain {
 			}
 
 		} catch (SQLException e) {
-
-			JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Error when loading");
+			System.out.println(e);
+//			JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Error when loading");
 		}
 
 	}
@@ -340,7 +340,7 @@ public class DataWarehouseMain {
 	}
 
 	public static void main(String[] args) {
-		DataWarehouseMain main = new DataWarehouseMain("1");
+		DataWarehouseMain main = new DataWarehouseMain(args[0]);
 		main.addDataToWarehouse();
 	}
 

@@ -1,0 +1,6 @@
+
+file: dangky_chieu_nhom4_2020.xlsx 21:57:52 09.08.2020
+Thay doi status  thanh 'TF' 
+Move file dangky_chieu_nhom4_2020.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 

@@ -18,7 +18,7 @@ public class ProcessETL {
 			System.out.println(e.getMessage());
 			System.exit(0);
 		}
-		new DataWarehouseMain(args[0]).addDataToWarehouse();
+		new DataWarehouseMain(id).addDataToWarehouse();
 		System.out.println("transform done");
 	}
 }

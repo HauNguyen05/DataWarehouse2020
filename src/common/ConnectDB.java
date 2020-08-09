@@ -1,6 +1,5 @@
 package common;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -34,11 +33,11 @@ public class ConnectDB {
 		}
 
 	}
-	
+
 	public static Connection getConnection(String db, String username, String password) throws SQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/" + db;
+			String url = "jdbc:mysql://localhost:3306/" + db + "?useSSL=false";
 			return DriverManager.getConnection(url, username, password);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

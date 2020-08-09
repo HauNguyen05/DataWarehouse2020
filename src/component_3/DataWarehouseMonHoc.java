@@ -58,8 +58,8 @@ public class DataWarehouseMonHoc {
 	public Connection getConnectToWarehouse() {
 		try {
 			return connectWarehouse = ConnectDB.getConnection(information.get("destination"),
-					information.get("server_des"), information.get("db_warehouse_main"), information.get("db_warehouse_user"),
-					information.get("pwd_des"));
+					information.get("server_des"), information.get("db_warehouse_main"),
+					information.get("db_warehouse_user"), information.get("pwd_des"));
 		} catch (SQLException e) {
 			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse - Can not connect to database Warehouse",
 					"I can not connect to db");
@@ -90,7 +90,7 @@ public class DataWarehouseMonHoc {
 				result.put("db_warehouse_main", rs.getString(11));
 				result.put("db_warehouse_user", rs.getString(12));
 				result.put("db_warehouse_password", rs.getString(13));
-				
+
 			}
 		} catch (SQLException e) {
 			System.out.println("excute query fail");
@@ -164,7 +164,8 @@ public class DataWarehouseMonHoc {
 	}
 
 	public void insertMonHoc(List<String> monhoc) {
-		String insert = "insert into monhoc("+this.information.get("column_name")+") VALUES(?,?,?,?,?,?,'9999-12-31', '9999-12-31')";
+		String insert = "insert into monhoc(" + this.information.get("column_name")
+				+ ") VALUES(?,?,?,?,?,?,'9999-12-31', '9999-12-31')";
 		try {
 			PreparedStatement statement = connectWarehouse.prepareStatement(insert);
 			statement = connectWarehouse.prepareStatement(insert);
@@ -200,7 +201,8 @@ public class DataWarehouseMonHoc {
 		Calendar cal = Calendar.getInstance();
 		return format.format(cal.getTime());
 	}
-public static void main(String[] args) {
-	new DataWarehouseMonHoc("2");
-}
+
+	public static void main(String[] args) {
+		new DataWarehouseMonHoc("2");
+	}
 }
