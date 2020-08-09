@@ -11,7 +11,7 @@
  Target Server Version : 100413
  File Encoding         : 65001
 
- Date: 26/07/2020 18:27:24
+ Date: 02/08/2020 19:19:47
 */
 
 SET NAMES utf8mb4;
@@ -44,16 +44,17 @@ CREATE TABLE `data_config`  (
   `dbwarehouse_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `dbwarehouse_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `dbwarehouse_table` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `date_dim_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of data_config
 -- ----------------------------
-INSERT INTO `data_config` VALUES (1, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/SinhVien', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'staging', 'root', '', 'sinhvien', '11', 'STT,MSSV,Họ Lót ,Tên SV,Ngày sinh,Mã Lớp,Lớp,Số điện thoại,Email,Quê quán,Ghi Chú', 'log_config_SinhVien.txt', 'sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).txt, sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).csv, sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx', '|', 'warehouse_main', 'root', '', 'sinhvien');
-INSERT INTO `data_config` VALUES (2, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/MonHoc', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'staging', 'root', '', 'monhoc', '6', 'STT, ma_MH, ten_MH, tin_chi, khoa_QL, ghi_chu, date_expired, date_change', 'log_config_MonHoc.txt', '', '|', 'warehouse_main', 'root', ' ', 'monhoc');
-INSERT INTO `data_config` VALUES (3, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/LopHoc', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'staging', 'root', ' ', 'lophoc', '4', 'STT,ma_LH,ma_MH,namhoc', ' log_config_LopHoc.txt', 'lophoc_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.txt, lophoc_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.csv, lophoc_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.xlsx', '|', 'warehouse_main', 'root', ' ', 'lophoc');
-INSERT INTO `data_config` VALUES (4, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/DangKy', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'staging', 'root', ' ', 'dangky', '5', 'STT,ma_DK,ma_SV,ma_LH,time_DK', 'log_config_DangKy.txt', 'dangky_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.txt, dangky_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.csv, dangky_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.xlsx', '|', 'warehouse_main', 'root', ' ', 'dangki');
+INSERT INTO `data_config` VALUES (1, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/SinhVien', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'staging', 'root', '', 'sinhvien', '11', 'STT,MSSV,HoLot,Ten,NgaySinh,MaLop,TenLop,DienThoai,Email,QueQuan,GhiChu', 'log_config_SinhVien.txt', 'sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).txt, sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).csv, sinhvien_(sang|chieu)_nhom([0-9]|[0-9][0-9]).xlsx', '|', 'warehouse_main', 'root', '', 'sinhvien', 'date_dim');
+INSERT INTO `data_config` VALUES (2, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/MonHoc', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'staging', 'root', '', 'monhoc', '6', 'STT,MaMH,TenMH,TinChi,KhoaQL,GhiChu', 'log_config_MonHoc.txt', '', '|', 'warehouse_main', 'root', '', 'monhoc', 'date_dim');
+INSERT INTO `data_config` VALUES (3, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/LopHoc', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'staging', 'root', '', 'lophoc', '4', 'STT,MaLH,MaMH,NamHoc', ' log_config_LopHoc.txt', 'lophoc_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.txt, lophoc_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.csv, lophoc_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.xlsx', '|', 'warehouse_main', 'root', '', 'lophoc', 'date_dim');
+INSERT INTO `data_config` VALUES (4, 'drive.ecepvn.org', '2227', 'guest_access', '123456', '/volume1/ECEP/song.nguyen/DW_2020/data/', 'D:/DataWarehouse2020/data/source/DangKy', 'jdbc:mysql://localhost:3306/', 'com.mysql.jdbc.Driver', 'staging', 'root', '', 'dangky', '5', 'STT,MaDK,MaSV,MaLH,TimeDK', 'log_config_DangKy.txt', 'dangky_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.txt, dangky_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.csv, dangky_(sang|chieu)_nhom([0-9]|[0-9][0-9])_2020.xlsx', '|', 'warehouse_main', 'root', '', 'dangki', 'date_dim');
 
 -- ----------------------------
 -- Table structure for data_config_log
@@ -73,12 +74,12 @@ CREATE TABLE `data_config_log`  (
 -- ----------------------------
 -- Records of data_config_log
 -- ----------------------------
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom11.xlsx', 'ER', 'xlsx', 0, 0);
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom13.xlsx', 'ER', 'xlsx', 0, 0);
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom14.xlsx', 'ER', 'xlsx', 0, 0);
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom15.xlsx', 'ER', 'xlsx', 0, 0);
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom16.xlsx', 'ER', 'xlsx', 0, 0);
-INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom2.xlsx', 'ER', 'xlsx', 0, 0);
+INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom11.xlsx', 'TF', 'xlsx', 0, 0);
+INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom13.xlsx', 'FAIL', 'xlsx', 0, 0);
+INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom14.xlsx', 'TF', 'xlsx', 0, 0);
+INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom15.xlsx', 'TF', 'xlsx', 0, 0);
+INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom16.xlsx', 'FAIL', 'xlsx', 0, 0);
+INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom2.xlsx', 'TF', 'xlsx', 0, 0);
 INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom3.xlsx', 'ER', 'xlsx', 0, 0);
 INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom4.csv', 'ER', 'csv', 0, 1);
 INSERT INTO `data_config_log` VALUES (1, 'sinhvien_chieu_nhom4.txt', 'ER', 'txt', 0, 1);
