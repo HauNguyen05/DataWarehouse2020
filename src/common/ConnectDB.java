@@ -38,7 +38,7 @@ public class ConnectDB {
 	public static Connection getConnection(String db, String username, String password) throws SQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/" + db + "?useSSL=false";
+			String url = "jdbc:mysql://localhost:3306/" + db;
 			return DriverManager.getConnection(url, username, password);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -66,7 +66,7 @@ public class ConnectDB {
 
 	public static void main(String[] args) throws SQLException {
 		
-		Connection conn = getConnection("warehouse_control", "root", "chkdsk");
+		Connection conn = getConectionControl( "root", "0985153812");
 		
 		if(conn != null) System.out.println("yes man");
 		else System.out.println("not ok");

@@ -30,7 +30,7 @@ public class DataWarehouseMain {
 //	Map<String, String> dateDim; // Lưu data date_dim
 
 	// Các thuộc tính fix cứng
-	final String PASSWORD = ""; // password my-sql
+	final String PASSWORD = "0985153812"; // password my-sql
 	final String TRANSFORM_SUCCESS = "TS"; // transform successful
 	final String TRANSFORM_FAIL = "TF"; // transform
 
@@ -39,7 +39,7 @@ public class DataWarehouseMain {
 	 * dataControl
 	 */
 	public void connectDataControl() throws SQLException {
-		CONNECTION_CONTROL = ConnectDB.getConectionControl("root", PASSWORD);
+		CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "");
 		Statement statementControl = CONNECTION_CONTROL.createStatement();
 		String sql = "select databasse, user_des, pwd_des, table_name_des,"
 				+ "column_number, column_name,dbwarehouse_name, dbwarehouse_user,"

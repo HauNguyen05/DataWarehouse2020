@@ -29,7 +29,7 @@ public class DownloadFile {
 	public DownloadFile(String idConfig) {
 		this.idConfig = idConfig;
 		try {
-			connectionControl = ConnectDB.getConectionControl("root", "");
+			connectionControl = ConnectDB.getConectionControl("root", "0985153812");
 			check = new CheckFileName();
 		} catch (SQLException e) {
 			e.printStackTrace();
