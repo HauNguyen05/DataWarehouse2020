@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import common.ConnectDB;
 import common.JavaMail;
 
 
-public class DataWarehouseMain {
+public class WarehouseMaster {
 	
 	// Khởi tạo các connection kết nối tới db_control, db_staging, db_warehouse
 	private Connection CONNECTION_CONTROL = null;
@@ -67,7 +66,6 @@ public class DataWarehouseMain {
 			dataControl.put("table_name_warehouse", rsControl.getString(10));
 			dataControl.put("date_dim_name", rsControl.getString(11));
 		}
-		System.out.println(dataControl);
 
 	}
 	
@@ -96,6 +94,7 @@ public class DataWarehouseMain {
 		 * Định dạng record thành string "A|B|C". Mỗi field ngăn cách bởi dấu |
 		 * Nếu field là NULL thì gán là "NULL"
 		 */
+		
 		while (rsStaging.next()) {
 			String temp = "";
 			for (int i = 1; i < Integer.parseInt(dataControl.get("number_of_column")) + 1; i++) { // column_number
@@ -116,7 +115,6 @@ public class DataWarehouseMain {
 			dataStaging.add(temp);
 
 		}
-		System.out.println(dataStaging);
 
 	}
 	
@@ -130,6 +128,12 @@ public class DataWarehouseMain {
 				dataControl.get("db_name_warehouse"),
 				dataControl.get("user_name_warehouse"),
 				dataControl.get("password_warehouse"));
+		
+		getDataWarehouse();
+
+	}
+	
+	public void getDataWarehouse() throws SQLException {
 		
 		Statement statementWarehouse = CONNECTION_WAREHOUSE.createStatement();
 		ResultSet rsWarehouse = statementWarehouse.executeQuery("select * from " + dataControl.get("table_name_warehouse"));
@@ -147,69 +151,8 @@ public class DataWarehouseMain {
 			dataWarehouse.add(temp);
 		}
 		System.out.println(dataWarehouse);
-		
-		/*
-		 
-		ResultSet rsDateDim = statementWarehouse.executeQuery("select `1`, `2` from " + dataControl.get("date_dim_name"));
-		dateDim = new HashMap<String, String>();
-		
-		while (rsDateDim.next()) {
-			dateDim.put(rsDateDim.getString(1), rsDateDim.getString(2));
-			
-		}
-		System.out.println(dateDim);
-		
-		*/
-		
-
 	}
-/*	
-	private int checkHandlingData() {
-		
-		switch (dataControl.get("table_name_staging")) {
-		case "sinhvien":
-			return 1;
-			
-		case "monhoc":
-			return 1;
-			
-		case "lophoc":
-			return 1;
-			
-		case "dangki":
-			return 1;
 
-		default:
-			return 0;
-		}
-	}
-	
-	private void directHandlingData() throws SQLException {
-		
-		switch (checkHandlingData()) {
-		// sinhvien
-		case 1:
-			handleDataSinhVien();
-			break;
-			
-		// monhoc
-		case 2:
-			handleDataMonHoc();
-			break;
-		// lophoc
-		case 3:
-			handleDataLopHoc();
-			break;
-		// dangki
-		case 4:
-			handleDataDangKi();
-			break;
-
-		default:
-			break;
-		}
-	}
-*/
 	
 	private void handleData() throws SQLException {
 		
@@ -229,12 +172,15 @@ public class DataWarehouseMain {
 						addData(dataIndex);
 						break;
 					}
+					
+					// Cập nhật lại dataWarehouse
+					getDataWarehouse();
 
 				}
 		
 	}
 	
-
+	
 	
 	private int checkData(String dataIndex) throws SQLException {
 		// 1. Giống hoàn toàn
@@ -243,13 +189,24 @@ public class DataWarehouseMain {
 		}
 		// 2. Giống trường khóa chính (MSSV)
 		String arrDataIndex[] = dataIndex.split("[|]");
-		String valueIndex = arrDataIndex[1];
+		String valueIndex = "";
+		int index = 2;
+		
+		if (dataControl.get("table_name_warehouse").equalsIgnoreCase("sinhvien") ||
+			dataControl.get("table_name_warehouse").equalsIgnoreCase("monhoc")) {	
+			
+			index = 1;	
+		}
+		
+		valueIndex = arrDataIndex[index];
 
 		int i = 0;
 		for (String dtWareHouse : dataWarehouse) {
 			i += 1;
 			String arrWarehouse[] = dtWareHouse.split("[|]");
-			if (valueIndex.equals(arrWarehouse[1])) {
+			
+			
+			if (valueIndex.equalsIgnoreCase(arrWarehouse[index])) {
 				setExpireDate(Integer.toString(i));
 				return 2;
 			}
@@ -259,27 +216,45 @@ public class DataWarehouseMain {
 	}
 	
 	// Tham số truyền vào là SK_ID, set dt_expired của SK_ID thành ngày hiện tại
+	
 	private void setExpireDate(String id) throws SQLException {
+		
+		String temp = "";
+		
+		switch (dataControl.get("table_name_warehouse")) {
+		case "sinhvien":
+			temp = " WHERE SK_SV =";
+			break;
+		case "monhoc":
+			temp = " WHERE SK_MH =";
+			break;
+		case "lophoc":
+			temp = " WHERE SK_LH =";
+			break;
+		case "dangki":
+			temp = " WHERE SK_DK =";
+			break;
+
+		default:
+			break;
+		}
+		
 		String sql = "UPDATE " + dataControl.get("table_name_warehouse") +
-					 " SET dt_expired = CURDATE()" + " WHERE SK_SV = " + id;
+					 " SET dt_expired = CURDATE()" + temp + id;
+		
+		if(dataControl.get("table_name_warehouse").equals("monhoc")) {
+			
+			sql = "UPDATE " + dataControl.get("table_name_warehouse") +
+					 " SET date_expired = \"31-12-2013\", date_change = CURDATE()" + temp + id;
+			
+		}
+		
 
 		Statement statementWarehouse = CONNECTION_WAREHOUSE.createStatement();
 		statementWarehouse.executeUpdate(sql);
 
 	}
-/*
-	private String getIdDateDim(String date) {
-		if(!date.equals("NULL")) {
-			for (Map.Entry me : dateDim.entrySet()) {
-				String a = (String) me.getKey();
-		          if(date.equalsIgnoreCase(dateDim.get(a)))
-		        	  return a;
-		        }
-			
-		} 
-		return "";
-	}
-*/
+
 	
 	private void addData(String dataIndex) throws SQLException {
 		// value để thêm vào warehouse
@@ -305,13 +280,7 @@ public class DataWarehouseMain {
 		
 		// Bỏ dấu , ở đầu
 		value = value.substring(1);
-		valueColumn = valueColumn.substring(1);
-/*		
-		if(!dateDimValue.equals("")) {
-			value += "," + dateDim;
-			valueColumn += " " + dataControl.get("date_dim_name");
-		}
-*/		
+		valueColumn = valueColumn.substring(1);	
 		
 		String sql = "INSERT INTO " + dataControl.get("table_name_warehouse") + 
 					 "(" + valueColumn + ") VALUES(" + value + ");";
@@ -336,6 +305,7 @@ public class DataWarehouseMain {
 				result = rsControl.getString(1);
 				
 		}
+		
 		System.out.println(result);
 		if(result.equals("0")) return false;
 		return true;
@@ -345,7 +315,9 @@ public class DataWarehouseMain {
 	private void editStatus() throws SQLException {
 		
 		String sql = "UPDATE " + "data_config_log" +
-					 " SET status = \"TC\" where status = \"TF\" ;";
+					 " SET status = \"TC\" where status = \"TF\" and id =" + idConfig;
+		
+		
 		
 		Statement statementControl = CONNECTION_CONTROL.createStatement();
 		
@@ -387,8 +359,8 @@ public class DataWarehouseMain {
 	}
 	
 	public static void main(String[] args) {
-		DataWarehouseMain main = new DataWarehouseMain();
-		main.idConfig = "1";
+		WarehouseMaster main = new WarehouseMaster();
+		main.idConfig = "4";
 		main.addDataToWarehouse();
 		
 	}
