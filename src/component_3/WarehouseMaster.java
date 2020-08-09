@@ -46,7 +46,7 @@ public class WarehouseMaster {
 		// Tạo câu truy vấn
 		String sql = "select databasse, user_des, pwd_des, table_name_des,"
 				+ "column_number, column_name,dbwarehouse_name, dbwarehouse_user,"
-				+ "dbwarehouse_password, dbwarehouse_table, date_dim_name "
+				+ "dbwarehouse_password, dbwarehouse_table "
 				+ "from data_config where id =" + idConfig;
 		
 		ResultSet rsControl = statementControl.executeQuery(sql);
@@ -64,7 +64,7 @@ public class WarehouseMaster {
 			dataControl.put("user_name_warehouse", rsControl.getString(8));
 			dataControl.put("password_warehouse", rsControl.getString(9));
 			dataControl.put("table_name_warehouse", rsControl.getString(10));
-			dataControl.put("date_dim_name", rsControl.getString(11));
+			
 		}
 
 	}

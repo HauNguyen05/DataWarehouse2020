@@ -1,5 +1,6 @@
 package common;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,7 +10,7 @@ public class ConnectDB {
 	public static Connection getConectionControl(String user, String pass) throws SQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/warehouse_control";
+			String url = "jdbc:mysql://localhost:3306/warehouse_control?useSSL=false";
 			return DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -33,7 +34,7 @@ public class ConnectDB {
 		}
 
 	}
-
+	
 	public static Connection getConnection(String db, String username, String password) throws SQLException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -46,47 +47,36 @@ public class ConnectDB {
 		}
 
 	}
-
+	
 	public static Connection getConnect(String db, String username, String password) {
 		Connection connection = null;
-<<<<<<< HEAD
+		
 		String url = "jdbc:mysql://localhost:3306" + "/" + db +
 					"?useSSL=false&useTimezone=true&serverTimezone=UTC&" +
 					"useUnicode=true&characterEndcoding=utf-8";
 		try {
 			connection = DriverManager.getConnection(url, username, password);
+			
 		} catch(SQLException e) {	
 			System.out.println("Opps, error!\n"+e.getMessage());
-=======
-
-		String url = "jdbc:mysql://localhost:3306" + "/" + db + "?useTimezone=true&serverTimezone=UTC&"
-				+ "useUnicode=true&characterEndcoding=utf-8";
-		try {
-			connection = DriverManager.getConnection(url, username, password);
-
-		} catch (SQLException e) {
-			System.out.println("Opps, error!\n" + e.getMessage());
->>>>>>> cf3d9a338c952389b543e1d702a3b2f2b0d67572
 		}
+
 		return connection;
 	}
 
 	public static void main(String[] args) throws SQLException {
-<<<<<<< HEAD
+		
 		Connection conn = getConectionControl("root","" );
+		
 		if(conn != null) System.out.println("yes man");
 		else System.out.println("not ok");
 
 		
-=======
->>>>>>> cf3d9a338c952389b543e1d702a3b2f2b0d67572
-
-		Connection conn = getConectionControl("root", "0985153812");
-
-		if (conn != null)
-			System.out.println("yes man");
-		else
-			System.out.println("not ok");
 
 	}
+
+
+//	public static void main(String[] args) throws SQLException {
+//		if(getConectionControl("root", "chkdsk") != null) System.out.println("ok");;
+//	}
 }
