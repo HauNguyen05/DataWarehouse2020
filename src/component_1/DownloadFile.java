@@ -38,13 +38,26 @@ public class DownloadFile {
 
 	public DownloadFile(String idConfig) {
 		this.idConfig = idConfig;
+		try {
+			connectionControl = ConnectDB.getConectionControl("root", "0985153812");
+			check = new CheckFileName();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JavaMail.send("haunguyen0528@gmail.com", "Data Warehouse", "I can't connect to database");
+		}
+
 		check = new CheckFileName();
 	}
 
 	/*
-	 * kết nối db control để lấy thông tin cần thiết: - server - tên user - mật khẩu
-	 * của server - cổng kết nối - đường dẫn trên server - đường dẫn ở local -
-	 * syntax của tên file
+	 * kết nối db control để lấy thông tin cần thiết:
+	 * - server
+	 * - tên user
+	 * - mật khẩu của server
+	 * - cổng kết nối
+	 * - đường dẫn trên server
+	 * - đường dẫn ở local
+	 * - syntax của tên file
 	 */
 	public void setup() {
 		String sql = "SELECT server_src,user_src, pwd_src, port_src, path_remote, path_dir_src, syntax_file_name from data_config where id ="
@@ -179,7 +192,7 @@ public class DownloadFile {
 				}
 			}
 		}
-		// bước 12: ngắt kết nối tới server
+		// ngắt kết nối tới server
 		ssh.Disconnect();
 	}
 

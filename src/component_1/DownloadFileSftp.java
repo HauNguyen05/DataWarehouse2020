@@ -276,7 +276,7 @@ public class DownloadFileSftp {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		new DownloadFileSftp("3").downloadFileProcess();
+		new DownloadFileSftp("4").downloadFileProcess();
 
 	}
 }

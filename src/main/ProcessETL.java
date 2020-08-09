@@ -1,14 +1,13 @@
 package main;
 
 import componen_2.ExtractFileToStaging;
-import component_1.DownloadFile;
+import component_1.DownloadFileSftp;
 import component_3.DataWarehouseMain;
 
 public class ProcessETL {
 	public static void main(String[] args) {
-//		String id = args[0];
-		String id = "1";
-		new DownloadFile(id).downloadFileProcess();
+		String id = args[0];
+		new DownloadFileSftp(id).downloadFileProcess();
 		System.out.println("download finished");
 		try {
 			new ExtractFileToStaging(id);

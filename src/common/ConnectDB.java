@@ -64,7 +64,7 @@ public class ConnectDB {
 
 	public static void main(String[] args) throws SQLException {
 
-		Connection conn = getConnection("warehouse_control", "root", "");
+		Connection conn = getConectionControl("root", "0985153812");
 
 		if (conn != null)
 			System.out.println("yes man");
