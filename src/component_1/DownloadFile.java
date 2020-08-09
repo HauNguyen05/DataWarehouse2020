@@ -1,22 +1,15 @@
 package component_1;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +62,15 @@ public class DownloadFile {
 				this.syntaxFileName = r.getString(7);
 
 			}
-
+			// đường dẫn chứa file logs của id config
+						File pathDir = new File(destinationPath + "/" + "logs");
+						// kiểm tra nếu thư mục chưa có thì tạo ra
+						if (!pathDir.exists()) {
+							pathDir.mkdir();
+						}
+						// tạo file log để ghi lại file nào được download
+						File file = new File(pathDir + "/LogDownloadConfig" + idConfig + ".txt");
+						logFile = new BufferedWriter(new FileWriter(file, true));
 			statement.close();
 		} catch (Exception e) {
 			System.out.println("can not get information from database control");

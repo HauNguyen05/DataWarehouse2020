@@ -274,7 +274,7 @@ public class ExtractFileToStaging {
 		try {
 			// Tao connection den database controll, neu khac null thi bo qua .
 			if (CONNECTION_CONTROL == null) {
-				CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "0985153812");
+				CONNECTION_CONTROL = ConnectDB.getConectionControl("root", "");
 			}
 			// Tao cau truy van query
 			String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
@@ -379,7 +379,7 @@ public class ExtractFileToStaging {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ExtractFileToStaging a = new ExtractFileToStaging("1");
+		ExtractFileToStaging a = new ExtractFileToStaging("4");
 	}
 	
 }
