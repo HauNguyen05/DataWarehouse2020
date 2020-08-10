@@ -21,7 +21,7 @@ public class WarehouseMaster {
 	private Connection CONNECTION_WAREHOUSE = null;
 	
 	// Set ID config
-	private String idConfig;
+	private int idConfig;
 	
 	// Tạo ra list để lưu các giá trị cần thiết
 	private Map<String, String> dataControl; 
@@ -33,6 +33,10 @@ public class WarehouseMaster {
 	private final String TRANSFORM_SUCCESS = "TS"; 
 	private final String TRANSFORM = "TF"; 
 	
+	public WarehouseMaster(int id) {
+		this.idConfig = id;
+	}
+
 	/**
 	 * 1. Connect tới db_control 
 	 * 2. Lấy các thuộc tính cần thiết add vào list
@@ -171,7 +175,7 @@ public class WarehouseMaster {
 			temp = temp.substring(1);
 			dataWarehouse.add(temp);
 		}
-		System.out.println(dataWarehouse);
+//		System.out.println(dataWarehouse);
 	}
 
 	
@@ -313,9 +317,9 @@ public class WarehouseMaster {
 					 "(" + valueColumn + ") VALUES(" + value + ");";
 		
 		Statement statementWarehouse = CONNECTION_WAREHOUSE.createStatement();
-		System.out.println(sql);
+//		System.out.println(sql);
 		int rows = statementWarehouse.executeUpdate(sql);
-		System.out.println(rows);
+//		System.out.println(rows);
 	}
 	
 	// Kiểm tra trong config_log có record nào status = TF hay không?
@@ -324,7 +328,7 @@ public class WarehouseMaster {
 		String sql = "select count(*) from data_config_log where status = \"" +
 					TRANSFORM + "\" and id = " + idConfig;
 		
-		System.out.println(sql);
+//		System.out.println(sql);
 
 		ResultSet rsControl = statementControl.executeQuery(sql);
 		String result = "";
@@ -333,7 +337,7 @@ public class WarehouseMaster {
 				
 		}
 		
-		System.out.println(result);
+//		System.out.println(result);
 		if(result.equals("0")) return false;
 		return true;
 	}
@@ -390,12 +394,10 @@ public class WarehouseMaster {
 		} catch (SQLException e) {
 			JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Error" + e);
 		}
-		
 	}
 	
 	public static void main(String[] args) {
-		WarehouseMaster main = new WarehouseMaster();
-		main.idConfig = "4";
+		WarehouseMaster main = new WarehouseMaster(1);
 		main.addDataToWarehouse();
 		
 	}

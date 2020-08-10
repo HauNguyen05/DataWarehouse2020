@@ -1,6 +1,0 @@
-
-file: Monhoc2013.csv 22:46:24 09.08.2020
-Thay doi status  thanh 'TF' 
-Move file Monhoc2013.csv  to folder successfully 
-Them du lieu thanh cong 
---------------------------------- 
