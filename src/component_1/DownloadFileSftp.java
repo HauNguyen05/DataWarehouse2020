@@ -61,6 +61,9 @@ public class DownloadFileSftp {
 				this.remotePath = r.getString(5);
 				this.destinationPath = r.getString(6);
 				this.syntaxFileName = r.getString(7);
+			}else {// nếu không có kết quả thì dừng chương trình
+				System.out.println("not fount idConfig: "+ idConfig);
+				System.exit(0);
 			}
 			// đường dẫn chứa file logs của id config
 			File pathDir = new File(destinationPath + "/" + "logs");
@@ -276,8 +279,7 @@ public class DownloadFileSftp {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		//Integer.parseInt(args[0])
-		new DownloadFileSftp(4).downloadFileProcess();
-
+		new DownloadFileSftp(Integer.parseInt(args[0])).downloadFileProcess();
+		System.out.println("download done");
 	}
 }

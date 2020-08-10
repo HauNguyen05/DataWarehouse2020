@@ -1,0 +1,172 @@
+
+file: sinhvien_chieu_nhom11.xlsx 10:06:51 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom11.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom13.xlsx 10:07:44 10.08.2020
+
+file: sinhvien_chieu_nhom13.xlsx 10:08:50 10.08.2020
+
+file: sinhvien_chieu_nhom13.xlsx 10:10:08 10.08.2020
+
+file: sinhvien_chieu_nhom13.xlsx 10:11:21 10.08.2020
+Thay doi status  thanh 'FAIL' 
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_chieu_nhom14.xlsx 10:13:35 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom14.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom15.xlsx 10:14:47 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom15.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom13.xlsx 10:15:44 10.08.2020
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_chieu_nhom11.xlsx 10:20:32 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom11.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom13.xlsx 10:21:44 10.08.2020
+Thay doi status  thanh 'FAIL' 
+Bug: java.sql.SQLException: No value specified for parameter 9
+Move file sinhvien_chieu_nhom13.xlsx to folder error 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom14.xlsx 10:22:02 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom14.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom15.xlsx 10:22:34 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom15.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom11.xlsx 10:35:45 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom11.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom13.xlsx 10:36:45 10.08.2020
+
+file: sinhvien_chieu_nhom13.xlsx 10:37:45 10.08.2020
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_chieu_nhom14.xlsx 10:38:46 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom14.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom15.xlsx 10:47:40 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 10:51:02 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 10:51:23 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 10:53:41 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 10:54:27 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 11:00:39 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 11:02:13 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 11:03:03 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 11:05:39 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 11:06:38 10.08.2020
+
+file: sinhvien_chieu_nhom15.xlsx 11:11:07 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom15.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom16.xlsx 11:12:50 10.08.2020
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_chieu_nhom2.xlsx 11:15:45 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom2.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom3.xlsx 11:16:44 10.08.2020
+
+file: sinhvien_chieu_nhom3.xlsx 11:18:42 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom3.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom4.csv 11:20:52 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom4.csv  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom4.txt 11:21:45 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom4.txt  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom4.xlsx 11:22:45 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom4.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom6.xlsx 11:23:45 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom6.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom7.csv 11:25:18 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom7.csv  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_sang_nhom1.xlsx 11:26:18 10.08.2020
+Thay doi status  thanh 'FAIL' 
+
+file: sinhvien_sang_nhom11.xlsx 11:47:43 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_sang_nhom11.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_sang_nhom13.xlsx 11:47:57 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_sang_nhom13.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom11.xlsx 11:53:41 10.08.2020
+Thay doi status  thanh 'TF' 
+Move file sinhvien_chieu_nhom11.xlsx  to folder successfully 
+Them du lieu thanh cong 
+--------------------------------- 
+
+file: sinhvien_chieu_nhom13.xlsx 11:55:36 10.08.2020
+Thay doi status  thanh 'FAIL' 
+Bug: java.sql.SQLException: No value specified for parameter 9
+Move file sinhvien_chieu_nhom13.xlsx to folder error 
+--------------------------------- 

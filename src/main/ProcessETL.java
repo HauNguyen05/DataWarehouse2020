@@ -24,16 +24,20 @@ public class ProcessETL {
 		if (id == 0) {
 			id = 1;
 		} else {// ngược lại thì chọn id từ database ra
-			String sql = "SELECT  data_config.id from data_config inner join data_config_log on data_config_log.id = data_config.id where status = 'TS' or `status`='ER' limit 1";
+			String sql = "SELECT id from data_config_log where `status`='ER' limit 1";
 			rs = connect.createStatement().executeQuery(sql);
+			// không còn file nào chưa load thì tăng id lên 1
 			if (!rs.next()) {
-				System.out.println("out of data to run");
-				System.exit(0);
+				sql = "SELECT id from data_config_log limit 1";
+				rs = connect.createStatement().executeQuery(sql);
+				if (rs.next()) {
+					id = rs.getInt(1) + 1;
+				}
 			} else {
 				id = rs.getInt(1);
 			}
 		}
-		System.out.println("run id: "+id);
+		System.out.println("run id: " + id);
 		new DownloadFileSftp(id).downloadFileProcess();
 		System.out.println("download finished\n");
 		try {
@@ -46,5 +50,6 @@ public class ProcessETL {
 		}
 		new WarehouseMaster(id).addDataToWarehouse();
 		System.out.println("\ntransform done");
+		System.exit(0);
 	}
 }

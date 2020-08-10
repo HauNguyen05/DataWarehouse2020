@@ -385,7 +385,7 @@ public class WarehouseMaster {
 			// Khi nào chạy thiệt mới mở comment, chứ không nó xóa hết data test hết :v 
 				editStatus();
 				truncateTable();
-				JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Transform successful");
+//				JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Transform successful");
 			}
 			else {
 				JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Nothing file to load");
@@ -397,9 +397,9 @@ public class WarehouseMaster {
 	}
 	
 	public static void main(String[] args) {
-		WarehouseMaster main = new WarehouseMaster(1);
+		WarehouseMaster main = new WarehouseMaster(Integer.parseInt(args[0]));
 		main.addDataToWarehouse();
-		
+		System.out.println("transform done");
 	}
 
 }

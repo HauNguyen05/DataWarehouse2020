@@ -386,7 +386,7 @@ public class ExtractFileToStaging {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ExtractFileToStaging a = new ExtractFileToStaging(1);
+		ExtractFileToStaging a = new ExtractFileToStaging(Integer.parseInt("1"));
 	}
 	
 }
