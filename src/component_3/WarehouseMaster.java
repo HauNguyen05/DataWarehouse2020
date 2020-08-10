@@ -38,8 +38,10 @@ public class WarehouseMaster {
 	 * 2. Lấy các thuộc tính cần thiết add vào list
 	 * 	  dataControl
 	 */
-	public void connectDataControl() throws SQLException {
+	public void connectDataControl() {
 		// Tạo connect tới db control
+		try {
+			
 		CONNECTION_CONTROL = ConnectDB.getConectionControl("root", PASSWORD);
 		Statement statementControl = CONNECTION_CONTROL.createStatement();
 		
@@ -50,6 +52,7 @@ public class WarehouseMaster {
 				+ "from data_config where id =" + idConfig;
 		
 		ResultSet rsControl = statementControl.executeQuery(sql);
+		// New list data control
 		dataControl = new HashMap<String, String>();
 
 		while (rsControl.next()) {
@@ -66,31 +69,37 @@ public class WarehouseMaster {
 			dataControl.put("table_name_warehouse", rsControl.getString(10));
 			
 		}
+		
+		} catch (SQLException e) {
+			JavaMail.send("thuongnguyen.it78@gmail,com", "Error Warehouse", "Issue when connect to db control " + e);
+		}
 
 	}
 	
 	/**
-	 * 1. Connect tới db_staging nhờ từ những thuộc tính có trong list data_Control
+	 * 1. Connect tới db_staging từ những thuộc tính có trong list data_Control
 	 * 2. Lấy toán bộ record trong db_staging add vào list data_Staging 
 	 * 3. Nếu field nào rỗng thì gán giá trị là "NULL"
 	 */
-	public void connectDataStaging() throws SQLException {
+	public void connectDataStaging() {
 		
 		// Tạo kết nối tới staging và query lấy toàn bộ record của nó
-		CONNECTION_STAGING = ConnectDB.getConnection
-							(dataControl.get("db_name_staging"),
-							 dataControl.get("user_name_staging"),
-							 dataControl.get("password_staging"));
+		try {
+			CONNECTION_STAGING = ConnectDB.getConnection
+								(dataControl.get("db_name_staging"),
+								 dataControl.get("user_name_staging"),
+								 dataControl.get("password_staging"));
+		
 
 		Statement statementStaging = CONNECTION_STAGING.createStatement();
 		String sql = "select * from " + dataControl.get("table_name_staging");
 		ResultSet rsStaging = statementStaging.executeQuery(sql);
 		
-		// Tạo list dataStaging
+		// New list dataStaging
 		dataStaging = new ArrayList<String>();
 		
 		/*
-		 * Chạy từng phần tử trong resultset
+		 * Chạy từng phần tử trong resultSet
 		 * Định dạng record thành string "A|B|C". Mỗi field ngăn cách bởi dấu |
 		 * Nếu field là NULL thì gán là "NULL"
 		 */
@@ -115,6 +124,12 @@ public class WarehouseMaster {
 			dataStaging.add(temp);
 
 		}
+		
+		} catch (SQLException e) {
+			
+			JavaMail.send("thuongnguyen.it78@gmail,com", "Error Warehouse", "Issue when connect to db staging " + e);
+
+		}
 
 	}
 	
@@ -122,14 +137,20 @@ public class WarehouseMaster {
 	 * 1. Kết nối tới database_warehouse
 	 * 2. Lấy ra toàn bộ dữ liệu của warehouse add vào list data_warehouse
 	 */
-	public void connectDataWarehouse() throws SQLException {
+	public void connectDataWarehouse()  {
 		// Khởi tạo kết nối và truy vấn lấy ra dữ liệu
 		CONNECTION_WAREHOUSE = ConnectDB.getConnect(
 				dataControl.get("db_name_warehouse"),
 				dataControl.get("user_name_warehouse"),
 				dataControl.get("password_warehouse"));
 		
-		getDataWarehouse();
+		try {
+			getDataWarehouse();
+		} catch (SQLException e) {
+			
+			JavaMail.send("thuongnguyen.it78@gmail,com", "Error Warehouse", "Issue when connect to db warehouse " + e);
+
+		}
 
 	}
 	
@@ -173,7 +194,7 @@ public class WarehouseMaster {
 						break;
 					}
 					
-					// Cập nhật lại dataWarehouse
+					// Cập nhật lại list dataWarehouse
 					getDataWarehouse();
 
 				}
@@ -190,8 +211,10 @@ public class WarehouseMaster {
 		// 2. Giống trường khóa chính (MSSV)
 		String arrDataIndex[] = dataIndex.split("[|]");
 		String valueIndex = "";
+		// giá trị index để so sánh
 		int index = 2;
 		
+		// nếu là sinhvien mà monhoc thì thay giá trị index là 1
 		if (dataControl.get("table_name_warehouse").equalsIgnoreCase("sinhvien") ||
 			dataControl.get("table_name_warehouse").equalsIgnoreCase("monhoc")) {	
 			
@@ -199,8 +222,10 @@ public class WarehouseMaster {
 		}
 		
 		valueIndex = arrDataIndex[index];
-
+		// giá trị để cập nhật SK
 		int i = 0;
+		// kiểm tra nó có trùng trường khóa chính hay không
+		boolean check = false;
 		for (String dtWareHouse : dataWarehouse) {
 			i += 1;
 			String arrWarehouse[] = dtWareHouse.split("[|]");
@@ -208,10 +233,11 @@ public class WarehouseMaster {
 			
 			if (valueIndex.equalsIgnoreCase(arrWarehouse[index])) {
 				setExpireDate(Integer.toString(i));
-				return 2;
+				check = true;
 			}
 
 		}
+		if(check) return 2;
 		return 0;
 	}
 	
@@ -239,6 +265,7 @@ public class WarehouseMaster {
 			break;
 		}
 		
+		// update lại dt expired
 		String sql = "UPDATE " + dataControl.get("table_name_warehouse") +
 					 " SET dt_expired = CURDATE()" + temp + id;
 		
@@ -255,7 +282,7 @@ public class WarehouseMaster {
 
 	}
 
-	
+	// Thêm dữ liệu vào warehouse
 	private void addData(String dataIndex) throws SQLException {
 		// value để thêm vào warehouse
 		String arrValue[] = dataIndex.split("[|]");
@@ -315,7 +342,7 @@ public class WarehouseMaster {
 	private void editStatus() throws SQLException {
 		
 		String sql = "UPDATE " + "data_config_log" +
-					 " SET status = \"TC\" where status = \"TF\" and id =" + idConfig;
+					 " SET status = \"" + TRANSFORM_SUCCESS + "\" where status = \"TF\" and id =" + idConfig;
 		
 		
 		
@@ -325,16 +352,25 @@ public class WarehouseMaster {
 		
 	}
 	
+	// truncate table
 	private void truncateTable() throws SQLException {
 		
 		String sql = "TRUNCATE TABLE " + dataControl.get("table_name_staging");
 		
-		Statement statementControl = CONNECTION_CONTROL.createStatement();
+		Statement statementControl = CONNECTION_STAGING.createStatement();
 		
 		statementControl.execute(sql);
 		
 	}
-	
+	/**
+	 * 1. Thực hiện connect tới db control
+	 * 2. Kiểm tra có file nào để load hay không?
+	 * 3. Connect tới staging
+	 * 4. Connect tới warehouse
+	 * 5. Handle dữ liệu
+	 * 6. Edit status
+	 * 7. Truncate table
+	 */
 	public void addDataToWarehouse() {
 		try {
 			connectDataControl();
@@ -343,17 +379,16 @@ public class WarehouseMaster {
 				connectDataWarehouse();
 				handleData();
 			// Khi nào chạy thiệt mới mở comment, chứ không nó xóa hết data test hết :v 
-			//	editStatus();
-			//	truncateTable();
+				editStatus();
+				truncateTable();
+				JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Transform successful");
 			}
 			else {
 				JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Nothing file to load");
-				
 			}
 			
 		} catch (SQLException e) {
-			System.out.println(e);
-			JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Error when loading");
+			JavaMail.send("thuongnguyen.it78@gmail.com", "Datawarehouse", "Error" + e);
 		}
 		
 	}
