@@ -34,10 +34,10 @@ public class DownloadFileSftp {
 	private static CkSFtp sftp;
 	private Connection connectionControl;
 	private CheckFileName check;
-	private String idConfig;
+	private int idConfig;
 	private BufferedWriter logFile;
 
-	public DownloadFileSftp(String idConfig) {
+	public DownloadFileSftp(int idConfig) {
 		this.idConfig = idConfig;
 		check = new CheckFileName();
 	}
@@ -219,11 +219,11 @@ public class DownloadFileSftp {
 	/*
 	 * thêm thông tin của file vừa download về vào table log
 	 */
-	public void insertLogTable(String idConfig, Map<String, String> infor) {
+	public void insertLogTable(int idConfig2, Map<String, String> infor) {
 		String update = "INSERT INTO data_config_log(id, file_name,file_type, status, unzip, ignore_record) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = connectionControl.prepareStatement(update);
-			statement.setString(1, idConfig);
+			statement.setInt(1, idConfig2);
 			statement.setString(2, infor.get("fileName"));
 			statement.setString(3, infor.get("typeFile"));
 			statement.setString(4, "ER");
@@ -276,7 +276,8 @@ public class DownloadFileSftp {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		new DownloadFileSftp("4").downloadFileProcess();
+		//Integer.parseInt(args[0])
+		new DownloadFileSftp(4).downloadFileProcess();
 
 	}
 }

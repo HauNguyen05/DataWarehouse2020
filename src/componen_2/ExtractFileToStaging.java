@@ -37,7 +37,7 @@ public class ExtractFileToStaging {
 	private String SUBJECT = "Load file to staging";
 	private BufferedWriter BW = null;
 
-	public ExtractFileToStaging(String id) throws Exception {
+	public ExtractFileToStaging(int id) throws Exception {
 		insetDataAllFile(id);
 	}
 // tao table data
@@ -262,7 +262,7 @@ public class ExtractFileToStaging {
 		BW.flush();
 	}
 
-	public void insetDataAllFile(String idConfig) throws Exception {
+	public void insetDataAllFile(int idConfig) throws Exception {
 		String destination, server_des, databasse, user_des, pwd_des, table_name_des, delimiter, file_type,
 				path_dir_src, file_name, file_logs = null;
 		int column_number = 0;
@@ -278,7 +278,7 @@ public class ExtractFileToStaging {
 // 3. Lay 1 record co idConfig = idConfig va co status ="ER"		
 			// Tao cau truy van query
 			String sql = "SELECT  destination,server_des, databasse,user_des,pwd_des,table_name_des, unzip, ignore_record,delimeter,file_type,path_dir_src,file_name,column_number ,file_logs from data_config inner join data_config_log"
-					+ " on data_config_log.id = data_config.id where data_config_log.id="+Integer.valueOf(idConfig)+" and status = 'ER' limit 1";
+					+ " on data_config_log.id = data_config.id where data_config_log.id="+idConfig+" and status = 'ER' limit 1";
 			PreparedStatement statement1 = CONNECTION_CONTROL.prepareStatement(sql);
 			r = statement1.executeQuery();
 			if (r.next()) {
@@ -386,7 +386,7 @@ public class ExtractFileToStaging {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ExtractFileToStaging a = new ExtractFileToStaging("3");
+		ExtractFileToStaging a = new ExtractFileToStaging(3);
 	}
 	
 }
